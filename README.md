@@ -1,4 +1,4 @@
-# ClincaOss
+# ClincaOSS
 
 Sistema web y catálogo de sistema para clínica odontológica.
 
