@@ -1,0 +1,82 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="content">
+        <h2>Mantenimiento de Usuarios</h2>
+
+        <h:form id="frmUsers">
+            <p:commandButton value="Nuevo" icon="pi pi-plus" styleClass="mb-3"
+                             actionListener="#{userBean.newEntity}"
+                             process="@this"
+                             update=":frmUsers:dlgUser"
+                             resetValues="true"
+                             oncomplete="PF('dlgUser').show()"/>
+
+            <p:dataTable id="tblUsers" value="#{userBean.list}" var="u"
+                         paginator="true" rows="8" styleClass="shadow-2">
+                <p:column headerText="Nombre completo">#{u.nombreCompleto}</p:column>
+                <p:column headerText="Email">#{u.email}</p:column>
+                <p:column headerText="Teléfono">#{u.telefono}</p:column>
+                <p:column headerText="Estado">#{u.status ? 'Activo' : 'Inactivo'}</p:column>
+                <p:column headerText="Rol">#{u.role != null ? u.role.nombre : ''}</p:column>
+
+                <p:column style="width:140px;text-align:center">
+                    <p:commandButton icon="pi pi-pencil"
+                                     actionListener="#{userBean.edit(u)}"
+                                     process="@this"
+                                     update=":frmUsers:dlgUser"
+                                     resetValues="true"
+                                     oncomplete="PF('dlgUser').show()"/>
+
+                    <p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+                                     actionListener="#{userBean.delete(u)}"
+                                     process="@this"
+                                     update=":frmUsers:tblUsers :global:msgs"/>
+                </p:column>
+            </p:dataTable>
+
+            <p:dialog id="dlgUser" header="Usuario" widgetVar="dlgUser" modal="true"
+                      appendTo="@form" resizable="false" closable="true" draggable="false">
+
+                <p:messages id="msgUser" showSummary="true" showDetail="false"
+                            closable="true" layout="list" styleClass="fieldErrors"/>
+
+                <p:panelGrid columns="2" layout="grid" styleClass="p-fluid"
+                             columnClasses="w-10rem,w-auto">
+                    <p:outputLabel for="nombreCompleto" value="Nombre completo"/>
+                    <p:inputText id="nombreCompleto" value="#{userBean.selected.nombreCompleto}" />
+
+                    <p:outputLabel for="email" value="Email"/>
+                    <p:inputText id="email" value="#{userBean.selected.email}" />
+
+                    <p:outputLabel for="telefono" value="Teléfono"/>
+                    <p:inputText id="telefono" value="#{userBean.selected.telefono}" />
+
+                    <p:outputLabel for="password" value="Contraseña"/>
+                    <p:password id="password" value="#{userBean.selected.password}" feedback="false"/>
+
+                    <p:outputLabel for="status" value="Estado"/>
+                    <p:selectBooleanCheckbox id="status" value="#{userBean.selected.status}" />
+
+                    <p:outputLabel for="role" value="Rol"/>
+                    <p:selectOneMenu id="role" value="#{userBean.selected.role}" converter="roleConverter">
+                        <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
+                        <f:selectItems value="#{userBean.roles}" var="r" itemValue="#{r}" itemLabel="#{r.nombre}" />
+                    </p:selectOneMenu>
+                </p:panelGrid>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Guardar" icon="pi pi-check"
+                                     actionListener="#{userBean.save}"
+                                     process="@form"
+                                     update=":global:msgs :frmUsers:tblUsers :frmUsers:msgUser"
+                                     oncomplete="if (!args.validationFailed) PF('dlgUser').hide();"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
