@@ -65,6 +65,14 @@ public abstract class Controller<T> implements Serializable {
         return findAll();
     }
 
+    /**
+     * Compatibilidad: algunas vistas antiguas pueden usar #{bean.findAll} en EL.
+     * Dejamos este getter para evitar PropertyNotFoundException y delegar a findAll().
+     */
+    public List<T> getFindAll() {
+        return findAll();
+    }
+
     public void newEntity() {
         clearFacesMessages();
         selected = createNew();
