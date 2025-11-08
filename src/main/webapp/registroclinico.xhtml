@@ -1,0 +1,127 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="content">
+
+        <h:form enctype="multipart/form-data">
+
+            <!-- Card principal -->
+            <p:card styleClass="registro-card">
+
+                <f:facet name="title">
+                    Registro Clínico
+                </f:facet>
+
+                <div class="p-fluid p-formgrid p-grid">
+
+                    <!-- Paciente -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <p:outputLabel for="paciente" value="Paciente:*" />
+                        <p:selectOneMenu id="paciente" value="#{registroClinicoController.pacienteId}" required="true">
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
+                            <f:selectItems value="#{registroClinicoController.pacientes}"
+                                           var="p" itemLabel="#{p.nombreCompleto}" itemValue="#{p.id}" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- Odontólogo -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <p:outputLabel for="odontologo" value="Odontólogo:*" />
+                        <p:selectOneMenu id="odontologo" value="#{registroClinicoController.odontologoId}" required="true">
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
+                            <f:selectItems value="#{registroClinicoController.odontologos}"
+                                           var="u" itemLabel="#{u.nombreCompleto}" itemValue="#{u.id}" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- Tipo de registro -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <p:outputLabel for="tipo" value="Tipo de Registro:*" />
+                        <p:inputText id="tipo" value="#{registroClinicoController.registro.tipo}" required="true"
+                                     placeholder="Ej. Diagnóstico, Control, Radiografía..." />
+                    </div>
+
+                    <!-- Archivo clínico -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <p:outputLabel for="archivo" value="Archivo Clínico:" />
+                        <p:fileUpload id="archivo"
+                                      mode="simple"
+                                      skinSimple="true"
+                                      label="Seleccionar archivo"
+                                      allowTypes="/(\.|\/)(pdf|jpg|jpeg|png)$/"
+                                      auto="false" />
+                    </div>
+
+                </div>
+
+                <div class="p-mt-3">
+                    <p:commandButton value="Guardar"
+                                     icon="pi pi-save"
+                                     action="#{registroClinicoController.guardarRegistro}"
+                                     update="@form registrosTabla"
+                                     styleClass="p-button-rounded p-button-primary" />
+                </div>
+
+            </p:card>
+
+            <!-- Tabla de registros -->
+            <p:dataTable id="registrosTabla"
+                         value="#{registroClinicoController.registros}"
+                         var="r"
+                         paginator="true"
+                         rows="8"
+                         emptyMessage="No se encontraron registros clínicos"
+                         styleClass="p-mt-4 registro-table">
+
+                <p:column headerText="Paciente">
+                    #{r.paciente.nombreCompleto}
+                </p:column>
+
+                <p:column headerText="Odontólogo">
+                    #{r.odontologo.nombreCompleto}
+                </p:column>
+
+                <p:column headerText="Tipo de Registro">
+                    #{r.tipo}
+                </p:column>
+
+                <p:column headerText="Fecha de Carga">
+                    <h:outputText value="#{r.fechaCarga}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Acciones" style="text-align:center;">
+                    <p:commandButton icon="pi pi-trash" title="Eliminar"
+                                     action="#{registroClinicoController.eliminarRegistro(r)}"
+                                     update="@form registrosTabla"
+                                     styleClass="p-button-danger p-button-rounded p-button-sm" />
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+
+        <h:outputStylesheet>
+            .registro-card {
+                background: #ffffff;
+                padding: 2rem;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            }
+            .registro-table {
+                border-radius: 10px;
+                box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            }
+            .p-card .p-card-title {
+                font-weight: 600;
+                color: #1e88e5;
+                text-align: center;
+            }
+        </h:outputStylesheet>
+
+    </ui:define>
+</ui:composition>

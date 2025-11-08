@@ -22,17 +22,25 @@ public class CatalogService implements Serializable {
     public CatalogService() { }
 
     @Inject
-    UserRepostory userRepository;
+    private UserRepostory userRepository;
+
+    @Inject
+    private RoleRepository roleRepository;
+
+    @Inject
+    private PacienteRepository pacienteRepository;
+
     @Inject
     RoleRepository roleRepository;
     @Inject
     FileRepository fileRepository;
 
 
-    public List<User> users(){ return userRepository.findAll(); }
-    public User guardar(User user){ return userRepository.guardar(user); }
-    public void eliminar(User user){ userRepository.eliminar(user); }
+    public List<User> users() { return userRepository.findAll(); }
+    public User guardar(User user) { return userRepository.guardar(user); }
+    public void eliminar(User user) { userRepository.eliminar(user); }
     public User findUserById(Long id) { return userRepository.find(id); }
+
 
     public List<Role> roles() { return roleRepository.findAll(); }
     public Role guardar(Role role) { return roleRepository.guardar(role); }
