@@ -17,16 +17,21 @@ public class CatalogService implements Serializable {
     public CatalogService() { }
 
     @Inject
-    UserRepostory userRepository;
-    @Inject
-    RoleRepository roleRepository;
+    private UserRepostory userRepository;
 
     @Inject
-    PacienteRepository pacienteRepository;
+    private RoleRepository roleRepository;
 
-    public List<User> users(){ return userRepository.findAll(); }
-    public User guardar(User user){ return userRepository.guardar(user); }
-    public void eliminar(User user){ userRepository.eliminar(user); }
+    @Inject
+    private PacienteRepository pacienteRepository;
+
+    @Inject
+    private TratamientoRepository tratamientoRepository;
+
+
+    public List<User> users() { return userRepository.findAll(); }
+    public User guardar(User user) { return userRepository.guardar(user); }
+    public void eliminar(User user) { userRepository.eliminar(user); }
     public User findUserById(Long id) { return userRepository.find(id); }
 
 
@@ -40,7 +45,11 @@ public class CatalogService implements Serializable {
     public void eliminar(Paciente paciente) { pacienteRepository.eliminar(paciente); }
     public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
 
- }
 
+    public List<Tratamiento> tratamientos() { return tratamientoRepository.findAll(); }
+    public Tratamiento guardar(Tratamiento tratamiento) { return tratamientoRepository.guardar(tratamiento); }
+    public void eliminar(Tratamiento tratamiento) { tratamientoRepository.eliminar(tratamiento); }
+    public Tratamiento findTratamientoById(Long id) { return tratamientoRepository.find(id); }
+}
 
 

@@ -1,0 +1,108 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="title">Gestión de Citas</ui:define>
+
+    <ui:define name="content">
+        <h:form id="formCita">
+
+            <h2>Gestión de Citas</h2>
+
+            <!-- Botón Nueva Cita -->
+            <p:commandButton value="Nueva Cita"
+                             actionListener="#{citaController.nuevaCita}"
+                             update="formCita"
+                             icon="pi pi-plus"
+                             styleClass="p-button-success" />
+
+            <br/><br/>
+
+            <!-- Formulario de Cita -->
+            <p:panel header="Datos de la Cita" style="max-width:600px; margin-bottom:20px;">
+
+                <h:panelGrid columns="2" cellpadding="5">
+
+                    <h:outputLabel value="Paciente:" for="paciente" />
+                    <p:selectOneMenu id="paciente" value="#{citaController.cita.paciente}" required="true">
+                        <f:selectItem itemLabel="-- Seleccionar --" itemValue="" />
+                        <f:selectItems value="#{citaController.pacientes}" var="p"
+                                       itemLabel="#{p.nombreCompleto}" itemValue="#{p}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Fecha:" for="fecha" />
+                    <p:datePicker id="fecha" value="#{citaController.cita.fecha}" pattern="yyyy-MM-dd" showIcon="true" />
+
+                    <h:outputLabel value="Hora:" for="hora" />
+                    <p:inputMask id="hora" mask="99:99" value="#{citaController.cita.hora}" placeholder="HH:mm" />
+
+                    <h:outputLabel value="Tratamiento:" for="tratamiento" />
+                    <p:selectOneMenu id="tratamiento" value="#{citaController.cita.tratamiento}">
+                        <f:selectItem itemLabel="-- Seleccionar --" itemValue="" />
+                        <f:selectItems value="#{citaController.tratamientos}" var="t"
+                                       itemLabel="#{t.nombre}" itemValue="#{t}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel value="Observaciones:" for="observaciones" />
+                    <p:inputTextarea id="observaciones"
+                                     value="#{citaController.cita.observaciones}"
+                                     rows="3" cols="30" />
+                </h:panelGrid>
+
+                <!-- Botones de acción -->
+                <div style="margin-top:10px;">
+                    <p:commandButton value="Guardar"
+                                     actionListener="#{citaController.guardar}"
+                                     update="formCita tablaCitas"
+                                     icon="pi pi-save"
+                                     styleClass="p-button-success" />
+
+                    <p:commandButton value="Eliminar"
+                                     actionListener="#{citaController.eliminar(citaController.cita)}"
+                                     update="formCita tablaCitas"
+                                     icon="pi pi-trash"
+                                     styleClass="p-button-danger"
+                                     rendered="#{not empty citaController.cita.id}" />
+                </div>
+
+            </p:panel>
+
+            <!-- Tabla de citas -->
+            <p:dataTable id="tablaCitas"
+                         value="#{citaController.citas}"
+                         var="c"
+                         paginator="true" rows="5"
+                         selectionMode="single"
+                         selection="#{citaController.cita}"
+                         rowKey="#{c.id}"
+                         style="max-width:800px">
+
+                <p:ajax event="rowSelect" update="formCita" />
+
+                <p:column headerText="Paciente">
+                    <h:outputText value="#{c.paciente.nombreCompleto}" />
+                </p:column>
+
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{c.fecha}" />
+                </p:column>
+
+                <p:column headerText="Hora">
+                    <h:outputText value="#{c.hora}" />
+                </p:column>
+
+                <p:column headerText="Tratamiento">
+                    <h:outputText value="#{c.tratamiento.nombre}" />
+                </p:column>
+
+                <p:column headerText="Observaciones">
+                    <h:outputText value="#{c.observaciones}" />
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
