@@ -1,0 +1,110 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>Gestión de Tratamientos</title>
+    </h:head>
+
+    <h:body>
+        <h:form id="formTratamiento">
+
+            <h2 style="color:#2c3e50; text-align:center;">Gestión de Tratamientos</h2>
+            <hr style="margin-bottom: 20px;"/>
+
+            <!-- Botón para nuevo tratamiento -->
+            <div style="text-align:center; margin-bottom:20px;">
+                <p:commandButton value="Nuevo Tratamiento"
+                                 actionListener="#{tratamientoController.nuevoTratamiento}"
+                                 update="formTratamiento"
+                                 icon="pi pi-plus"
+                                 styleClass="p-button-success" />
+            </div>
+
+            <!-- Panel del formulario -->
+            <p:panel header="Datos del Tratamiento"
+                     style="max-width:600px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+
+                <h:panelGrid columns="2" cellpadding="5" style="width:100%;">
+
+                    <h:outputLabel for="nombre" value="Nombre:" />
+                    <p:inputText id="nombre" value="#{tratamientoController.tratamiento.nombre}"
+                                 required="true" requiredMessage="El nombre es obligatorio." />
+
+                    <h:outputLabel for="descripcion" value="Descripción:" />
+                    <p:inputTextarea id="descripcion" value="#{tratamientoController.tratamiento.descripcion}"
+                                     rows="3" cols="30" autoResize="true" />
+
+                    <h:outputLabel for="costo" value="Costo (Q):" />
+                    <p:inputNumber id="costo" value="#{tratamientoController.tratamiento.costo}"
+                                   symbol=" Q" symbolPosition="s" minValue="0" decimalPlaces="2" />
+
+                    <h:outputLabel for="fecha" value="Fecha:" />
+                    <p:calendar id="fecha" value="#{tratamientoController.tratamiento.fecha}"
+                                pattern="yyyy-MM-dd" showIcon="true"
+                                required="true" requiredMessage="Seleccione una fecha." />
+
+                </h:panelGrid>
+
+                <div style="text-align:center; margin-top:20px;">
+                    <p:commandButton value="Guardar"
+                                     actionListener="#{tratamientoController.guardarTratamiento}"
+                                     update="formTratamiento tablaTratamientos"
+                                     icon="pi pi-save"
+                                     styleClass="p-button-success" />
+
+                    <p:commandButton value="Eliminar"
+                                     actionListener="#{tratamientoController.eliminarTratamiento}"
+                                     update="formTratamiento tablaTratamientos"
+                                     icon="pi pi-trash"
+                                     styleClass="p-button-danger"
+                                     rendered="#{not empty tratamientoController.tratamiento.id}" />
+                </div>
+            </p:panel>
+
+            <br/><br/>
+
+            <!-- Tabla de tratamientos -->
+            <p:dataTable id="tablaTratamientos"
+                         value="#{tratamientoController.tratamientos}"
+                         var="t"
+                         paginator="true" rows="5"
+                         selectionMode="single"
+                         selection="#{tratamientoController.tratamiento}"
+                         rowKey="#{t.id}"
+                         style="max-width:800px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+
+                <p:ajax event="rowSelect" update="formTratamiento" />
+
+                <p:column headerText="ID" style="width:60px; text-align:center;">
+                    <h:outputText value="#{t.id}" />
+                </p:column>
+
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{t.nombre}" />
+                </p:column>
+
+                <p:column headerText="Descripción">
+                    <h:outputText value="#{t.descripcion}" />
+                </p:column>
+
+                <p:column headerText="Costo (Q)">
+                    <h:outputText value="#{t.costo}">
+                        <f:convertNumber pattern="#,##0.00" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{t.fecha}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+    </h:body>
+</ui:composition>
