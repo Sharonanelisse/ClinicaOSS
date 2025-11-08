@@ -1,4 +1,4 @@
-package com.smarroquin.clinicaoss.controllers.user;
+package com.smarroquin.clinicaoss.controllers.users;
 
 import com.smarroquin.clinicaoss.controllers.Controller;
 import com.smarroquin.clinicaoss.models.User;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Named("userBean")
 @ViewScoped
-public class UserBean extends Controller<User>  implements Serializable {
+public class UserBean extends Controller<User> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
