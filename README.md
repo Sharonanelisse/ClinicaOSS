@@ -25,5 +25,5 @@ src/main/java/com/smarroquin/clinicaoss
 
 ### Base de Datos
 ```bash
-docker run --name postgres-jpql -e POSTGRES_PASSWORD=admin123 -e POSTGRES_USER=postgres -e POSTGRES_DB=clinicaoss -p 5433:5432 -d postgres
+docker run --name postgres-clinicaoss -e POSTGRES_PASSWORD=admin123 -e POSTGRES_USER=postgres -e POSTGRES_DB=clinicaoss -p 5433:5432 -d postgres
 ```
