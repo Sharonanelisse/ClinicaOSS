@@ -67,7 +67,7 @@ public class UserBean extends Controller<User>  implements Serializable {
     protected String successDeleteMessage() {
         return "Usuario eliminado";
     }
-    
+
     public List<Role> getRoles() {
         return service.roles();
     }
