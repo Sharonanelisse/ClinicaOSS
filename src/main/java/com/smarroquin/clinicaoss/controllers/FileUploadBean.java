@@ -1,4 +1,4 @@
-package com.smarroquin.clinicaoss.controllers.files;
+package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.File;
 import com.smarroquin.clinicaoss.service.CatalogService;

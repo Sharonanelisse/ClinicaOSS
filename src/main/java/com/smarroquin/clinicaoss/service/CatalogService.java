@@ -1,12 +1,8 @@
 package com.smarroquin.clinicaoss.service;
 
 
-import com.smarroquin.clinicaoss.models.Role;
-import com.smarroquin.clinicaoss.models.User;
-import com.smarroquin.clinicaoss.models.File;
-import com.smarroquin.clinicaoss.repositories.RoleRepository;
-import com.smarroquin.clinicaoss.repositories.UserRepostory;
-import com.smarroquin.clinicaoss.repositories.FileRepository;
+import com.smarroquin.clinicaoss.models.*;
+import com.smarroquin.clinicaoss.repositories.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -31,8 +27,6 @@ public class CatalogService implements Serializable {
     private PacienteRepository pacienteRepository;
 
     @Inject
-    RoleRepository roleRepository;
-    @Inject
     FileRepository fileRepository;
 
 
@@ -49,5 +43,10 @@ public class CatalogService implements Serializable {
     public File saveFile(File f) { return fileRepository.guardar(f); }
     public List<File> files() { return fileRepository.findAll(); }
     public void deleteFile(File f) { fileRepository.eliminar(f); }
+
+    public List<Paciente> pacientes() { return pacienteRepository.findAll(); }
+    public Paciente guardar(Paciente paciente) { return pacienteRepository.guardar(paciente); }
+    public void eliminar(Paciente paciente) { pacienteRepository.eliminar(paciente); }
+    public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
 
 }

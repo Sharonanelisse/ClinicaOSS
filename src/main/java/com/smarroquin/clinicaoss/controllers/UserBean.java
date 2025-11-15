@@ -1,6 +1,5 @@
-package com.smarroquin.clinicaoss.controllers.users;
+package com.smarroquin.clinicaoss.controllers;
 
-import com.smarroquin.clinicaoss.controllers.Controller;
 import com.smarroquin.clinicaoss.models.User;
 import com.smarroquin.clinicaoss.models.Role;
 import com.smarroquin.clinicaoss.service.CatalogService;
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Named("userBean")
+@Named
 @ViewScoped
 public class UserBean extends Controller<User> implements Serializable {
     private static final long serialVersionUID = 1L;

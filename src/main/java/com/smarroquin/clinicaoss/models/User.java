@@ -4,12 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(
-        name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
-        }
-)
 public class User {
 
     @Id
@@ -18,7 +12,7 @@ public class User {
 
     @NotBlank(message = "El nombre completo es obligatorio.")
     @Size(min = 3, max = 60, message = "El nombre completo debe tener entre 3 y 60 caracteres.")
-    @Column(name = "nombre_completo", length = 60, nullable = false)
+    @Column(length = 60, nullable = false)
     private String nombreCompleto;
 
     @NotBlank(message = "El correo electrónico es obligatorio.")
@@ -37,7 +31,7 @@ public class User {
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s]).{8,20}$",
             message = "La contraseña debe incluir al menos: una letra mayúscula, una minúscula, un número y un carácter especial."
     )
-    @Column(name = "password", length = 60, nullable = false)
+    @Column(length = 60, nullable = false)
     private String password;
 
     @NotNull(message = "El estado es obligatorio.")
