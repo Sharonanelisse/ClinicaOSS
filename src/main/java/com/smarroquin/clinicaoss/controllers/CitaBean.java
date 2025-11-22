@@ -16,7 +16,7 @@ import java.util.List;
 
 @Named("citaController")
 @ViewScoped
-public class CitaController implements Serializable {
+public class CitaBean implements Serializable {
 
     private Cita cita = new Cita();
     private List<Cita> citas;

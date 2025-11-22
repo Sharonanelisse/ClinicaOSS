@@ -30,20 +30,23 @@ public class CatalogService implements Serializable {
     FileRepository fileRepository;
 
 
+    //Users
     public List<User> users() { return userRepository.findAll(); }
     public User guardar(User user) { return userRepository.guardar(user); }
     public void eliminar(User user) { userRepository.eliminar(user); }
     public User findUserById(Long id) { return userRepository.find(id); }
 
-
+    //Role
     public List<Role> roles() { return roleRepository.findAll(); }
     public Role guardar(Role role) { return roleRepository.guardar(role); }
     public void eliminar(Role role) { roleRepository.eliminar(role); }
 
+    //Files
     public File saveFile(File f) { return fileRepository.guardar(f); }
     public List<File> files() { return fileRepository.findAll(); }
     public void deleteFile(File f) { fileRepository.eliminar(f); }
 
+    //Pacientes
     public List<Paciente> pacientes() { return pacienteRepository.findAll(); }
     public Paciente guardar(Paciente paciente) { return pacienteRepository.guardar(paciente); }
     public void eliminar(Paciente paciente) { pacienteRepository.eliminar(paciente); }

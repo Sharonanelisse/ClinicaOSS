@@ -158,4 +158,23 @@ public class Paciente {
     public void setFechaRegistro(LocalDateTime fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Paciente{");
+        sb.append("id=").append(id);
+        sb.append(", nombreCompleto='").append(nombreCompleto).append('\'');
+        sb.append(", dpi='").append(dpi).append('\'');
+        sb.append(", fechaNacimiento='").append(fechaNacimiento).append('\'');
+        sb.append(", edad='").append(edad).append('\'');
+        sb.append(", telefono='").append(telefono).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", alergias='").append(alergias).append('\'');
+        sb.append(", condicionesMedicas='").append(condicionesMedicas).append('\'');
+        sb.append(", observaciones='").append(observaciones).append('\'');
+        sb.append(", fechaRegistro='").append(fechaRegistro).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
 }

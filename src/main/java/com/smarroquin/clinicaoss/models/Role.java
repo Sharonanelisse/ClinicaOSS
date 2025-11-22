@@ -11,7 +11,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Seleccionar un campo")
+    @NotNull(message = "Seleccionar el role")
     @Enumerated(EnumType.STRING)
     private role_name role_name;
 

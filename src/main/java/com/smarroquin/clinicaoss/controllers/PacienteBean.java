@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Named
 @ViewScoped
-public class PacienteBean extends Controller<Paciente> implements Serializable {
+public class PacienteBean extends Bean<Paciente> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject

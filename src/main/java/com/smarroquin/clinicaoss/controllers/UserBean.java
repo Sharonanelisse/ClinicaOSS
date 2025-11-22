@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Named
 @ViewScoped
-public class UserBean extends Controller<User> implements Serializable {
+public class UserBean extends Bean<User> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject

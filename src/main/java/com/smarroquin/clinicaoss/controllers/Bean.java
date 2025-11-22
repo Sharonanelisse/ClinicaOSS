@@ -45,7 +45,7 @@ public class PacienteController extends Controller<Paciente> {
 * */
 
 @ViewScoped
-public abstract class Controller<T> implements Serializable {
+public abstract class Bean<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
