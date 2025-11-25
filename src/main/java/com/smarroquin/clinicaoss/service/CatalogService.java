@@ -52,4 +52,10 @@ public class CatalogService implements Serializable {
     public void eliminar(Paciente paciente) { pacienteRepository.eliminar(paciente); }
     public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
 
+    //JornadaLaboral
+    public List<JornadaLaboral> pacientes() { return pacienteRepository.findAll(); }
+    public Paciente guardar(Paciente paciente) { return pacienteRepository.guardar(paciente); }
+    public void eliminar(Paciente paciente) { pacienteRepository.eliminar(paciente); }
+    public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
+
 }

@@ -18,7 +18,7 @@
 
             <p:dataTable id="tblUsers" value="#{userBean.findAll}" var="u"
                          paginator="true" rows="8" styleClass="shadow-2">
-                <p:column headerText="Nombre completo">#{u.nombreCompleto}</p:column>
+                <p:column headerText="Nombre completo">#{u.apellidoUsuario}</p:column>
                 <p:column headerText="Email">#{u.email}</p:column>
                 <p:column headerText="Teléfono">#{u.telefono}</p:column>
                 <p:column headerText="Estado">#{u.status ? 'Activo' : 'Inactivo'}</p:column>
@@ -48,7 +48,7 @@
                 <p:panelGrid columns="2" layout="grid" styleClass="p-fluid"
                              columnClasses="w-10rem,w-auto">
                     <p:outputLabel for="nombreCompleto" value="Nombre completo"/>
-                    <p:inputText id="nombreCompleto" value="#{userBean.selected.nombreCompleto}" />
+                    <p:inputText id="nombreCompleto" value="#{userBean.selected.apellidoUsuario}" />
 
                     <p:outputLabel for="email" value="Email"/>
                     <p:inputText id="email" value="#{userBean.selected.email}" />

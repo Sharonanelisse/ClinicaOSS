@@ -13,7 +13,12 @@ public class User {
     @NotBlank(message = "El nombre completo es obligatorio.")
     @Size(min = 3, max = 60, message = "El nombre completo debe tener entre 3 y 60 caracteres.")
     @Column(length = 60, nullable = false)
-    private String nombreCompleto;
+    private String nombreUsuario;
+
+    @NotBlank(message = "El nombre completo es obligatorio.")
+    @Size(min = 3, max = 60, message = "El nombre completo debe tener entre 3 y 60 caracteres.")
+    @Column(length = 60, nullable = false)
+    private String apellidoUsuario;
 
     @NotBlank(message = "El correo electrónico es obligatorio.")
     @Email(message = "El correo electrónico no tiene un formato válido.")
@@ -38,39 +43,50 @@ public class User {
     @Column(nullable = false)
     private Boolean status = true;
 
+    @NotNull(message = "Agregar un role al usuario")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "role_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_role_user")
-    )
     private Role role;
 
     @PrePersist
     protected void prePersist() {
         if (status == null) status = true;
-        if (nombreCompleto != null) nombreCompleto = nombreCompleto.trim();
+        if (nombreUsuario != null) nombreUsuario = nombreUsuario.trim();
+        if (apellidoUsuario != null) apellidoUsuario = apellidoUsuario.trim();
         if (email != null) email = email.trim().toLowerCase();
         if (telefono != null) telefono = telefono.trim();
     }
 
+    // Getters y Setters
+
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getApellidoUsuario() {
+        return apellidoUsuario;
+    }
+
+    public void setApellidoUsuario(String apellidoUsuario) {
+        this.apellidoUsuario = apellidoUsuario;
     }
 
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -78,6 +94,7 @@ public class User {
     public String getTelefono() {
         return telefono;
     }
+
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
@@ -85,6 +102,7 @@ public class User {
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -92,6 +110,7 @@ public class User {
     public Boolean getStatus() {
         return status;
     }
+
     public void setStatus(Boolean status) {
         this.status = status;
     }
@@ -99,7 +118,24 @@ public class User {
     public Role getRole() {
         return role;
     }
+
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Paciente{");
+        sb.append("id=").append(id);
+        sb.append(", nombreUsuario='").append(nombreUsuario).append('\'');
+        sb.append(", apellidoUsuario='").append(apellidoUsuario).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", telefono='").append(telefono).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", role='").append(role).append('\'');
+        sb.append('}');
+
+        return sb.toString();
     }
 }

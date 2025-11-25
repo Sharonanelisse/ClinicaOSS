@@ -81,7 +81,7 @@ public class RegistroClinico {
                 ", ruta='" + ruta + '\'' +
                 ", fechaCarga=" + fechaCarga +
                 ", paciente=" + (paciente != null ? paciente.getNombreCompleto() : "null") +
-                ", odontologo=" + (odontologo != null ? odontologo.getNombreCompleto() : "null") +
+                ", odontologo=" + (odontologo != null ? odontologo.getApellidoUsuario() : "null") +
                 '}';
     }
 }

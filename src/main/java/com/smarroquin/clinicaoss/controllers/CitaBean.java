@@ -36,8 +36,8 @@ public class CitaBean implements Serializable {
         pacientes = catalogService.pacientes();
         odontologos = catalogService.users().stream()
                 .filter(u -> u.getRole() != null
-                        && u.getRole().getNombre() != null
-                        && u.getRole().getNombre().equalsIgnoreCase("odontologo"))
+                        && u.getRole().getNombrePaciente() != null
+                        && u.getRole().getNombrePaciente().equalsIgnoreCase("odontologo"))
                 .toList();
         tratamientos = catalogService.tratamientos();
     }

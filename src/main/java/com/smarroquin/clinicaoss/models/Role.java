@@ -30,4 +30,14 @@ public class Role {
     public void setRole_name(role_name role_name) {
         this.role_name = role_name;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Paciente{");
+        sb.append("id=").append(id);
+        sb.append(", role_name='").append(role_name).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
 }

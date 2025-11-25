@@ -34,7 +34,7 @@
                         <p:selectOneMenu id="odontologo" value="#{registroClinicoController.odontologoId}" required="true">
                             <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
                             <f:selectItems value="#{registroClinicoController.odontologos}"
-                                           var="u" itemLabel="#{u.nombreCompleto}" itemValue="#{u.id}" />
+                                           var="u" itemLabel="#{u.apellidoUsuario}" itemValue="#{u.id}" />
                         </p:selectOneMenu>
                     </div>
 
@@ -82,7 +82,7 @@
                 </p:column>
 
                 <p:column headerText="Odontólogo">
-                    #{r.odontologo.nombreCompleto}
+                    #{r.odontologo.apellidoUsuario}
                 </p:column>
 
                 <p:column headerText="Tipo de Registro">

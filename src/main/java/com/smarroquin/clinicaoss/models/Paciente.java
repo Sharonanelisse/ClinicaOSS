@@ -13,10 +13,15 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre completo es obligatorio")
+    @NotBlank(message = "Agregar el nombre del paciente")
     @Size(min = 3, max = 60)
     @Column(length = 60, nullable = false)
-    private String nombreCompleto;
+    private String nombrePaciente;
+
+    @NotBlank(message = "Agregar el nombre del paciente")
+    @Size(min = 3, max = 60)
+    @Column(length = 60, nullable = false)
+    private String apellidoPaciente;
 
     @NotBlank(message = "El DPI es obligatorio")
     @Column(length = 20, nullable = false, unique = true)
@@ -79,12 +84,20 @@ public class Paciente {
         this.id = id;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
+    public String getNombrePaciente() {
+        return nombrePaciente;
     }
 
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+    }
+
+    public String getApellidoPaciente() {
+        return apellidoPaciente;
+    }
+
+    public void setApellidoPaciente(String apellidoPaciente) {
+        this.apellidoPaciente = apellidoPaciente;
     }
 
     public String getDpi() {
@@ -163,7 +176,8 @@ public class Paciente {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Paciente{");
         sb.append("id=").append(id);
-        sb.append(", nombreCompleto='").append(nombreCompleto).append('\'');
+        sb.append(", nombrePaciente='").append(nombrePaciente).append('\'');
+        sb.append(", apellidoPaciente='").append(apellidoPaciente).append('\'');
         sb.append(", dpi='").append(dpi).append('\'');
         sb.append(", fechaNacimiento='").append(fechaNacimiento).append('\'');
         sb.append(", edad='").append(edad).append('\'');

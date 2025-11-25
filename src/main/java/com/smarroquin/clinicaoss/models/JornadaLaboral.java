@@ -25,4 +25,26 @@ public class JornadaLaboral {
     @Column
     @NotBlank(message = "Poner hora de salida")
     private LocalTime horaFin;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_user_jornadalaboral")
+    )
+    private User user;
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Paciente{");
+        sb.append("id=").append(id);
+        sb.append(", diaSemana='").append(diaSemana).append('\'');
+        sb.append(", horaInicio='").append(horaInicio).append('\'');
+        sb.append(", horaFin='").append(horaFin).append('\'');
+        sb.append(", user='").append(user).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
+
 }
