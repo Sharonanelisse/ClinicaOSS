@@ -1,5 +1,6 @@
 package com.smarroquin.clinicaoss.controllers;
 
+import com.smarroquin.clinicaoss.enums.role_name;
 import com.smarroquin.clinicaoss.models.User;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.inject.Inject;
@@ -27,6 +28,10 @@ public class UserBean extends Bean<User> implements Serializable {
     @Override
     protected List<User> findAll() {
         return service.users();
+    }
+
+    public role_name[] getRoles() {
+        return role_name.values();
     }
 
     @Override

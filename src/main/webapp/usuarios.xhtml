@@ -29,9 +29,10 @@
                 <p:password id="password" value="#{userBean.selected.password}" feedback="true"/>
 
                 <h:outputLabel value="Rol:" for="role"/>
-                <p:selectOneMenu id="role" value="#{userBean.selected.role}">
-                    <f:selectItems value="#{userBean.roles}" var="r" itemLabel="#{r.name}" itemValue="#{r}"/>
+                <p:selectOneMenu id="role" value="#{userBean.selected.role_name}">
+                    <f:selectItems value="#{userBean.roles}" var="r" itemLabel="#{r}" itemValue="#{r}"/>
                 </p:selectOneMenu>
+
 
                 <h:outputLabel value="Estado:" for="status"/>
                 <p:selectBooleanCheckbox id="status" value="#{userBean.selected.status}" />
