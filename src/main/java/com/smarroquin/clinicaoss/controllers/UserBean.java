@@ -1,7 +1,6 @@
 package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.User;
-import com.smarroquin.clinicaoss.models.Role;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

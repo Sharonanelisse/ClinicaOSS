@@ -1,6 +1,5 @@
 package com.smarroquin.clinicaoss.converters;
 
-import com.smarroquin.clinicaoss.models.Role;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;

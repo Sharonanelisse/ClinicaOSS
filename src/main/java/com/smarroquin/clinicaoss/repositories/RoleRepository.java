@@ -1,6 +1,5 @@
 package com.smarroquin.clinicaoss.repositories;
 
-import com.smarroquin.clinicaoss.models.Role;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped

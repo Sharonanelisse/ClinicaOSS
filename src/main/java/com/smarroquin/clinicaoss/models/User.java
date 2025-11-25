@@ -1,5 +1,6 @@
 package com.smarroquin.clinicaoss.models;
 
+import com.smarroquin.clinicaoss.enums.role_name;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -19,6 +20,10 @@ public class User {
     @Size(min = 3, max = 60, message = "El nombre completo debe tener entre 3 y 60 caracteres.")
     @Column(length = 60, nullable = false)
     private String apellidoUsuario;
+
+    @NotNull(message = "Seleccionar el role")
+    @Enumerated(EnumType.STRING)
+    private role_name role_name;
 
     @NotBlank(message = "El correo electrónico es obligatorio.")
     @Email(message = "El correo electrónico no tiene un formato válido.")
@@ -43,10 +48,6 @@ public class User {
     @Column(nullable = false)
     private Boolean status = true;
 
-    @NotNull(message = "Agregar un role al usuario")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Role role;
-
     @PrePersist
     protected void prePersist() {
         if (status == null) status = true;
@@ -57,7 +58,6 @@ public class User {
     }
 
     // Getters y Setters
-
 
     public Long getId() {
         return id;
@@ -77,6 +77,14 @@ public class User {
 
     public String getApellidoUsuario() {
         return apellidoUsuario;
+    }
+
+    public role_name getRole_name() {
+        return role_name;
+    }
+
+    public void setRole_name(role_name role_name) {
+        this.role_name = role_name;
     }
 
     public void setApellidoUsuario(String apellidoUsuario) {
@@ -115,25 +123,17 @@ public class User {
         this.status = status;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Paciente{");
         sb.append("id=").append(id);
         sb.append(", nombreUsuario='").append(nombreUsuario).append('\'');
         sb.append(", apellidoUsuario='").append(apellidoUsuario).append('\'');
+        sb.append(", role_name='").append(role_name).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", telefono='").append(telefono).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", status='").append(status).append('\'');
-        sb.append(", role='").append(role).append('\'');
         sb.append('}');
 
         return sb.toString();
