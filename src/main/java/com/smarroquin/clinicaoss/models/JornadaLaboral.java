@@ -73,7 +73,7 @@ public class JornadaLaboral {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Paciente{");
+        final StringBuffer sb = new StringBuffer("JornadaLaboral{");
         sb.append("id=").append(id);
         sb.append(", dia_semana='").append(dia_semana).append('\'');
         sb.append(", horaInicio='").append(horaInicio).append('\'');

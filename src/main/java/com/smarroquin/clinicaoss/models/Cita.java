@@ -54,7 +54,6 @@ public class Cita {
 
     // Getters y Setters
 
-
     public Long getId() {
         return id;
     }
@@ -121,7 +120,7 @@ public class Cita {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Paciente{");
+        final StringBuffer sb = new StringBuffer("Cita{");
         sb.append("id=").append(id);
         sb.append(", codigo='").append(codigo).append('\'');
         sb.append(", fechaApertura='").append(fechaApertura).append('\'');

@@ -25,14 +25,10 @@ public class PacienteBean extends Bean<Paciente> implements Serializable {
     }
 
     @Override
-    protected List<Paciente> findAll() {
-        return service.pacientes();
-    }
+    protected List<Paciente> findAll() {return service.pacientes();}
 
     @Override
-    protected void persist(Paciente entity) {
-        service.guardar(entity);
-    }
+    protected void persist(Paciente entity) {service.guardar(entity);}
 
     @Override
     protected void remove(Paciente entity) {
@@ -42,7 +38,8 @@ public class PacienteBean extends Bean<Paciente> implements Serializable {
     @Override
     protected Map<String, String> fieldLabels() {
         Map<String, String> labels = new HashMap<>();
-        labels.put("nombreCompleto", "Nombre completo");
+        labels.put("nombrePaciente", "Nombre del paciente");
+        labels.put("apellidoPaciente", "Apellido del paciente");
         labels.put("dpi", "Numero de DPI");
         labels.put("fechaNacimiento", "Fecha de nacimiento");
         labels.put("edad", "Edad del paciente");

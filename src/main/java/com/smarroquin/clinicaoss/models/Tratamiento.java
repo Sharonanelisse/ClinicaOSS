@@ -5,11 +5,10 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-public class Tratamiento implements Serializable {
+public class Tratamiento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,6 @@ public class Tratamiento implements Serializable {
     private Especialidad especialidad;
 
     // Getters y setters
-
 
     public Long getId() {
         return id;
@@ -86,7 +84,7 @@ public class Tratamiento implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Paciente{");
+        final StringBuffer sb = new StringBuffer("Tratamiento{");
         sb.append("id=").append(id);
         sb.append(", nombreTratamiento='").append(nombreTratamiento).append('\'');
         sb.append(", descripcion='").append(descripcion).append('\'');

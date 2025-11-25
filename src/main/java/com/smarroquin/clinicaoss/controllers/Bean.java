@@ -3,48 +3,12 @@ package com.smarroquin.clinicaoss.controllers;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
 
-/*
-* El Controller<T> sirve como base estandarizada para todos los controladores JSF de una aplicación.
-* Su propósito es reducir código repetido en las operaciones CRUD y centralizar:
-* La creación, edición, guardado y eliminación de entidades.
-* La validación automática con Jakarta Bean Validation (@NotNull, @Email, etc.).
-* El manejo de mensajes en la interfaz (errores y confirmaciones).
-* El control de diálogos modales (por ejemplo, en PrimeFaces).
-* Cada controlador específico (como PacienteController, DoctorController, etc.) hereda de esta clase y solo implementa la lógica propia de su entidad: cómo crear, listar, guardar y eliminar.
-@Named
-@ViewScoped
-public class PacienteController extends Controller<Paciente> {
-    @Inject
-    private PacienteService service;
-    @Override
-    protected Paciente createNew() {
-        return new Paciente();
-    }
-    @Override
-    protected List<Paciente> findAll() {
-        return service.listarPacientes();
-    }
-    @Override
-    protected void persist(Paciente entity) {
-        service.guardar(entity);
-    }
-    @Override
-    protected void remove(Paciente entity) {
-        service.eliminar(entity);
-    }
-}
-*
-*
-* */
-
-@ViewScoped
 public abstract class Bean<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -2,63 +2,90 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Cita;
 import com.smarroquin.clinicaoss.models.Paciente;
-import com.smarroquin.clinicaoss.models.Tratamiento;
 import com.smarroquin.clinicaoss.models.User;
-import com.smarroquin.clinicaoss.service.CitaService;
+import com.smarroquin.clinicaoss.models.Tratamiento;
+import com.smarroquin.clinicaoss.enums.estado_cita;
 import com.smarroquin.clinicaoss.service.CatalogService;
-import jakarta.annotation.PostConstruct;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.faces.view.ViewScoped;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Named("citaController")
+@Named
 @ViewScoped
-public class CitaBean implements Serializable {
-
-    private Cita cita = new Cita();
-    private List<Cita> citas;
-    private List<Paciente> pacientes;
-    private List<User> odontologos;
-    private List<Tratamiento> tratamientos;
+public class CitaBean extends Bean<Cita> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Inject
-    private CitaService citaService;
+    private transient CatalogService service;
 
-    @Inject
-    private CatalogService catalogService;
-
-    @PostConstruct
-    public void init() {
-        citas = citaService.findAll();
-        pacientes = catalogService.pacientes();
-        odontologos = catalogService.users().stream()
-                .filter(u -> u.getRole() != null
-                        && u.getRole().getNombrePaciente() != null
-                        && u.getRole().getNombrePaciente().equalsIgnoreCase("odontologo"))
-                .toList();
-        tratamientos = catalogService.tratamientos();
+    @Override
+    protected Cita createNew() {
+        return new Cita();
     }
 
-    public void guardar() {
-        citaService.guardar(cita);
-        citas = citaService.findAll();
-        cita = new Cita();
+    @Override
+    protected List<Cita> findAll() {
+        return service.citas();
     }
 
-    public void eliminar(Cita c) {
-        citaService.eliminar(c);
-        citas.remove(c);
+    @Override
+    protected void persist(Cita entity) {
+        service.guardar(entity);
     }
 
-    // Getters y setters
-    public Cita getCita() { return cita; }
-    public void setCita(Cita cita) { this.cita = cita; }
+    @Override
+    protected void remove(Cita entity) {
+        service.eliminar(entity);
+    }
 
-    public List<Cita> getCitas() { return citas; }
-    public List<Paciente> getPacientes() { return pacientes; }
-    public List<User> getOdontologos() { return odontologos; }
-    public List<Tratamiento> getTratamientos() { return tratamientos; }
+    @Override
+    protected Map<String, String> fieldLabels() {
+        Map<String, String> labels = new HashMap<>();
+        labels.put("codigo", "Código de cita");
+        labels.put("fechaApertura", "Fecha de apertura");
+        labels.put("estado_cita", "Estado de la cita");
+        labels.put("observacionesCita", "Observaciones");
+        labels.put("paciente", "Paciente");
+        labels.put("user", "Usuario");
+        labels.put("tratamiento", "Tratamiento");
+        return labels;
+    }
+
+    @Override
+    protected String getFacesClientId() {
+        return "frmCitas:msgCitas";
+    }
+
+    @Override
+    protected String successSaveMessage() {
+        return "Cita guardada";
+    }
+
+    @Override
+    protected String successDeleteMessage() {
+        return "Cita eliminada";
+    }
+
+    // Métodos auxiliares para combos en la vista
+    public List<Paciente> getPacientes() {
+        return service.pacientes();
+    }
+
+    public List<User> getUsuarios() {
+        return service.users();
+    }
+
+    public List<Tratamiento> getTratamientos() {
+        return service.tratamientos();
+    }
+
+    public estado_cita[] getEstadosCita() {
+        return estado_cita.values();
+    }
 }
+

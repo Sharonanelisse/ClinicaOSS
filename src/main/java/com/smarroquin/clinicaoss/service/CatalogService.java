@@ -21,10 +21,16 @@ public class CatalogService implements Serializable {
     private UserRepostory userRepository;
 
     @Inject
-    private RoleRepository roleRepository;
+    private PacienteRepository pacienteRepository;
 
     @Inject
-    private PacienteRepository pacienteRepository;
+    private JornadaLaboralRepository jornadalaboralRepository;
+
+    @Inject
+    private CitaRepository citaRepository;
+
+    @Inject
+    private TratamientoRepository tratamientoRepository;
 
     @Inject
     FileRepository fileRepository;
@@ -35,11 +41,6 @@ public class CatalogService implements Serializable {
     public User guardar(User user) { return userRepository.guardar(user); }
     public void eliminar(User user) { userRepository.eliminar(user); }
     public User findUserById(Long id) { return userRepository.find(id); }
-
-    //Role
-    public List<Role> roles() { return roleRepository.findAll(); }
-    public Role guardar(Role role) { return roleRepository.guardar(role); }
-    public void eliminar(Role role) { roleRepository.eliminar(role); }
 
     //Files
     public File saveFile(File f) { return fileRepository.guardar(f); }
@@ -53,9 +54,21 @@ public class CatalogService implements Serializable {
     public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
 
     //JornadaLaboral
-    public List<JornadaLaboral> pacientes() { return pacienteRepository.findAll(); }
-    public Paciente guardar(Paciente paciente) { return pacienteRepository.guardar(paciente); }
-    public void eliminar(Paciente paciente) { pacienteRepository.eliminar(paciente); }
-    public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
+    public List<JornadaLaboral> jornadasPorUsuario(User userContext) { return jornadalaboralRepository.findAll(); }
+    public JornadaLaboral guardar(JornadaLaboral jornadaLaboral) { return jornadalaboralRepository.guardar(jornadaLaboral); }
+    public void eliminar(JornadaLaboral jornadaLaboral) { jornadalaboralRepository.eliminar(jornadaLaboral); }
+
+    //Citas
+    public List<Cita> citas() { return citaRepository.findAll(); }
+    public Cita guardar(Cita cita) { return citaRepository.guardar(cita); }
+    public void eliminar(Cita cita) { citaRepository.eliminar(cita); }
+    public Cita findCitaById(Long id) { return citaRepository.find(id); }
+
+
+    //Tratamientos
+    public List<Tratamiento> tratamientos() { return tratamientoRepository.findAll(); }
+    public Tratamiento guardar(Tratamiento tratamiento) { return tratamientoRepository.guardar(tratamiento); }
+    public void eliminar(Tratamiento tratamiento) { tratamientoRepository.eliminar(tratamiento); }
+    public Tratamiento findTratamientoById(Long id) { return tratamientoRepository.find(id); }
 
 }
