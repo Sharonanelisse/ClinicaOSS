@@ -33,6 +33,21 @@ public class CatalogService implements Serializable {
     private TratamientoRepository tratamientoRepository;
 
     @Inject
+    private EspecialidadesRepository especialidadesRepository;
+
+    @Inject
+    private RegistroClinicoRepository repositorioClinicoRepository;
+
+    @Inject
+    private FacturacionRepository facturacionRepository;
+
+    @Inject
+    private DescuentoRepository descuentoRepository;
+
+    @Inject
+    private SeguroRepository seguroRepository;
+
+    @Inject
     FileRepository fileRepository;
 
 
@@ -70,5 +85,37 @@ public class CatalogService implements Serializable {
     public Tratamiento guardar(Tratamiento tratamiento) { return tratamientoRepository.guardar(tratamiento); }
     public void eliminar(Tratamiento tratamiento) { tratamientoRepository.eliminar(tratamiento); }
     public Tratamiento findTratamientoById(Long id) { return tratamientoRepository.find(id); }
+
+
+    //Especialidad
+    public List<Especialidad> especialidades() { return especialidadesRepository.findAll(); }
+    public Especialidad guardar(Especialidad especialidad) { return especialidadesRepository.guardar(especialidad); }
+    public void eliminar(Especialidad especialidad) { especialidadesRepository.eliminar(especialidad); }
+    public Especialidad findEspecialidadById(Long id) { return especialidadesRepository.find(id); }
+
+
+    //Registro Clinico
+    public List<RegistroClinico> registrosClinicos() { return repositorioClinicoRepository.findAll(); }
+    public RegistroClinico guardar(RegistroClinico registroClinico) { return repositorioClinicoRepository.guardar(registroClinico); }
+    public void eliminar(RegistroClinico registroClinico) { repositorioClinicoRepository.eliminar(registroClinico); }
+    public RegistroClinico findRegistroClinicoById(Long id) { return repositorioClinicoRepository.find(id); }
+
+    //Facturacion
+    public List<Facturacion> facturaciones() { return facturacionRepository.findAll(); }
+    public Facturacion guardar(Facturacion facturacion) { return facturacionRepository.guardar(facturacion); }
+    public void eliminar(Facturacion facturacion) { facturacionRepository.eliminar(facturacion); }
+    public Facturacion findFacturacionById(Long id) { return facturacionRepository.find(id); }
+
+    //Descuento
+    public List<Descuento> descuentos() { return descuentoRepository.findAll(); }
+    public Descuento guardar(Descuento descuento) { return descuentoRepository.guardar(descuento); }
+    public void eliminar(Descuento descuento) { descuentoRepository.eliminar(descuento); }
+    public Descuento findSescuentoById(Long id) { return descuentoRepository.find(id); }
+
+    //Seguro
+    public List<Seguro> seguros() { return seguroRepository.findAll(); }
+    public Seguro guardar(Seguro seguro) { return seguroRepository.guardar(seguro); }
+    public void eliminar(Seguro seguro) { seguroRepository.eliminar(seguro); }
+    public Seguro findSeguroById(Long id) { return seguroRepository.find(id); }
 
 }

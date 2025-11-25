@@ -6,122 +6,111 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
+        <h1>Gestión de Registros Clínicos</h1>
 
-        <h:form enctype="multipart/form-data">
+        <h:form id="frmRegistros">
+            <p:growl id="msgRegistro" showDetail="true" life="4000" />
 
-            <!-- Card principal -->
-            <p:card styleClass="registro-card">
+            <!-- Formulario de registro clínico -->
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputLabel value="Tipo de archivo:" for="tipoArchivo"/>
+                <p:selectOneMenu id="tipoArchivo" value="#{registroClinicoBean.selected.tipo_archivo}">
+                    <f:selectItems value="#{registroClinicoBean.tiposArchivo}" var="ta" itemLabel="#{ta}" itemValue="#{ta}"/>
+                </p:selectOneMenu>
 
-                <f:facet name="title">
-                    Registro Clínico
-                </f:facet>
+                <h:outputLabel value="Tipo de contenido (MIME):" for="tipoContenido"/>
+                <p:inputText id="tipoContenido" value="#{registroClinicoBean.selected.tipo_contenido}" />
 
-                <div class="p-fluid p-formgrid p-grid">
+                <h:outputLabel value="URL del archivo:" for="blobUrl"/>
+                <p:inputText id="blobUrl" value="#{registroClinicoBean.selected.blob_url}" required="true"/>
 
-                    <!-- Paciente -->
-                    <div class="p-field p-col-12 p-md-6">
-                        <p:outputLabel for="paciente" value="Paciente:*" />
-                        <p:selectOneMenu id="paciente" value="#{registroClinicoController.pacienteId}" required="true">
-                            <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
-                            <f:selectItems value="#{registroClinicoController.pacientes}"
-                                           var="p" itemLabel="#{p.nombreCompleto}" itemValue="#{p.id}" />
-                        </p:selectOneMenu>
-                    </div>
+                <h:outputLabel value="Nombre del archivo:" for="blobName"/>
+                <p:inputText id="blobName" value="#{registroClinicoBean.selected.blobName}" required="true"/>
 
-                    <!-- Odontólogo -->
-                    <div class="p-field p-col-12 p-md-6">
-                        <p:outputLabel for="odontologo" value="Odontólogo:*" />
-                        <p:selectOneMenu id="odontologo" value="#{registroClinicoController.odontologoId}" required="true">
-                            <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
-                            <f:selectItems value="#{registroClinicoController.odontologos}"
-                                           var="u" itemLabel="#{u.apellidoUsuario}" itemValue="#{u.id}" />
-                        </p:selectOneMenu>
-                    </div>
+                <h:outputLabel value="Fecha de carga:" for="fechaCarga"/>
+                <p:datePicker id="fechaCarga" value="#{registroClinicoBean.selected.fechaCarga}" showTime="true" pattern="yyyy-MM-dd HH:mm"/>
 
-                    <!-- Tipo de registro -->
-                    <div class="p-field p-col-12 p-md-6">
-                        <p:outputLabel for="tipo" value="Tipo de Registro:*" />
-                        <p:inputText id="tipo" value="#{registroClinicoController.registro.tipo}" required="true"
-                                     placeholder="Ej. Diagnóstico, Control, Radiografía..." />
-                    </div>
+                <h:outputLabel value="Paciente:" for="paciente"/>
+                <p:selectOneMenu id="paciente" value="#{registroClinicoBean.selected.paciente}">
+                    <f:selectItems value="#{registroClinicoBean.pacientes}" var="p" itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
+                </p:selectOneMenu>
 
-                    <!-- Archivo clínico -->
-                    <div class="p-field p-col-12 p-md-6">
-                        <p:outputLabel for="archivo" value="Archivo Clínico:" />
-                        <p:fileUpload id="archivo"
-                                      mode="simple"
-                                      skinSimple="true"
-                                      label="Seleccionar archivo"
-                                      allowTypes="/(\.|\/)(pdf|jpg|jpeg|png)$/"
-                                      auto="false" />
-                    </div>
+                <h:outputLabel value="Usuario (Odontólogo):" for="usuario"/>
+                <p:selectOneMenu id="usuario" value="#{registroClinicoBean.selected.user}">
+                    <f:selectItems value="#{registroClinicoBean.usuarios}" var="u" itemLabel="#{u.nombreUsuario}" itemValue="#{u}"/>
+                </p:selectOneMenu>
 
-                </div>
+                <h:outputLabel value="Cita asociada:" for="cita"/>
+                <p:selectOneMenu id="cita" value="#{registroClinicoBean.selected.cita}">
+                    <f:selectItems value="#{registroClinicoBean.citas}" var="c" itemLabel="#{c.codigo}" itemValue="#{c}"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
 
-                <div class="p-mt-3">
-                    <p:commandButton value="Guardar"
-                                     icon="pi pi-save"
-                                     action="#{registroClinicoController.guardarRegistro}"
-                                     update="@form registrosTabla"
-                                     styleClass="p-button-rounded p-button-primary" />
-                </div>
+            <!-- Botones -->
+            <p:commandButton value="Guardar"
+                             action="#{registroClinicoBean.save}"
+                             update="tblRegistros,frmRegistros,msgRegistro"
+                             icon="pi pi-check" />
 
-            </p:card>
+            <p:commandButton value="Cancelar"
+                             action="#{registroClinicoBean.newEntity}"
+                             update="frmRegistros"
+                             icon="pi pi-times"
+                             styleClass="p-button-secondary" />
 
-            <!-- Tabla de registros -->
-            <p:dataTable id="registrosTabla"
-                         value="#{registroClinicoController.registros}"
+            <!-- Tabla de registros clínicos -->
+            <p:dataTable id="tblRegistros"
+                         value="#{registroClinicoBean.list}"
                          var="r"
                          paginator="true"
-                         rows="8"
-                         emptyMessage="No se encontraron registros clínicos"
-                         styleClass="p-mt-4 registro-table">
+                         rows="10"
+                         style="margin-top:20px;"
+                         rowKey="#{r.id}"
+                         selectionMode="single"
+                         selection="#{registroClinicoBean.selected}">
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{r.id}" />
+                </p:column>
+
+                <p:column headerText="Número registro">
+                    <h:outputText value="#{r.numeroRegistro}" />
+                </p:column>
+
+                <p:column headerText="Tipo archivo">
+                    <h:outputText value="#{r.tipo_archivo}" />
+                </p:column>
+
+                <p:column headerText="Nombre archivo">
+                    <h:outputText value="#{r.blobName}" />
+                </p:column>
 
                 <p:column headerText="Paciente">
-                    #{r.paciente.nombreCompleto}
+                    <h:outputText value="#{r.paciente.nombrePaciente}" />
                 </p:column>
 
-                <p:column headerText="Odontólogo">
-                    #{r.odontologo.apellidoUsuario}
+                <p:column headerText="Usuario">
+                    <h:outputText value="#{r.user.nombreUsuario}" />
                 </p:column>
 
-                <p:column headerText="Tipo de Registro">
-                    #{r.tipo}
+                <p:column headerText="Cita">
+                    <h:outputText value="#{r.cita.codigo}" />
                 </p:column>
 
-                <p:column headerText="Fecha de Carga">
-                    <h:outputText value="#{r.fechaCarga}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                    </h:outputText>
-                </p:column>
+                <p:column headerText="Acciones">
+                    <p:commandButton value="Editar"
+                                     action="#{registroClinicoBean.edit(r)}"
+                                     update="frmRegistros"
+                                     icon="pi pi-pencil" />
 
-                <p:column headerText="Acciones" style="text-align:center;">
-                    <p:commandButton icon="pi pi-trash" title="Eliminar"
-                                     action="#{registroClinicoController.eliminarRegistro(r)}"
-                                     update="@form registrosTabla"
-                                     styleClass="p-button-danger p-button-rounded p-button-sm" />
+                    <p:commandButton value="Eliminar"
+                                     action="#{registroClinicoBean.delete(r)}"
+                                     update="tblRegistros"
+                                     icon="pi pi-trash"
+                                     styleClass="ui-button-danger" />
                 </p:column>
             </p:dataTable>
-
         </h:form>
-
-        <h:outputStylesheet>
-            .registro-card {
-                background: #ffffff;
-                padding: 2rem;
-                border-radius: 12px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            }
-            .registro-table {
-                border-radius: 10px;
-                box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-            }
-            .p-card .p-card-title {
-                font-weight: 600;
-                color: #1e88e5;
-                text-align: center;
-            }
-        </h:outputStylesheet>
-
     </ui:define>
 </ui:composition>
+
