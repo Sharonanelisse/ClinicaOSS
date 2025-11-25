@@ -1,0 +1,119 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="content">
+        <h1>Gestión de Pacientes</h1>
+
+        <h:form id="frmPacientes">
+            <p:growl id="msgPacientes" showDetail="true" life="4000" />
+
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputLabel value="Nombre:" for="nombrePaciente"/>
+                <p:inputText id="nombrePaciente" value="#{pacienteBean.selected.nombrePaciente}" required="true"/>
+
+                <h:outputLabel value="Apellido:" for="apellidoPaciente"/>
+                <p:inputText id="apellidoPaciente" value="#{pacienteBean.selected.apellidoPaciente}" required="true"/>
+
+                <h:outputLabel value="DPI:" for="dpi"/>
+                <p:inputText id="dpi" value="#{pacienteBean.selected.dpi}" required="true"/>
+
+                <h:outputLabel value="Fecha de nacimiento:" for="fechaNacimiento"/>
+                <p:datePicker id="fechaNacimiento" value="#{pacienteBean.selected.fechaNacimiento}" pattern="dd/MM/yyyy"/>
+
+                <h:outputLabel value="Edad:" for="edad"/>
+                <p:inputText id="edad" value="#{pacienteBean.selected.edad}" />
+
+                <h:outputLabel value="Teléfono:" for="telefono"/>
+                <p:inputText id="telefono" value="#{pacienteBean.selected.telefono}" />
+
+                <h:outputLabel value="Email:" for="email"/>
+                <p:inputText id="email" value="#{pacienteBean.selected.email}" />
+
+                <h:outputLabel value="Alergias:" for="alergias"/>
+                <p:inputTextarea id="alergias" value="#{pacienteBean.selected.alergias}" rows="2"/>
+
+                <h:outputLabel value="Condiciones médicas:" for="condicionesMedicas"/>
+                <p:inputTextarea id="condicionesMedicas" value="#{pacienteBean.selected.condicionesMedicas}" rows="2"/>
+
+                <h:outputLabel value="Observaciones:" for="observaciones"/>
+                <p:inputTextarea id="observaciones" value="#{pacienteBean.selected.observaciones}" rows="2"/>
+
+                <h:outputLabel value="Fecha de registro:" for="fechaRegistro"/>
+                <p:datePicker id="fechaRegistro" value="#{pacienteBean.selected.fechaRegistro}" pattern="dd/MM/yyyy"/>
+            </h:panelGrid>
+
+            <p:commandButton value="Guardar"
+                             action="#{pacienteBean.save}"
+                             update="tblPacientes,frmPacientes,msgPacientes"
+                             icon="pi pi-check" />
+
+            <p:commandButton value="Cancelar"
+                             action="#{pacienteBean.newEntity}"
+                             update="frmPacientes"
+                             icon="pi pi-times"
+                             styleClass="p-button-secondary" />
+
+            <p:dataTable id="tblPacientes"
+                         value="#{pacienteBean.list}"
+                         var="p"
+                         paginator="true"
+                         rows="10"
+                         style="margin-top:20px;"
+                         rowKey="#{p.id}"
+                         selectionMode="single"
+                         selection="#{pacienteBean.selected}">
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{p.id}" />
+                </p:column>
+
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{p.nombrePaciente}" />
+                </p:column>
+
+                <p:column headerText="Apellido">
+                    <h:outputText value="#{p.apellidoPaciente}" />
+                </p:column>
+
+                <p:column headerText="DPI">
+                    <h:outputText value="#{p.dpi}" />
+                </p:column>
+
+                <p:column headerText="Fecha nacimiento">
+                    <h:outputText value="#{p.fechaNacimiento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Edad">
+                    <h:outputText value="#{p.edad}" />
+                </p:column>
+
+                <p:column headerText="Teléfono">
+                    <h:outputText value="#{p.telefono}" />
+                </p:column>
+
+                <p:column headerText="Email">
+                    <h:outputText value="#{p.email}" />
+                </p:column>
+
+                <p:column headerText="Acciones">
+                    <p:commandButton value="Editar"
+                                     action="#{pacienteBean.edit(p)}"
+                                     update="frmPacientes"
+                                     icon="pi pi-pencil" />
+
+                    <p:commandButton value="Eliminar"
+                                     action="#{pacienteBean.delete(p)}"
+                                     update="tblPacientes"
+                                     icon="pi pi-trash"
+                                     styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

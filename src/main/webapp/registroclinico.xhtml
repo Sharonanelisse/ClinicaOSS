@@ -1,0 +1,116 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="content">
+        <h1>Gestión de Registros Clínicos</h1>
+
+        <h:form id="frmRegistros">
+            <p:growl id="msgRegistro" showDetail="true" life="4000" />
+
+            <!-- Formulario de registro clínico -->
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputLabel value="Tipo de archivo:" for="tipoArchivo"/>
+                <p:selectOneMenu id="tipoArchivo" value="#{registroClinicoBean.selected.tipo_archivo}">
+                    <f:selectItems value="#{registroClinicoBean.tiposArchivo}" var="ta" itemLabel="#{ta}" itemValue="#{ta}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel value="Tipo de contenido (MIME):" for="tipoContenido"/>
+                <p:inputText id="tipoContenido" value="#{registroClinicoBean.selected.tipo_contenido}" />
+
+                <h:outputLabel value="URL del archivo:" for="blobUrl"/>
+                <p:inputText id="blobUrl" value="#{registroClinicoBean.selected.blob_url}" required="true"/>
+
+                <h:outputLabel value="Nombre del archivo:" for="blobName"/>
+                <p:inputText id="blobName" value="#{registroClinicoBean.selected.blobName}" required="true"/>
+
+                <h:outputLabel value="Fecha de carga:" for="fechaCarga"/>
+                <p:datePicker id="fechaCarga" value="#{registroClinicoBean.selected.fechaCarga}" showTime="true" pattern="yyyy-MM-dd HH:mm"/>
+
+                <h:outputLabel value="Paciente:" for="paciente"/>
+                <p:selectOneMenu id="paciente" value="#{registroClinicoBean.selected.paciente}">
+                    <f:selectItems value="#{registroClinicoBean.pacientes}" var="p" itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel value="Usuario (Odontólogo):" for="usuario"/>
+                <p:selectOneMenu id="usuario" value="#{registroClinicoBean.selected.user}">
+                    <f:selectItems value="#{registroClinicoBean.usuarios}" var="u" itemLabel="#{u.nombreUsuario}" itemValue="#{u}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel value="Cita asociada:" for="cita"/>
+                <p:selectOneMenu id="cita" value="#{registroClinicoBean.selected.cita}">
+                    <f:selectItems value="#{registroClinicoBean.citas}" var="c" itemLabel="#{c.codigo}" itemValue="#{c}"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <!-- Botones -->
+            <p:commandButton value="Guardar"
+                             action="#{registroClinicoBean.save}"
+                             update="tblRegistros,frmRegistros,msgRegistro"
+                             icon="pi pi-check" />
+
+            <p:commandButton value="Cancelar"
+                             action="#{registroClinicoBean.newEntity}"
+                             update="frmRegistros"
+                             icon="pi pi-times"
+                             styleClass="p-button-secondary" />
+
+            <!-- Tabla de registros clínicos -->
+            <p:dataTable id="tblRegistros"
+                         value="#{registroClinicoBean.list}"
+                         var="r"
+                         paginator="true"
+                         rows="10"
+                         style="margin-top:20px;"
+                         rowKey="#{r.id}"
+                         selectionMode="single"
+                         selection="#{registroClinicoBean.selected}">
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{r.id}" />
+                </p:column>
+
+                <p:column headerText="Número registro">
+                    <h:outputText value="#{r.numeroRegistro}" />
+                </p:column>
+
+                <p:column headerText="Tipo archivo">
+                    <h:outputText value="#{r.tipo_archivo}" />
+                </p:column>
+
+                <p:column headerText="Nombre archivo">
+                    <h:outputText value="#{r.blobName}" />
+                </p:column>
+
+                <p:column headerText="Paciente">
+                    <h:outputText value="#{r.paciente.nombrePaciente}" />
+                </p:column>
+
+                <p:column headerText="Usuario">
+                    <h:outputText value="#{r.user.nombreUsuario}" />
+                </p:column>
+
+                <p:column headerText="Cita">
+                    <h:outputText value="#{r.cita.codigo}" />
+                </p:column>
+
+                <p:column headerText="Acciones">
+                    <p:commandButton value="Editar"
+                                     action="#{registroClinicoBean.edit(r)}"
+                                     update="frmRegistros"
+                                     icon="pi pi-pencil" />
+
+                    <p:commandButton value="Eliminar"
+                                     action="#{registroClinicoBean.delete(r)}"
+                                     update="tblRegistros"
+                                     icon="pi pi-trash"
+                                     styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,193 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="content">
+        <h2>Calendario de Citas</h2>
+
+        <h:outputStylesheet>
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-column-gap: 1.25rem;
+                grid-row-gap: .75rem;
+            }
+            .form-field {
+                display: flex;
+                flex-direction: column;
+            }
+            .form-field label {
+                font-weight: 600;
+                color: #495057;
+                margin: 0 0 .25rem;
+            }
+            .form-footer {
+                display: flex;
+                justify-content: flex-end;
+                gap: .5rem;
+                margin-top: .75rem;
+            }
+            @media (max-width: 992px) {
+                .form-grid { grid-template-columns: 1fr; }
+            }
+            .toolbar {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 1rem;
+            }
+        </h:outputStylesheet>
+
+        <h:form id="frmCitas">
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <p:commandButton value="Nueva cita" icon="pi pi-plus" styleClass="mb-3"
+                                 actionListener="#{citaBean.newEntity}"
+                                 process="@this"
+                                 update=":frmCitas:dlgCita"
+                                 resetValues="true"/>
+            </div>
+
+            <!-- Calendario -->
+            <p:schedule id="cal" value="#{citaBean.schedule}" widgetVar="sch"
+                        locale="es" timeZone="GMT-6" allDaySlot="false"
+                        view="dayGridMonth" style="height:600px">
+                <p:ajax event="eventSelect" listener="#{citaBean.onEventSelect}"
+                        update=":frmCitas:dlgDetail"/>
+            </p:schedule>
+
+            <!-- Diálogo de detalle -->
+            <p:dialog id="dlgDetail" widgetVar="dlgDetail" header="Detalle de la cita"
+                      visible="#{citaBean.detailVisible}" modal="true" appendTo="@form"
+                      resizable="false" draggable="false" width="720">
+                <h:panelGrid columns="2" columnClasses="w-12rem,w-auto" styleClass="p-fluid">
+
+                    <h:outputText value="Código:" />
+                    <h:outputText value="#{citaBean.selected.codigo}" />
+
+                    <h:outputText value="Fecha apertura:" />
+                    <h:outputText value="#{citaBean.selected.fechaApertura}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                    </h:outputText>
+
+                    <h:outputText value="Paciente:" />
+                    <h:outputText value="#{citaBean.selected.paciente.nombrePaciente}" />
+
+                    <h:outputText value="Usuario:" />
+                    <h:outputText value="#{citaBean.selected.user.nombreUsuario}" />
+
+                    <h:outputText value="Tratamiento:" />
+                    <h:outputText value="#{citaBean.selected.tratamiento.nombre}" />
+
+                    <h:outputText value="Estado:" />
+                    <h:outputText value="#{citaBean.selected.estado_cita}" />
+
+                    <h:outputText value="Observaciones:" />
+                    <h:outputText value="#{citaBean.selected.observacionesCita}" />
+                </h:panelGrid>
+
+                <p:commandButton icon="pi pi-pencil"
+                                 actionListener="#{citaBean.edit(citaBean.selected)}"
+                                 process="@this"
+                                 update=":frmCitas:dlgCita"
+                                 resetValues="true"
+                                 oncomplete="PF('dlgDetail').hide(); PF('dlgCita').show();"/>
+
+                <p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+                                 value="Eliminar"
+                                 process="@this"
+                                 update=":frmCitas:cal :global:msgs"
+                                 actionListener="#{citaBean.delete(citaBean.selected)}"/>
+            </p:dialog>
+
+            <!-- Confirmación eliminación -->
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDlg"
+                             header="Confirmación" message="¿Está seguro de eliminar esta cita?" icon="pi pi-exclamation-triangle">
+                <p:commandButton value="Sí" styleClass="ui-confirmdialog-yes ui-button-danger"
+                                 actionListener="#{citaBean.delete(citaBean.selected)}"
+                                 update=":frmCitas:cal :global:msgs"
+                                 oncomplete="PF('confirmDlg').hide(); PF('dlgDetail').hide();" />
+                <p:commandButton value="No" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </p:confirmDialog>
+
+            <!-- Diálogo edición/creación -->
+            <p:dialog id="dlgCita" header="Detalle de la cita" widgetVar="dlgCita"
+                      modal="true" appendTo="@form" baseZIndex="100000"
+                      resizable="false" draggable="false" width="920"
+                      visible="#{citaBean.dialogVisible}">
+
+                <p:messages id="msgCita" showSummary="true" showDetail="false"
+                            closable="true" layout="list" styleClass="fieldErrors"/>
+                <p:focus context="dlgCita" for=":frmCitas:dlgCita"/>
+
+                <!-- Formulario ordenado con CSS Grid -->
+                <div class="form-grid">
+
+                    <!-- Paciente -->
+                    <div class="form-field">
+                        <label for="pac">Paciente *</label>
+                        <p:selectOneMenu id="pac" value="#{citaBean.selected.paciente}" styleClass="w-full">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{citaBean.pacientes}" var="p"
+                                           itemValue="#{p}" itemLabel="#{p.nombrePaciente}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- Usuario -->
+                    <div class="form-field">
+                        <label for="usr">Usuario *</label>
+                        <p:selectOneMenu id="usr" value="#{citaBean.selected.user}" styleClass="w-full">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{citaBean.usuarios}" var="u"
+                                           itemValue="#{u}" itemLabel="#{u.nombreUsuario}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- Tratamiento -->
+                    <div class="form-field">
+                        <label for="trat">Tratamiento *</label>
+                        <p:selectOneMenu id="trat" value="#{citaBean.selected.tratamiento}" styleClass="w-full">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{citaBean.tratamientos}" var="t"
+                                           itemValue="#{t}" itemLabel="#{t.nombre}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="form-field">
+                        <label for="est">Estado *</label>
+                        <p:selectOneMenu id="est" value="#{citaBean.selected.estado_cita}" styleClass="w-full">
+                            <f:selectItems value="#{citaBean.estadosCita}" var="e"
+                                           itemValue="#{e}" itemLabel="#{e}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="form-field">
+                        <label for="obs">Observaciones</label>
+                        <p:inputTextarea id="obs" value="#{citaBean.selected.observacionesCita}" rows="3" styleClass="w-full"/>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <f:facet name="footer">
+                    <p:divider/>
+                    <div class="form-footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         action="#{citaBean.save}"
+                                         process=":frmCitas:dlgCita"
+                                         update=":global:msgs :frmCitas:cal :frmCitas:dlgCita :frmCitas:msgCita"
+                                         oncomplete="if (!args || !args.validationFailed) PF('dlgCita').hide();"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         onclick="PF('dlgCita').hide(); return false;"
+                                         styleClass="ui-button-secondary"/>
+                    </div>
+                </f:facet>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
