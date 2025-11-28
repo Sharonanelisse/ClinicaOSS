@@ -1,6 +1,7 @@
 package com.smarroquin.clinicaoss.controllers;
 
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.service.IUserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class LoginBean extends HttpServlet {
     private final IUserService userService = new IUserService() {
         @Override
-        public List<User> list(int page, int size) {
+        public List<Usuario> list(int page, int size) {
             return List.of();
         }
 
@@ -27,17 +28,17 @@ public class LoginBean extends HttpServlet {
         }
 
         @Override
-        public Optional<User> getById(int id) {
+        public Optional<Usuario> getById(int id) {
             return Optional.empty();
         }
 
         @Override
-        public Optional<User> getByUsername(String username) {
+        public Optional<Usuario> getByUsername(String username) {
             return Optional.empty();
         }
 
         @Override
-        public void save(User user) {
+        public void save(Usuario user) {
 
         }
 
@@ -69,7 +70,7 @@ public class LoginBean extends HttpServlet {
         String password = req.getParameter("password");
 
         if (userService.validateLogin(username, password)) {
-            Optional<User> u = userService.getByUsername(username);
+            Optional<Usuario> u = userService.getByUsername(username);
             HttpSession s = req.getSession(true);
             s.setAttribute("user", u.get());
             resp.sendRedirect(req.getContextPath() + "/home");
