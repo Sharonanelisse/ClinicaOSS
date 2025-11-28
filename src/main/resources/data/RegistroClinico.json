@@ -1,0 +1,57 @@
+[
+  {
+    "numeroRegistro": "REG-0001",
+    "tipo_archivo": "RECETA",
+    "tipo_contenido": "application/pdf",
+    "blob_url": "https://storage.sonrisasana.com/registros/registro_1.pdf",
+    "blobName": "registro_1.pdf",
+    "fechaCarga": "2025-11-20T09:15:00",
+    "paciente": { "id": 1 },
+    "user": { "id": 2 },
+    "cita": { "id": 1 }
+  },
+  {
+    "numeroRegistro": "REG-0002",
+    "tipo_archivo": "CONSTANCIA",
+    "tipo_contenido": "application/pdf",
+    "blob_url": "https://storage.sonrisasana.com/registros/registro_2.pdf",
+    "blobName": "registro_2.pdf",
+    "fechaCarga": "2025-11-21T10:45:00",
+    "paciente": { "id": 2 },
+    "user": { "id": 4 },
+    "cita": { "id": 2 }
+  },
+  {
+    "numeroRegistro": "REG-0003",
+    "tipo_archivo": "RADIOGRAFIA",
+    "tipo_contenido": "image/png",
+    "blob_url": "https://storage.sonrisasana.com/registros/registro_3.png",
+    "blobName": "registro_3.png",
+    "fechaCarga": "2025-11-22T14:30:00",
+    "paciente": { "id": 3 },
+    "user": { "id": 2 },
+    "cita": { "id": 3 }
+  },
+  {
+    "numeroRegistro": "REG-0004",
+    "tipo_archivo": "RECETA",
+    "tipo_contenido": "application/pdf",
+    "blob_url": "https://storage.sonrisasana.com/registros/registro_4.pdf",
+    "blobName": "registro_4.pdf",
+    "fechaCarga": "2025-11-23T09:00:00",
+    "paciente": { "id": 4 },
+    "user": { "id": 4 },
+    "cita": { "id": 4 }
+  },
+  {
+    "numeroRegistro": "REG-0005",
+    "tipo_archivo": "CONSTANCIA",
+    "tipo_contenido": "application/pdf",
+    "blob_url": "https://storage.sonrisasana.com/registros/registro_5.pdf",
+    "blobName": "registro_5.pdf",
+    "fechaCarga": "2025-11-24T16:30:00",
+    "paciente": { "id": 5 },
+    "user": { "id": 2 },
+    "cita": { "id": 5 }
+  }
+]

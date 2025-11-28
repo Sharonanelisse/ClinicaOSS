@@ -1,7 +1,7 @@
 package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.enums.role_name;
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -14,19 +14,19 @@ import java.util.Map;
 
 @Named
 @ViewScoped
-public class UserBean extends Bean<User> implements Serializable {
+public class UsuarioBean extends Bean<Usuario> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
     private transient CatalogService service;
 
     @Override
-    protected User createNew() {
-        return new User();
+    protected Usuario createNew() {
+        return new Usuario();
     }
 
     @Override
-    protected List<User> findAll() {
+    protected List<Usuario> findAll() {
         return service.users();
     }
 
@@ -35,12 +35,12 @@ public class UserBean extends Bean<User> implements Serializable {
     }
 
     @Override
-    protected void persist(User entity) {
+    protected void persist(Usuario entity) {
         service.guardar(entity);
     }
 
     @Override
-    protected void remove(User entity) {
+    protected void remove(Usuario entity) {
         service.eliminar(entity);
     }
 

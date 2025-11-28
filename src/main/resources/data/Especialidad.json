@@ -1,0 +1,30 @@
+[
+  {
+    "nombreEspecialidad": "Odontología General",
+    "descripcion": "Atención básica en salud bucal: limpiezas, obturaciones y diagnósticos iniciales."
+  },
+  {
+    "nombreEspecialidad": "Ortodoncia",
+    "descripcion": "Corrección de la posición de los dientes y maloclusiones mediante brackets y alineadores."
+  },
+  {
+    "nombreEspecialidad": "Endodoncia",
+    "descripcion": "Tratamiento de conductos radiculares para salvar piezas dentales dañadas."
+  },
+  {
+    "nombreEspecialidad": "Periodoncia",
+    "descripcion": "Prevención y tratamiento de enfermedades de las encías y tejidos de soporte."
+  },
+  {
+    "nombreEspecialidad": "Odontopediatría",
+    "descripcion": "Atención especializada en niños, incluyendo prevención y tratamientos adaptados."
+  },
+  {
+    "nombreEspecialidad": "Cirugía Oral",
+    "descripcion": "Extracciones complejas, implantes dentales y procedimientos quirúrgicos de la cavidad oral."
+  },
+  {
+    "nombreEspecialidad": "Estética Dental",
+    "descripcion": "Blanqueamiento, carillas y procedimientos para mejorar la apariencia de la sonrisa."
+  }
+]

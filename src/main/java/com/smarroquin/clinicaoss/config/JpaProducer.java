@@ -33,12 +33,18 @@ public class JpaProducer {
         props.put("hibernate.format_sql", System.getProperty("HIBERNATE_FORMAT_SQL"));
         props.put("hibernate.archive.autodetection", "class");
 
-        // escanea el/los paquetes donde se encuetran los @Entity
+        // escanea el/los paquetes donde se encuentran los @Entity
         Set<Class<?>> entities = new Reflections("com.smarroquin.clinicaoss.models")
                 .getTypesAnnotatedWith(Entity.class);
-        // si se tienen más paquetes, se debe repetir con otro Reflections y añadir al set
+
+// imprime las entidades detectadas
+        System.out.println("Entidades detectadas por Reflections:");
+        for (Class<?> entityClass : entities) {
+            System.out.println(" - " + entityClass.getName());
+        }
 
         props.put(AvailableSettings.LOADED_CLASSES, new ArrayList<>(entities));
+
 
 
         return Persistence.createEntityManagerFactory("clinicaossPU", props);

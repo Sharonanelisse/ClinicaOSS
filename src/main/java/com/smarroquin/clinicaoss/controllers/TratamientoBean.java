@@ -14,6 +14,7 @@ import java.util.Map;
 @Named
 @ViewScoped
 public class TratamientoBean extends Bean<Tratamiento> implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Inject
@@ -43,16 +44,16 @@ public class TratamientoBean extends Bean<Tratamiento> implements Serializable {
     protected Map<String, String> fieldLabels() {
         Map<String, String> labels = new HashMap<>();
         labels.put("nombreTratamiento", "Nombre del tratamiento");
-        labels.put("descripcion", "descripcion del tratamiento");
-        labels.put("duracionEstimado", "Duracion estimado del tratamiento");
-        labels.put("costo", "Costo del tratamiento");
-        labels.put("especialidad", "Especialidad del tratamiento");
+        labels.put("descripcion", "Descripción del tratamiento");
+        labels.put("duracionEstimado", "Duración estimada");
+        labels.put("costo", "Costo");
+        labels.put("especialidad", "Especialidad");
         return labels;
     }
 
     @Override
     protected String getFacesClientId() {
-        return "frmTratamiento:msgTratamiento";
+        return "frmTratamientos:msgTratamiento";
     }
 
     @Override
@@ -64,5 +65,4 @@ public class TratamientoBean extends Bean<Tratamiento> implements Serializable {
     protected String successDeleteMessage() {
         return "Tratamiento eliminado";
     }
-
 }

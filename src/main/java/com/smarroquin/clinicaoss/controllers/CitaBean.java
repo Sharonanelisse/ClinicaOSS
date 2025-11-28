@@ -2,15 +2,24 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Cita;
 import com.smarroquin.clinicaoss.models.Paciente;
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.models.Tratamiento;
 import com.smarroquin.clinicaoss.enums.estado_cita;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.ScheduleModel;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +27,23 @@ import java.util.Map;
 @Named
 @ViewScoped
 public class CitaBean extends Bean<Cita> implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Inject
     private transient CatalogService service;
+
+    private ScheduleModel schedule;
+    private ScheduleEvent<?> selectedEvent;
+    private Cita cita;
+    private boolean dialogVisible;
+    private boolean detailVisible;
+
+    @PostConstruct
+    public void init() {
+        this.cita = new Cita();  // ← AQUÍ
+        loadEvents();
+    }
 
     @Override
     protected Cita createNew() {
@@ -71,21 +93,89 @@ public class CitaBean extends Bean<Cita> implements Serializable {
         return "Cita eliminada";
     }
 
-    // Métodos auxiliares para combos en la vista
-    public List<Paciente> getPacientes() {
-        return service.pacientes();
+
+    public void loadEvents() {
+        schedule = new DefaultScheduleModel();
+
+        for (Cita c : service.citas()) {
+
+            LocalDateTime start = c.getFechaApertura();
+            LocalDateTime end = c.getFechaApertura().plusHours(1);
+
+            DefaultScheduleEvent<?> ev = DefaultScheduleEvent.builder()
+                    .id(String.valueOf(c.getCodigo()))
+                    .title(c.getPaciente().getNombrePaciente() + " - " + c.getTratamiento().getNombreTratamiento())
+                    .startDate(start)
+                    .endDate(end)
+                    .data(c)
+                    .editable(true)
+                    .build();
+
+            schedule.addEvent(ev);
+        }
     }
 
-    public List<User> getUsuarios() {
-        return service.users();
+    public void newEvent() {
+        cita = new Cita();
+        dialogVisible = true;
     }
 
-    public List<Tratamiento> getTratamientos() {
-        return service.tratamientos();
+    public void onEventSelect(SelectEvent<ScheduleEvent<?>> selectEvent) {
+        selectedEvent = selectEvent.getObject();
+        cita = (Cita) selectedEvent.getData();
+        detailVisible = true;
     }
 
-    public estado_cita[] getEstadosCita() {
-        return estado_cita.values();
+    public void save() {
+        service.guardar(cita);
+        loadEvents();
+        dialogVisible = false;
+        detailVisible = false;
     }
+
+    public void delete() {
+        service.eliminar(cita);
+        loadEvents();
+        detailVisible = false;
+    }
+
+    /* ================================
+                CONVERT Date
+       ================================ */
+
+    private LocalDateTime toLocalDateTime(Date date) {
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    /* ================================
+              GETTERS / SETTERS
+       ================================ */
+
+    public ScheduleModel getSchedule() {
+        return schedule;
+    }
+
+    public boolean isDialogVisible() {
+        return dialogVisible;
+    }
+
+    public boolean isDetailVisible() {
+        return detailVisible;
+    }
+
+    public Cita getCita() {
+        return cita;
+    }
+
+    public Cita getSelected() {
+        return cita;
+    }
+
+    public List<Paciente> getPacientes() { return service.pacientes(); }
+    public List<Usuario> getUsuarios() { return service.users(); }
+    public List<Tratamiento> getTratamientos() { return service.tratamientos(); }
+    public estado_cita[] getEstadosCita() { return estado_cita.values(); }
 }
 
