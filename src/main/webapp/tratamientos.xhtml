@@ -13,20 +13,29 @@
 
             <!-- Formulario de tratamiento -->
             <h:panelGrid columns="2" columnClasses="label,value">
+
                 <h:outputLabel value="Nombre:" for="nombreTratamiento"/>
-                <p:inputText id="nombreTratamiento" value="#{tratamientoBean.selected.nombreTratamiento}" required="true"/>
+                <p:inputText id="nombreTratamiento"
+                             value="#{tratamientoBean.selected.nombreTratamiento}"
+                             required="true" />
 
                 <h:outputLabel value="Descripción:" for="descripcion"/>
-                <p:inputTextarea id="descripcion" value="#{tratamientoBean.selected.descripcion}" rows="3" required="true"/>
+                <p:inputTextarea id="descripcion"
+                                 value="#{tratamientoBean.selected.descripcion}"
+                                 rows="3"
+                                 required="true" />
 
                 <h:outputLabel value="Duración estimada:" for="duracionEstimado"/>
-                <p:inputText id="duracionEstimado" value="#{tratamientoBean.selected.duracionEstimado}" />
+                <p:inputText id="duracionEstimado"
+                             value="#{tratamientoBean.selected.duracionEstimado}" />
 
                 <h:outputLabel value="Costo:" for="costo"/>
-                <p:inputText id="costo" value="#{tratamientoBean.selected.costo}" />
+                <p:inputText id="costo"
+                             value="#{tratamientoBean.selected.costo}" />
 
                 <h:outputLabel value="Especialidad:" for="especialidad"/>
-                <p:inputText id="especialidad" value="#{tratamientoBean.selected.especialidad}" />
+                <p:inputText id="especialidad"
+                             value="#{tratamientoBean.selected.especialidad}" />
             </h:panelGrid>
 
             <!-- Botones -->
@@ -41,7 +50,7 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <!-- Tabla de tratamientos -->
+            <!-- Tabla -->
             <p:dataTable id="tblTratamientos"
                          value="#{tratamientoBean.list}"
                          var="t"
@@ -49,8 +58,7 @@
                          rows="10"
                          style="margin-top:20px;"
                          rowKey="#{t.id}"
-                         selectionMode="single"
-                         selection="#{tratamientoBean.selected}">
+                         selectionMode="single">
 
                 <p:column headerText="ID">
                     <h:outputText value="#{t.id}" />
@@ -77,18 +85,23 @@
                 </p:column>
 
                 <p:column headerText="Acciones">
+
+                    <!-- EDITAR -->
                     <p:commandButton value="Editar"
                                      action="#{tratamientoBean.edit(t)}"
                                      update="frmTratamientos"
                                      icon="pi pi-pencil" />
 
+                    <!-- ELIMINAR -->
                     <p:commandButton value="Eliminar"
                                      action="#{tratamientoBean.delete(t)}"
-                                     update="tblTratamientos"
+                                     update="tblTratamientos msgTratamiento"
                                      icon="pi pi-trash"
                                      styleClass="ui-button-danger" />
+
                 </p:column>
             </p:dataTable>
         </h:form>
     </ui:define>
 </ui:composition>
+

@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "codigoAseguradora": "SEG-001",
     "nombreAseguradora": "DentalCare Plus",
     "porcentajeDescuento": 15.0,
@@ -10,7 +9,6 @@
     "estado": true
   },
   {
-    "id": 2,
     "codigoAseguradora": "SEG-002",
     "nombreAseguradora": "Sonrisa Protegida",
     "porcentajeDescuento": 20.0,
@@ -20,7 +18,6 @@
     "estado": true
   },
   {
-    "id": 3,
     "codigoAseguradora": "SEG-003",
     "nombreAseguradora": "Salud Bucal Segura",
     "porcentajeDescuento": 10.0,
@@ -30,7 +27,6 @@
     "estado": true
   },
   {
-    "id": 4,
     "codigoAseguradora": "SEG-004",
     "nombreAseguradora": "OdontoLife",
     "porcentajeDescuento": 25.0,
@@ -40,7 +36,6 @@
     "estado": true
   },
   {
-    "id": 5,
     "codigoAseguradora": "SEG-005",
     "nombreAseguradora": "SmileCare Insurance",
     "porcentajeDescuento": 18.0,

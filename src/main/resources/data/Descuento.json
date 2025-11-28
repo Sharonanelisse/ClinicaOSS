@@ -1,34 +1,29 @@
 [
   {
-    "id": 1,
     "nombrePromocion": "Promo Limpieza Dental",
     "descripcionPromocion": "Descuento especial en limpiezas durante el Mes de la Salud Bucal",
     "descuentoPromocion": 10.0,
     "estado": true
   },
   {
-    "id": 2,
     "nombrePromocion": "Ortodoncia Joven",
     "descripcionPromocion": "Promoción en tratamientos de ortodoncia para pacientes menores de 18 años",
     "descuentoPromocion": 15.0,
     "estado": true
   },
   {
-    "id": 3,
     "nombrePromocion": "Semana del Adulto Mayor",
     "descripcionPromocion": "Descuento en prótesis y revisiones para adultos mayores",
     "descuentoPromocion": 20.0,
     "estado": true
   },
   {
-    "id": 4,
     "nombrePromocion": "Blanqueamiento Estético",
     "descripcionPromocion": "Campaña de estética dental con descuento en blanqueamientos",
     "descuentoPromocion": 12.5,
     "estado": true
   },
   {
-    "id": 5,
     "nombrePromocion": "Regreso a Clases",
     "descripcionPromocion": "Promoción en revisiones y limpiezas para estudiantes",
     "descuentoPromocion": 8.0,

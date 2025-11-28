@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "nombreUsuario": "María Fernanda",
     "apellidoUsuario": "García López",
     "role_name": "ADMINISTRADOR",
@@ -10,7 +9,6 @@
     "status": true
   },
   {
-    "id": 2,
     "nombreUsuario": "Carlos Eduardo",
     "apellidoUsuario": "Ramírez Soto",
     "role_name": "ODONTOLOGO",
@@ -20,7 +18,6 @@
     "status": true
   },
   {
-    "id": 3,
     "nombreUsuario": "Ana Beatriz",
     "apellidoUsuario": "Morales Díaz",
     "role_name": "RECEPCIONISTA",
@@ -30,7 +27,6 @@
     "status": true
   },
   {
-    "id": 4,
     "nombreUsuario": "Luis Alberto",
     "apellidoUsuario": "Hernández Pérez",
     "role_name": "ODONTOLOGO",
@@ -40,7 +36,6 @@
     "status": true
   },
   {
-    "id": 5,
     "nombreUsuario": "Sofía Isabel",
     "apellidoUsuario": "Martínez Cruz",
     "role_name": "RECEPCIONISTA",

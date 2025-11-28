@@ -1,7 +1,7 @@
 package com.smarroquin.clinicaoss.enums;
 
 public enum role_name {
-    AMINISTRADOR,
+    ADMINISTRADOR,
     ODONTOLOGO,
     RECEPCIONISTA
 }

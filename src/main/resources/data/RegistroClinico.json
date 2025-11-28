@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "numeroRegistro": "REG-0001",
     "tipo_archivo": "RECETA",
     "tipo_contenido": "application/pdf",
@@ -12,7 +11,6 @@
     "cita": { "id": 1 }
   },
   {
-    "id": 2,
     "numeroRegistro": "REG-0002",
     "tipo_archivo": "CONSTANCIA",
     "tipo_contenido": "application/pdf",
@@ -24,7 +22,6 @@
     "cita": { "id": 2 }
   },
   {
-    "id": 3,
     "numeroRegistro": "REG-0003",
     "tipo_archivo": "RADIOGRAFIA",
     "tipo_contenido": "image/png",
@@ -36,7 +33,6 @@
     "cita": { "id": 3 }
   },
   {
-    "id": 4,
     "numeroRegistro": "REG-0004",
     "tipo_archivo": "RECETA",
     "tipo_contenido": "application/pdf",
@@ -48,7 +44,6 @@
     "cita": { "id": 4 }
   },
   {
-    "id": 5,
     "numeroRegistro": "REG-0005",
     "tipo_archivo": "CONSTANCIA",
     "tipo_contenido": "application/pdf",
