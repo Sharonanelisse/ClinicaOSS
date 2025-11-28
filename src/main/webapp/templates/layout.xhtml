@@ -5,32 +5,331 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title>Clínica Odontológica Sonrisa Sana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&amp;family=Roboto:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
     <style>
-        .p-3{padding:1rem}.mb-3{margin-bottom:1rem}.dialog-nice{max-width:760px;width:95vw}
+
+        .p-3{padding:1rem}
+        .mb-3{margin-bottom:1rem}
+        .dialog-nice{max-width:760px;width:95vw}
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+
+        body{
+            background: #e8edf5;
+            width: 100%;
+            height: 100%;
+        }
+
+        .wrapper .top_navbar{
+            width: 100%;
+            height: 65px;
+            display: flex;
+            position: fixed;
+            top: 0;
+        }
+
+        .wrapper .top_navbar .logo{
+            width: 250px;
+            height: 100%;
+            background: #0f70b7;
+            border-bottom: 1px solid #fff;
+        }
+
+        .wrapper .top_navbar .logo a{
+            display: block;
+            text-align: center;
+            font-family: 'Montserrat Subrayada', sans-serif;
+            font-size: 20px;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        .wrapper .top_navbar .top_menu {
+            width: calc(100% - 250px);
+            height: 100%;
+            background: #fff;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 8px 12px 14px -13px rgba(0, 0, 0, 0.15);
+        }
+
+        .wrapper .top_navbar .top_menu .home_link a{
+            display: block;
+            background: #054c80;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 3px;
+        }
+
+        .wrapper .top_navbar .top_menu .home_link a:hover,
+        .wrapper .top_navbar .right_info .icon_wrap:hover {
+            background: #054c80;
+        }
+
+        .wrapper .top_navbar .right_info{
+            display: flex;
+        }
+
+        .wrapper .top_navbar .right_info .icon_wrap{
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #0f70b7;
+            color: #fff;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .main_body .sidebar_menu{
+            position: fixed;
+            left: 0;
+            background: #0f70b7;
+            width: 250px;
+            height: 100%;
+            transition: all 0.3s linear;
+        }
+
+        .main_body .sidebar_menu .inner__sidebar_menu{
+            position: relative;
+
+        }
+
+        .main_body .sidebar_menu ul li a{
+            color: #fff;
+            font-size: 14px;
+            padding: 20px 35px;
+            display: block;
+            white-space: nowrap;
+        }
+
+        .main_body .sidebar_menu ul li a .icon{
+            margin-right: 8px;
+        }
+
+        .main_body .sidebar_menu ul li a span{
+            display: inline-block;
+        }
+
+        .main_body .sidebar_menu ul li a:hover{
+            background: #054c80;
+            color: #fff;
+        }
+
+        .main_body .sidebar_menu ul li a.active{
+            background: #054c80;
+            color: #fff;
+        }
+
+        .main_body .sidebar_menu .hamburger{
+            position: absolute;
+            top: 5px;
+            right: -25px;
+            width: 50px;
+            height: 50px;
+            background: #e8edf5;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .main_body .sidebar_menu .inner_hamburger,
+        .main_body .sidebar_menu .hamburger .arrow{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .main_body .sidebar_menu .inner_hamburger{
+            width: 40px;
+            border-radius: 50%;
+            height: 40px;
+            background: #3421C0;
+        }
+
+        .main_body .sidebar_menu .hamburger .arrow{
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .main_body .sidebar_menu .hamburger  .fa-long-arrow-alt-right{
+            display: none;
+        }
+
+        .main_body .container{
+            width: calc(100% - 250px);
+            margin-top: 65px;
+            margin-left: 250px;
+            padding: 25px 40px;
+            transition: all 0.3s linear;
+        }
+
+        .main_body .container .item_wrap{
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .main_body .container .item_wrap .item{
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 25px;
+            font-size: 14px;
+            line-height: 22px;
+        }
+
+        .main_body .container .item_wrap .item:first-child{
+            margin-right: 20px;
+        }
+
+        /* after adding active class */
+        .wrapper.active .sidebar_menu{
+            width: 100px;
+        }
+
+        .wrapper.active .hamburger .fa-long-arrow-alt-right{
+            display: block;
+        }
+
+        .wrapper.active .hamburger .fa-long-arrow-alt-left{
+            display: none;
+        }
+
+        .wrapper.active .sidebar_menu ul li a .list{
+            display: none;
+        }
+
+        .wrapper.active .main_body .container{
+            width: calc(100% - 100px);
+            margin-left: 100px;
+        }
+
     </style>
 </h:head>
-<h:body class="p-3">
+<h:body>
+    <div class="wrapper">
 
-    <h:form id="menu">
-        <p:menubar styleClass="shadow-2 surface-50 border-round mb-3">
-            <p:menuitem value="Home" icon="pi pi-home" outcome="/home.xhtml"/>
-            <p:menuitem value="Pacientes" icon="pi pi-id-card" outcome="/pacientes.xhtml"/>
-            <p:menuitem value="Usuarios" icon="pi pi-users" outcome="/usuarios.xhtml"/>
-            <p:menuitem value="Citas" icon="pi pi-history" outcome="/citas.xhtml"/>
-            <p:menuitem value="Registro Clinico" icon="pi pi-folder-open" outcome="/registroclinico.xhtml"/>
-            <p:menuitem value="Tratamiento" icon="pi pi-shield" outcome="/tratamientos.xhtml"/>
-            <p:menuitem value="Especialidades" icon="pi pi-shield" outcome="/especialidades.xhtml"/>
-            <p:menuitem value="Facturacion" icon="pi pi-users" outcome="/facturacion.xhtml"/>
-            <p:menuitem value="Descuentos y Seguros" icon="pi pi-users" outcome="/descuentosseguros.xhtml"/>
-        </p:menubar>
-    </h:form>
+        <div class="top_navbar">
+            <div class="logo">
+                <a href="#"><h:graphicImage library="img" name="logo.png" style="width: 115px;filter: brightness(0) invert(1);" /></a>
+            </div>
+            <div class="top_menu">
+                <div> </div>
+                <div class="right_info">
+                    <div class="icon_wrap">
+                        <div class="icon">
+                            Cerrar sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main_body">
+
+            <div class="sidebar_menu">
+                <div class="inner__sidebar_menu">
+                    <ul>
+                        <li>
+                            <a href="home.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-home" ></i>
+                          </span>
+                                <span class="list">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="pacientes.xhtml">
+                          <span class="icon">
+                             <i class="pi pi-exclamation-circle" ></i>
+                          </span>
+                                <span class="list">Pacientes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="usuarios.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-users" ></i>
+                          </span>
+                                <span class="list">Usuarios</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="citas.xhtml">
+                          <span class="icon">
+                             <i class="pi pi-calendar" ></i>
+                          </span>
+                                <span class="list">Citas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="registroclinico.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-calendar-plus" ></i>
+                          </span>
+                                <span class="list">Registro Clínico</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tratamientos.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-exclamation-triangle"></i>
+                          </span>
+                                <span class="list">Tratamiento</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="especialidades.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-check-circle"></i>
+                          </span>
+                                <span class="list">Especialidades</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="facturacion.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-inbox"></i>
+                          </span>
+                                <span class="list">Facrturación</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="descuentosseguros.xhtml">
+                          <span class="icon">
+                            <i class="pi pi-percentage"></i>
+                          </span>
+                                <span class="list">Descuentos y seguros</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <h:form id="global">
+                    <p:messages id="msgs" showDetail="true" closable="true" globalOnly="true"/>
+                </h:form>
+
+                <!-- Aquí se incrusta el contenido de cada página -->
+                <ui:insert name="content"/>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
 
     <!-- Mensajes globales (también en FORM) -->
-    <h:form id="global">
-        <p:messages id="msgs" showDetail="true" closable="true" globalOnly="true"/>
-    </h:form>
 
-    <!-- Aquí se incrusta el contenido de cada página -->
-    <ui:insert name="content"/>
 </h:body>
 </html>
