@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Clínica Odontológica Sonrisa Sana</title>
+    <style>
+        .p-3{padding:1rem}.mb-3{margin-bottom:1rem}.dialog-nice{max-width:760px;width:95vw}
+    </style>
+</h:head>
+<h:body class="p-3">
+
+
+<section class="container py-5" style="max-width:720px;">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h3 class="mb-3">Iniciar sesión</h3>
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger">${error}</div>
+            </c:if>
+            <form method="post" action="${pageContext.request.contextPath}/login" class="row g-3">
+                <div class="mb-3">
+                    <label class="form-label">Usuario</label>
+                    <input name="username" value="admin" class="form-control" required/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input name="password" type="password" class="form-control" value="admin123" required/>
+                </div>
+                <button class="btn btn-primary w-100">Entrar</button>
+            </form>
+        </div>
+    </div>
+</section>
+</h:body>
+</html>
