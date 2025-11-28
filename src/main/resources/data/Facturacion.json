@@ -4,54 +4,54 @@
     "subtotal": 350.00,
     "total": 315.00,
     "estado_pago": "PENDIENTE",
-    "tratamiento": { "id": 1 },
-    "paciente": { "id": 1 },
-    "cita": { "id": 1 },
-    "descuento": { "id": 1 },
-    "seguro": { "id": 1 }
+    "tratamientoId": 1,
+    "pacienteId": 1,
+    "citaId": 1,
+    "descuentoId": 1,
+    "seguroId": 1
   },
   {
     "fechaEmision": "2025-11-21T11:00:00",
     "subtotal": 2500.00,
     "total": 2000.00,
     "estado_pago": "PAGADO",
-    "tratamiento": { "id": 2 },
-    "paciente": { "id": 2 },
-    "cita": { "id": 2 },
-    "descuento": { "id": 2 },
-    "seguro": { "id": 2 }
+    "tratamientoId": 2,
+    "pacienteId": 2,
+    "citaId": 2,
+    "descuentoId": 2,
+    "seguroId": 2
   },
   {
     "fechaEmision": "2025-11-22T14:30:00",
     "subtotal": 1800.00,
     "total": 1620.00,
     "estado_pago": "PENDIENTE",
-    "tratamiento": { "id": 3 },
-    "paciente": { "id": 3 },
-    "cita": { "id": 3 },
-    "descuento": { "id": 3 },
-    "seguro": { "id": 3 }
+    "tratamientoId": 3,
+    "pacienteId": 3,
+    "citaId": 3,
+    "descuentoId": 3,
+    "seguroId": 3
   },
   {
     "fechaEmision": "2025-11-23T09:15:00",
     "subtotal": 1200.00,
     "total": 900.00,
     "estado_pago": "PAGADO",
-    "tratamiento": { "id": 4 },
-    "paciente": { "id": 4 },
-    "cita": { "id": 4 },
-    "descuento": { "id": 4 },
-    "seguro": { "id": 4 }
+    "tratamientoId": 4,
+    "pacienteId": 4,
+    "citaId": 4,
+    "descuentoId": 4,
+    "seguroId": 4
   },
   {
     "fechaEmision": "2025-11-24T16:45:00",
     "subtotal": 2000.00,
     "total": 1640.00,
     "estado_pago": "PENDIENTE",
-    "tratamiento": { "id": 7 },
-    "paciente": { "id": 5 },
-    "cita": { "id": 5 },
-    "descuento": { "id": 5 },
-    "seguro": { "id": 5 }
+    "tratamientoId": 7,
+    "pacienteId": 5,
+    "citaId": 5,
+    "descuentoId": 5,
+    "seguroId": 5
   }
 ]

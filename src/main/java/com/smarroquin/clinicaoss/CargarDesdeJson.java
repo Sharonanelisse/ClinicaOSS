@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.validation.constraints.NotBlank;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -19,19 +18,18 @@ import java.util.Date;
 import java.util.List;
 
 public class CargarDesdeJson {
-
     private static final String PERSISTENCE_UNIT = "clinicaossPU";
     private static final int TAMANO_LOTE = 50;
 
-    // Rutas de los JSON
     private static final String USUARIOS_PATH = "data/Usuario.json";
     private static final String PACIENTES_PATH = "data/Paciente.json";
     private static final String ESPECIALIDADES_PATH = "data/Especialidad.json";
+    private static final String DESCUENTOS_PATH = "data/Descuento.json";
+    private static final String SEGUROS_PATH = "data/Seguro.json";
+
     private static final String TRATAMIENTOS_PATH = "data/Tratamiento.json";
     private static final String CITAS_PATH = "data/Cita.json";
     private static final String REGISTROS_PATH = "data/RegistroClinico.json";
-    private static final String DESCUENTOS_PATH = "data/Descuento.json";
-    private static final String SEGUROS_PATH = "data/Seguro.json";
     private static final String FACTURACIONES_PATH = "data/Facturacion.json";
     private static final String JORNADAS_PATH = "data/JornadaLaboral.json";
 
@@ -40,25 +38,36 @@ public class CargarDesdeJson {
         EntityManager em = emf.createEntityManager();
 
         try {
-            em.getTransaction().begin();
 
+            //Cargar archivos Independientes
+            em.getTransaction().begin();
             cargarUsuarios(em);
             cargarPacientes(em);
             cargarEspecialidades(em);
-            cargarTratamientos(em);
-            cargarCitas(em);
-            cargarRegistros(em);
             cargarDescuentos(em);
             cargarSeguros(em);
-            cargarFacturaciones(em);
-            cargarJornadas(em);
 
             em.getTransaction().commit();
-            System.out.println("Carga desde JSON completada correctamente.");
+            System.out.println("Carga independientes completada correctamente.");
+
+            // Fase 1: cargar tratamientos
+            em.getTransaction().begin();
+            cargarTratamientos(em);
+            em.getTransaction().commit();
+            System.out.println("Tratamientos cargados correctamente.");
+
+            // Fase 2: cargar el resto
+            em.getTransaction().begin();
+            cargarCitas(em);
+            cargarRegistros(em);
+            cargarFacturaciones(em);
+            cargarJornadas(em);
+            em.getTransaction().commit();
+            System.out.println("Dependientes cargados correctamente.");
+
+
         } catch (RuntimeException ex) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();
@@ -67,11 +76,10 @@ public class CargarDesdeJson {
     }
 
     private static void cargarUsuarios(EntityManager em) throws Exception {
-        List<UsuarioJson> lista = leerJson(USUARIOS_PATH, UsuarioJson.class);
-        int contador = 0;
-        for (UsuarioJson json : lista) {
+        List<CargarDesdeJson.UsuarioJson> lista = leerJson(USUARIOS_PATH, CargarDesdeJson.UsuarioJson.class);
+        for (CargarDesdeJson.UsuarioJson json : lista) {
             Usuario u = new Usuario();
-            u.setId(json.getId());
+            u.setId(json.getUsuarioId());
             u.setNombreUsuario(json.getNombreUsuario());
             u.setApellidoUsuario(json.getApellidoUsuario());
             u.setRole_name(role_name.valueOf(json.getRole_name()));
@@ -80,21 +88,15 @@ public class CargarDesdeJson {
             u.setPassword(json.getPassword());
             u.setStatus(json.getStatus() != null ? json.getStatus() : Boolean.TRUE);
             em.persist(u);
-
-            if (++contador % TAMANO_LOTE == 0) {
-                em.flush();
-                em.clear();
-            }
         }
         System.out.println("Usuarios insertados: " + lista.size());
     }
 
     private static void cargarPacientes(EntityManager em) throws Exception {
-        List<PacienteJson> lista = leerJson(PACIENTES_PATH, PacienteJson.class);
-        int contador = 0;
-        for (PacienteJson json : lista) {
+        List<CargarDesdeJson.PacienteJson> lista = leerJson(PACIENTES_PATH, CargarDesdeJson.PacienteJson.class);
+        for (CargarDesdeJson.PacienteJson json : lista) {
             Paciente p = new Paciente();
-            p.setId(json.getId());
+            p.setId(json.getPacienteId());
             p.setNombrePaciente(json.getNombrePaciente());
             p.setApellidoPaciente(json.getApellidoPaciente());
             p.setDpi(json.getDpi());
@@ -107,20 +109,15 @@ public class CargarDesdeJson {
             p.setObservaciones(json.getObservaciones());
             p.setFechaRegistro(json.getFechaRegistro() != null ? json.getFechaRegistro() : LocalDateTime.now());
             em.persist(p);
-
-            if (++contador % TAMANO_LOTE == 0) {
-                em.flush();
-                em.clear();
-            }
         }
         System.out.println("Pacientes insertados: " + lista.size());
     }
 
     private static void cargarEspecialidades(EntityManager em) throws Exception {
-        List<EspecialidadJson> lista = leerJson(ESPECIALIDADES_PATH, EspecialidadJson.class);
-        for (EspecialidadJson json : lista) {
+        List<CargarDesdeJson.EspecialidadJson> lista = leerJson(ESPECIALIDADES_PATH, CargarDesdeJson.EspecialidadJson.class);
+        for (CargarDesdeJson.EspecialidadJson json : lista) {
             Especialidad e = new Especialidad();
-            e.setId(json.getId());
+            e.setId(json.getEspecialidadId());
             e.setNombreEspecialidad(json.getNombreEspecialidad());
             e.setDescripcion(json.getDescripcion());
             em.persist(e);
@@ -128,62 +125,11 @@ public class CargarDesdeJson {
         System.out.println("Especialidades insertadas: " + lista.size());
     }
 
-    private static void cargarTratamientos(EntityManager em) throws Exception {
-        List<TratamientoJson> lista = leerJson(TRATAMIENTOS_PATH, TratamientoJson.class);
-        for (TratamientoJson json : lista) {
-            Tratamiento t = new Tratamiento();
-            t.setId(json.getId());
-            t.setNombreTratamiento(json.getNombreTratamiento());
-            t.setDescripcion(json.getDescripcion());
-            t.setDuracionEstimado(json.getDuracionEstimado());
-            t.setCosto(json.getCosto());
-            t.setEspecialidad(em.find(Especialidad.class, json.getEspecialidad().getId()));
-            em.persist(t);
-        }
-        System.out.println("Tratamientos insertados: " + lista.size());
-    }
-
-    private static void cargarCitas(EntityManager em) throws Exception {
-        List<CitaJson> lista = leerJson(CITAS_PATH, CitaJson.class);
-        for (CitaJson json : lista) {
-            Cita c = new Cita();
-            c.setId(json.getId());
-            c.setCodigo(json.getCodigo());
-            c.setFechaApertura(json.getFechaApertura());
-            c.setEstado_cita(json.getEstado_cita());
-            c.setObservacionesCita(json.getObservacionesCita());
-            c.setPaciente(em.find(Paciente.class, json.getPaciente().getId()));
-            c.setUser(em.find(Usuario.class, json.getUser().getId()));
-            c.setTratamiento(em.find(Tratamiento.class, json.getTratamiento().getId()));
-            em.persist(c);
-        }
-        System.out.println("Citas insertadas: " + lista.size());
-    }
-
-    private static void cargarRegistros(EntityManager em) throws Exception {
-        List<RegistroClinicoJson> lista = leerJson(REGISTROS_PATH, RegistroClinicoJson.class);
-        for (RegistroClinicoJson json : lista) {
-            RegistroClinico r = new RegistroClinico();
-            r.setId(json.getId());
-            r.setNumeroRegistro(json.getNumeroRegistro());
-            r.setTipo_archivo(json.getTipo_archivo());
-            r.setTipo_contenido(json.getTipo_contenido());
-            r.setBlob_url(json.getBlob_url());
-            r.setBlobName(json.getBlob_url());
-            r.setFechaCarga(json.getFechaCarga());
-            r.setPaciente(em.find(Paciente.class, json.getPaciente().getId()));
-            r.setUser(em.find(Usuario.class, json.getUser().getId()));
-            r.setCita(em.find(Cita.class, json.getCita().getId()));
-            em.persist(r);
-        }
-        System.out.println("Registros insertados: " + lista.size());
-    }
-
     private static void cargarDescuentos(EntityManager em) throws Exception {
-        List<DescuentoJson> lista = leerJson(DESCUENTOS_PATH, DescuentoJson.class);
-        for (DescuentoJson json : lista) {
+        List<CargarDesdeJson.DescuentoJson> lista = leerJson(DESCUENTOS_PATH, CargarDesdeJson.DescuentoJson.class);
+        for (CargarDesdeJson.DescuentoJson json : lista) {
             Descuento d = new Descuento();
-            d.setId(json.getId());
+            d.setId(json.getDescuentoId());
             d.setNombrePromocion(json.getNombrePromocion());
             d.setDescripcionPromocion(json.getDescripcionPromocion());
             d.setDescuentoPromocion(json.getDescuentoPromocion());
@@ -193,10 +139,10 @@ public class CargarDesdeJson {
     }
 
     private static void cargarSeguros(EntityManager em) throws Exception {
-        List<SeguroJson> lista = leerJson(SEGUROS_PATH, SeguroJson.class);
-        for (SeguroJson json : lista) {
+        List<CargarDesdeJson.SeguroJson> lista = leerJson(SEGUROS_PATH, CargarDesdeJson.SeguroJson.class);
+        for (CargarDesdeJson.SeguroJson json : lista) {
             Seguro s = new Seguro();
-            s.setId(json.getId());
+            s.setId(json.getSeguroId());
             s.setCodigoAseguradora(json.getCodigoAseguradora());
             s.setNombreAseguradora(json.getNombreAseguradora());
             s.setPorcentajeDescuento(json.getPorcentajeDescuento());
@@ -209,40 +155,95 @@ public class CargarDesdeJson {
         System.out.println("Seguros insertados: " + lista.size());
     }
 
+    private static void cargarTratamientos(EntityManager em) throws Exception {
+        List<CargarDesdeJson.TratamientoJson> lista = leerJson(TRATAMIENTOS_PATH, CargarDesdeJson.TratamientoJson.class);
+        for (CargarDesdeJson.TratamientoJson json : lista) {
+            Tratamiento t = new Tratamiento();
+            t.setId(json.getTratamientoId());
+            t.setNombreTratamiento(json.getNombreTratamiento());
+            t.setDescripcion(json.getDescripcion());
+            t.setDuracionEstimado(json.getDuracionEstimado());
+            t.setCosto(json.getCosto());
+
+            Especialidad especialidad = em.find(Especialidad.class, json.getEspecialidadId());
+            if (especialidad == null)
+                throw new RuntimeException("Especialidad no encontrada con id: " + json.getEspecialidadId());
+            t.setEspecialidad(especialidad);
+
+            em.persist(t);
+        }
+        System.out.println("Tratamientos insertados: " + lista.size());
+    }
+
+    private static void cargarCitas(EntityManager em) throws Exception {
+        List<CargarDesdeJson.CitaJson> lista = leerJson(CITAS_PATH, CargarDesdeJson.CitaJson.class);
+        for (CargarDesdeJson.CitaJson json : lista) {
+            Cita c = new Cita();
+            c.setId(json.getCitaId());
+            c.setCodigo(json.getCodigo());
+            c.setFechaApertura(json.getFechaApertura());
+            c.setEstado_cita(json.getEstado_cita());
+            c.setObservacionesCita(json.getObservacionesCita());
+            c.setPaciente(em.find(Paciente.class, json.getPacienteId()));
+            c.setUser(em.find(Usuario.class, json.getUserId()));
+            c.setTratamiento(em.find(Tratamiento.class, json.getTratamientoId()));
+            em.persist(c);
+        }
+        System.out.println("Citas insertadas: " + lista.size());
+    }
+
+    private static void cargarRegistros(EntityManager em) throws Exception {
+        List<CargarDesdeJson.RegistroClinicoJson> lista = leerJson(REGISTROS_PATH, CargarDesdeJson.RegistroClinicoJson.class);
+        for (CargarDesdeJson.RegistroClinicoJson json : lista) {
+            RegistroClinico r = new RegistroClinico();
+            r.setId(json.getRegistroId());
+            r.setNumeroRegistro(json.getNumeroRegistro());
+            r.setTipo_archivo(json.getTipo_archivo());
+            r.setTipo_contenido(json.getTipo_contenido());
+            r.setBlob_url(json.getBlob_url());
+            r.setBlobName(json.getBlob_url());
+            r.setFechaCarga(json.getFechaCarga());
+            r.setPaciente(em.find(Paciente.class, json.getPacienteId()));
+            r.setUser(em.find(Usuario.class, json.getUserId()));
+            r.setCita(em.find(Cita.class, json.getCitaId()));
+            em.persist(r);
+        }
+        System.out.println("Registros insertados: " + lista.size());
+    }
+
     private static void cargarFacturaciones(EntityManager em) throws Exception {
-        List<FacturacionJson> lista = leerJson(FACTURACIONES_PATH, FacturacionJson.class);
-        for (FacturacionJson json : lista) {
+        List<CargarDesdeJson.FacturacionJson> lista = leerJson(FACTURACIONES_PATH, CargarDesdeJson.FacturacionJson.class);
+        for (CargarDesdeJson.FacturacionJson json : lista) {
             Facturacion f = new Facturacion();
-            f.setId(json.getId());
+            f.setId(json.getFacturacionId());
             f.setFechaEmision(json.getFechaEmision());
             f.setSubtotal(json.getSubtotal());
             f.setTotal(json.getTotal());
             f.setEstado_pago(json.getEstado_pago());
-            f.setTratamiento(em.find(Tratamiento.class, json.getTratamiento().getId()));
-            f.setPaciente(em.find(Paciente.class, json.getPaciente().getId()));
-            f.setCita(em.find(Cita.class, json.getCita().getId()));
-            f.setDescuento(em.find(Descuento.class, json.getDescuento().getId()));
-            f.setSeguro(em.find(Seguro.class, json.getSeguro().getId()));
+            f.setTratamiento(em.find(Tratamiento.class, json.getTratamientoId()));
+            f.setPaciente(em.find(Paciente.class, json.getPacienteId()));
+            f.setCita(em.find(Cita.class, json.getCitaId()));
+            f.setDescuento(em.find(Descuento.class, json.getDescuentoId()));
+            f.setSeguro(em.find(Seguro.class, json.getSeguroId()));
             em.persist(f);
         }
         System.out.println("Facturaciones insertadas: " + lista.size());
     }
 
     private static void cargarJornadas(EntityManager em) throws Exception {
-        List<JornadaLaboralJson> lista = leerJson(JORNADAS_PATH, JornadaLaboralJson.class);
-        for (JornadaLaboralJson json : lista) {
+        List<CargarDesdeJson.JornadaLaboralJson> lista = leerJson(JORNADAS_PATH, CargarDesdeJson.JornadaLaboralJson.class);
+        for (CargarDesdeJson.JornadaLaboralJson json : lista) {
             JornadaLaboral j = new JornadaLaboral();
-            j.setId(json.getId());
+            j.setId(json.getJornadaLaboralId());
             j.setDia_semana(json.getDia_semana());
             j.setHoraInicio(json.getHoraInicio());
             j.setHoraFin(json.getHoraFin());
-            j.setUser(em.find(Usuario.class,json.getUser().getId()));
+            j.setUser(em.find(Usuario.class, json.getUserId()));
             em.persist(j);
         }
         System.out.println("Jornadas insertadas: " + lista.size());
     }
 
-    // ---------- Lectura genérica de JSON ----------
     private static <T> List<T> leerJson(String path, Class<T> clazz) throws Exception {
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
         if (inputStream == null) {
@@ -262,10 +263,8 @@ public class CargarDesdeJson {
         return mapper;
     }
 
-    // ---------- POJOs JSON (tipos explícitos) ----------
-
-    public static class UsuarioJson {
-        private Long id;
+    // ---------- POJOs ----------
+    public static class UsuarioJson {  private Long usuarioId;
         private String nombreUsuario;
         private String apellidoUsuario;
         private String role_name;
@@ -275,12 +274,12 @@ public class CargarDesdeJson {
         private Boolean status;
         // getters y setters...
 
-        public Long getId() {
-            return id;
+        public Long getUsuarioId() {
+            return usuarioId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setUsuarioId(Long id) {
+            this.usuarioId = usuarioId;
         }
 
         public String getNombreUsuario() {
@@ -341,7 +340,7 @@ public class CargarDesdeJson {
     }
 
     public static class PacienteJson {
-        private Long id;
+        private Long pacienteId;
         private String nombrePaciente;
         private String apellidoPaciente;
         private String dpi;
@@ -356,12 +355,12 @@ public class CargarDesdeJson {
         // getters y setters...
 
 
-        public Long getId() {
-            return id;
+        public Long getPacienteId() {
+            return pacienteId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setPacienteId(Long pacienteId) {
+            this.pacienteId = pacienteId;
         }
 
         public String getNombrePaciente() {
@@ -453,17 +452,17 @@ public class CargarDesdeJson {
         }
     }
 
-    public static class EspecialidadJson {
-        private Long id;
+    public static class EspecialidadJson {private Long especialidadId;
         private String nombreEspecialidad;
         private String descripcion;
         // getters y setters...
 
-        public Long getId() {
-            return id;
+        public Long getEspecialidadId() {
+            return especialidadId;
         }
-        public void setId(Long id) {
-            this.id = id;
+
+        public void setEspecialidadId(Long especialidadId) {
+            this.especialidadId = especialidadId;
         }
 
         public String getNombreEspecialidad() {
@@ -483,249 +482,18 @@ public class CargarDesdeJson {
         }
     }
 
-    public static class TratamientoJson {
-        private Long id;
-        private String nombreTratamiento;
-        private String descripcion;
-        private Double duracionEstimado;
-        private BigDecimal costo;
-        private EspecialidadJson especialidad;
-        // getters y setters...
-
-        public Long getId() {
-            return id;
-        }
-        public void setId(Long id) {
-            this.id = id;
-        }
-        public String getNombreTratamiento() {
-            return nombreTratamiento;
-        }
-
-        public void setNombreTratamiento(String nombreTratamiento) {
-            this.nombreTratamiento = nombreTratamiento;
-        }
-
-        public String getDescripcion() {
-            return descripcion;
-        }
-
-        public void setDescripcion(String descripcion) {
-            this.descripcion = descripcion;
-        }
-
-        public Double getDuracionEstimado() {
-            return duracionEstimado;
-        }
-
-        public void setDuracionEstimado(Double duracionEstimado) {
-            this.duracionEstimado = duracionEstimado;
-        }
-
-        public BigDecimal getCosto() {
-            return costo;
-        }
-
-        public void setCosto(BigDecimal costo) {
-            this.costo = costo;
-        }
-
-        public EspecialidadJson getEspecialidad() {
-            return especialidad;
-        }
-
-        public void setEspecialidad(EspecialidadJson especialidad) {
-            this.especialidad = especialidad;
-        }
-    }
-
-    public static class CitaJson {
-        private Long id;
-        private String codigo;
-        private LocalDateTime fechaApertura;
-        private estado_cita estado_cita;
-        private String observacionesCita;
-        private PacienteJson paciente;
-        private UsuarioJson user;
-        private TratamientoJson tratamiento;
-        // getters y setters...
-
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getCodigo() {
-            return codigo;
-        }
-
-        public void setCodigo(String codigo) {
-            this.codigo = codigo;
-        }
-
-        public LocalDateTime getFechaApertura() {
-            return fechaApertura;
-        }
-
-        public void setFechaApertura(LocalDateTime fechaApertura) {
-            this.fechaApertura = fechaApertura;
-        }
-
-        public estado_cita getEstado_cita() {
-            return estado_cita;
-        }
-
-        public void setEstado_cita(estado_cita estado_cita) {
-            this.estado_cita = estado_cita;
-        }
-
-        public String getObservacionesCita() {
-            return observacionesCita;
-        }
-
-        public void setObservacionesCita(String observacionesCita) {
-            this.observacionesCita = observacionesCita;
-        }
-
-        public PacienteJson getPaciente() {
-            return paciente;
-        }
-
-        public void setPaciente(PacienteJson paciente) {
-            this.paciente = paciente;
-        }
-
-        public UsuarioJson getUser() {
-            return user;
-        }
-
-        public void setUser(UsuarioJson user) {
-            this.user = user;
-        }
-
-        public TratamientoJson getTratamiento() {
-            return tratamiento;
-        }
-
-        public void setTratamiento(TratamientoJson tratamiento) {
-            this.tratamiento = tratamiento;
-        }
-    }
-
-    public static class RegistroClinicoJson {
-        private Long id;
-        private String numeroRegistro;
-        private tipo_archivo tipo_archivo;
-        private String tipo_contenido;
-        private String blob_url;
-        private String blobName;
-        private LocalDateTime fechaCarga;
-        private PacienteJson paciente;
-        private UsuarioJson user;
-        private CitaJson cita;
-        // getters y setters...
-
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getNumeroRegistro() {
-            return numeroRegistro;
-        }
-
-        public void setNumeroRegistro(String numeroRegistro) {
-            this.numeroRegistro = numeroRegistro;
-        }
-
-        public tipo_archivo getTipo_archivo() {
-            return tipo_archivo;
-        }
-
-        public void setTipo_archivo(tipo_archivo tipo_archivo) {
-            this.tipo_archivo = tipo_archivo;
-        }
-
-        public String getTipo_contenido() {
-            return tipo_contenido;
-        }
-
-        public void setTipo_contenido(String tipo_contenido) {
-            this.tipo_contenido = tipo_contenido;
-        }
-
-        public String getBlob_url() {
-            return blob_url;
-        }
-
-        public void setBlob_url(String blob_url) {
-            this.blob_url = blob_url;
-        }
-
-        public String getBlobName() {
-            return blobName;
-        }
-
-        public void setBlobName(String blobName) {
-            this.blobName = blobName;
-        }
-
-        public LocalDateTime getFechaCarga() {
-            return fechaCarga;
-        }
-
-        public void setFechaCarga(LocalDateTime fechaCarga) {
-            this.fechaCarga = fechaCarga;
-        }
-
-        public PacienteJson getPaciente() {
-            return paciente;
-        }
-
-        public void setPaciente(PacienteJson paciente) {
-            this.paciente = paciente;
-        }
-
-        public UsuarioJson getUser() {
-            return user;
-        }
-
-        public void setUser(UsuarioJson user) {
-            this.user = user;
-        }
-
-        public CitaJson getCita() {
-            return cita;
-        }
-
-        public void setCita(CitaJson cita) {
-            this.cita = cita;
-        }
-    }
-
-    public static class DescuentoJson {
-        private Long id;
+    public static class DescuentoJson { private Long descuentoId;
         private String nombrePromocion;
         private String descripcionPromocion;
         private Double descuentoPromocion;
         private Boolean estado;
-        // getters y setters...
 
-
-        public Long getId() {
-            return id;
+        public Long getDescuentoId() {
+            return descuentoId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setDescuentoId(Long descuentoId) {
+            this.descuentoId = descuentoId;
         }
 
         public String getNombrePromocion() {
@@ -761,8 +529,7 @@ public class CargarDesdeJson {
         }
     }
 
-    public static class SeguroJson {
-        private Long id;
+    public static class SeguroJson { private Long seguroId;
         private String codigoAseguradora;
         private String nombreAseguradora;
         private Double porcentajeDescuento;
@@ -770,15 +537,13 @@ public class CargarDesdeJson {
         private BigDecimal deducible;
         private Date fechaFinal;
         private Boolean estado;
-        // getters y setters...
 
-
-        public Long getId() {
-            return id;
+        public Long getSeguroId() {
+            return seguroId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setSeguroId(Long seguroId) {
+            this.seguroId = seguroId;
         }
 
         public String getCodigoAseguradora() {
@@ -838,26 +603,253 @@ public class CargarDesdeJson {
         }
     }
 
+    public static class TratamientoJson {
+        private Long tratamientoId;
+        private String nombreTratamiento;
+        private String descripcion;
+        private Double duracionEstimado;
+        private BigDecimal costo;
+        private Long especialidadId;
+        // getters y setters...
+
+        public Long getTratamientoId() {
+            return tratamientoId;
+        }
+
+        public void setTratamientoId(Long id) {
+            this.tratamientoId = tratamientoId;
+        }
+
+        public String getNombreTratamiento() {
+            return nombreTratamiento;
+        }
+
+        public void setNombreTratamiento(String nombreTratamiento) {
+            this.nombreTratamiento = nombreTratamiento;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+
+        public void setDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public Double getDuracionEstimado() {
+            return duracionEstimado;
+        }
+
+        public void setDuracionEstimado(Double duracionEstimado) {
+            this.duracionEstimado = duracionEstimado;
+        }
+
+        public BigDecimal getCosto() {
+            return costo;
+        }
+
+        public void setCosto(BigDecimal costo) {
+            this.costo = costo;
+        }
+
+        public Long getEspecialidadId() {
+            return especialidadId;
+        }
+
+        public void setEspecialidadId(Long especialidadId) {
+            this.especialidadId = especialidadId;
+        }
+    }
+
+    public static class CitaJson {
+        private Long citaId;
+        private String codigo;
+        private LocalDateTime fechaApertura;
+        private estado_cita estado_cita;
+        private String observacionesCita;
+        private Long pacienteId;
+        private Long userId;
+        private Long tratamientoId;
+
+        // getters y setters...
+
+
+        public Long getCitaId() {
+            return citaId;
+        }
+
+        public void setCitaId(Long id) {
+            this.citaId = citaId;
+        }
+
+        public String getCodigo() {
+            return codigo;
+        }
+
+        public void setCodigo(String codigo) {
+            this.codigo = codigo;
+        }
+
+        public LocalDateTime getFechaApertura() {
+            return fechaApertura;
+        }
+
+        public void setFechaApertura(LocalDateTime fechaApertura) {
+            this.fechaApertura = fechaApertura;
+        }
+
+        public estado_cita getEstado_cita() {
+            return estado_cita;
+        }
+
+        public void setEstado_cita(estado_cita estado_cita) {
+            this.estado_cita = estado_cita;
+        }
+
+        public String getObservacionesCita() {
+            return observacionesCita;
+        }
+
+        public void setObservacionesCita(String observacionesCita) {
+            this.observacionesCita = observacionesCita;
+        }
+
+        public Long getPacienteId() {
+            return pacienteId;
+        }
+
+        public void setPacienteId(Long pacienteId) {
+            this.pacienteId = pacienteId;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
+        public Long getTratamientoId() {
+            return tratamientoId;
+        }
+
+        public void setTratamientoId(Long tratamientoId) {
+            this.tratamientoId = tratamientoId;
+        }
+    }
+
+    public static class RegistroClinicoJson {
+        private Long registroId;
+        private String numeroRegistro;
+        private tipo_archivo tipo_archivo;
+        private String tipo_contenido;
+        private String blob_url;
+        private String blobName;
+        private LocalDateTime fechaCarga;
+        private Long pacienteId;
+        private Long userId;
+        private Long citaId;
+
+        public Long getRegistroId() {
+            return registroId;
+        }
+
+        public void setRegistroId(Long registroId) {
+            this.registroId = registroId;
+        }
+
+        public tipo_archivo getTipo_archivo() {
+            return tipo_archivo;
+        }
+
+        public void setTipo_archivo(tipo_archivo tipo_archivo) {
+            this.tipo_archivo = tipo_archivo;
+        }
+
+        public String getNumeroRegistro() {
+            return numeroRegistro;
+        }
+
+        public void setNumeroRegistro(String numeroRegistro) {
+            this.numeroRegistro = numeroRegistro;
+        }
+
+        public String getTipo_contenido() {
+            return tipo_contenido;
+        }
+
+        public void setTipo_contenido(String tipo_contenido) {
+            this.tipo_contenido = tipo_contenido;
+        }
+
+        public String getBlob_url() {
+            return blob_url;
+        }
+
+        public void setBlob_url(String blob_url) {
+            this.blob_url = blob_url;
+        }
+
+        public String getBlobName() {
+            return blobName;
+        }
+
+        public void setBlobName(String blobName) {
+            this.blobName = blobName;
+        }
+
+        public LocalDateTime getFechaCarga() {
+            return fechaCarga;
+        }
+
+        public void setFechaCarga(LocalDateTime fechaCarga) {
+            this.fechaCarga = fechaCarga;
+        }
+
+        public Long getPacienteId() {
+            return pacienteId;
+        }
+
+        public void setPacienteId(Long pacienteId) {
+            this.pacienteId = pacienteId;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
+        public Long getCitaId() {
+            return citaId;
+        }
+
+        public void setCitaId(Long citaId) {
+            this.citaId = citaId;
+        }
+    }
+
     public static class FacturacionJson {
-        private Long id;
+        private Long facturacionId;
         private LocalDateTime fechaEmision;
         private BigDecimal subtotal;
         private BigDecimal total;
         private estado_pago estado_pago;
-        private TratamientoJson tratamiento;
-        private PacienteJson paciente;
-        private CitaJson cita;
-        private DescuentoJson descuento;
-        private SeguroJson seguro;
-        // getters y setters...
+        private Long tratamientoId;
+        private Long pacienteId;
+        private Long citaId;
+        private Long descuentoId;
+        private Long seguroId;
 
-
-        public Long getId() {
-            return id;
+        public Long getFacturacionId() {
+            return facturacionId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setFacturacionId(Long facturacionId) {
+            this.facturacionId = facturacionId;
         }
 
         public LocalDateTime getFechaEmision() {
@@ -892,62 +884,108 @@ public class CargarDesdeJson {
             this.estado_pago = estado_pago;
         }
 
-        public TratamientoJson getTratamiento() {
-            return tratamiento;
+        public Long getTratamientoId() {
+            return tratamientoId;
         }
 
-        public void setTratamiento(TratamientoJson tratamiento) {
-            this.tratamiento = tratamiento;
+        public void setTratamientoId(Long tratamientoId) {
+            this.tratamientoId = tratamientoId;
         }
 
-        public PacienteJson getPaciente() {
-            return paciente;
+        public Long getPacienteId() {
+            return pacienteId;
         }
 
-        public void setPaciente(PacienteJson paciente) {
-            this.paciente = paciente;
+        public void setPacienteId(Long pacienteId) {
+            this.pacienteId = pacienteId;
         }
 
-        public CitaJson getCita() {
-            return cita;
+        public Long getCitaId() {
+            return citaId;
         }
 
-        public void setCita(CitaJson cita) {
-            this.cita = cita;
+        public void setCitaId(Long citaId) {
+            this.citaId = citaId;
         }
 
-        public DescuentoJson getDescuento() {
-            return descuento;
+        public Long getDescuentoId() {
+            return descuentoId;
         }
 
-        public void setDescuento(DescuentoJson descuento) {
-            this.descuento = descuento;
+        public void setDescuentoId(Long descuentoId) {
+            this.descuentoId = descuentoId;
         }
 
-        public SeguroJson getSeguro() {
-            return seguro;
+        public Long getSeguroId() {
+            return seguroId;
         }
 
-        public void setSeguro(SeguroJson seguro) {
-            this.seguro = seguro;
+        public void setSeguroId(Long seguroId) {
+            this.seguroId = seguroId;
+        }
+
+        public static class JornadaLaboralJson {
+            private Long jornadaLaboralId;
+            private dia_semana dia_semana;
+            private LocalTime horaInicio;
+            private LocalTime horaFin;
+            private Long userId;
+
+            public Long getJornadaLaboralId() {
+                return jornadaLaboralId;
+            }
+
+            public void setJornadaLaboralId(Long jornadaLaboralId) {
+                this.jornadaLaboralId = jornadaLaboralId;
+            }
+
+            public dia_semana getDia_semana() {
+                return dia_semana;
+            }
+
+            public void setDia_semana(dia_semana dia_semana) {
+                this.dia_semana = dia_semana;
+            }
+
+            public LocalTime getHoraInicio() {
+                return horaInicio;
+            }
+
+            public void setHoraInicio(LocalTime horaInicio) {
+                this.horaInicio = horaInicio;
+            }
+
+            public LocalTime getHoraFin() {
+                return horaFin;
+            }
+
+            public void setHoraFin(LocalTime horaFin) {
+                this.horaFin = horaFin;
+            }
+
+            public Long getUserId() {
+                return userId;
+            }
+
+            public void setUserId(Long userId) {
+                this.userId = userId;
+            }
         }
     }
 
     public static class JornadaLaboralJson {
-        private Long id;
+        private Long jornadaLaboralId;
         private dia_semana dia_semana;
         private LocalTime horaInicio;
         private LocalTime horaFin;
-        private UsuarioJson user;
-        // getters y setters...
+        private Long userId;
 
-
-        public Long getId() {
-            return id;
+        public Long getJornadaLaboralId() {
+            return jornadaLaboralId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setJornadaLaboralId(Long jornadaLaboralId) {
+            this.jornadaLaboralId = jornadaLaboralId;
         }
 
         public dia_semana getDia_semana() {
@@ -974,12 +1012,12 @@ public class CargarDesdeJson {
             this.horaFin = horaFin;
         }
 
-        public UsuarioJson getUser() {
-            return user;
+        public Long getUserId() {
+            return userId;
         }
 
-        public void setUser(UsuarioJson user) {
-            this.user = user;
+        public void setUserId(Long userId) {
+            this.userId = userId;
         }
     }
 }

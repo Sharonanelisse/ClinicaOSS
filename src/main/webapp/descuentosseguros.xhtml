@@ -10,22 +10,22 @@
 
         <!-- ==================== BLOQUE DE DESCUENTOS ==================== -->
         <h2>Descuentos</h2>
-        <h:form id="frmDescuentos">
-            <p:growl id="msgDescuento" showDetail="true" life="4000" />
+        <h:form citaId="frmDescuentos">
+            <p:growl citaId="msgDescuento" showDetail="true" life="4000" />
 
             <!-- Formulario de descuentos -->
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Nombre promoción:" for="nombrePromocion"/>
-                <p:inputText id="nombrePromocion" value="#{descuentoBean.selected.nombrePromocion}" required="true"/>
+                <p:inputText citaId="nombrePromocion" value="#{descuentoBean.selected.nombrePromocion}" required="true"/>
 
                 <h:outputLabel value="Descripción promoción:" for="descripcionPromocion"/>
-                <p:inputTextarea id="descripcionPromocion" value="#{descuentoBean.selected.descripcionPromocion}" rows="3" required="true"/>
+                <p:inputTextarea citaId="descripcionPromocion" value="#{descuentoBean.selected.descripcionPromocion}" rows="3" required="true"/>
 
-                <h:outputLabel value="Porcentaje descuento:" for="descuentoPromocion"/>
-                <p:inputText id="descuentoPromocion" value="#{descuentoBean.selected.descuentoPromocion}" />
+                <h:outputLabel value="Porcentaje descuentoId:" for="descuentoPromocion"/>
+                <p:inputText citaId="descuentoPromocion" value="#{descuentoBean.selected.descuentoPromocion}" />
 
                 <h:outputLabel value="Estado:" for="estado"/>
-                <p:selectBooleanCheckbox id="estado" value="#{descuentoBean.selected.estado}" />
+                <p:selectBooleanCheckbox citaId="estado" value="#{descuentoBean.selected.estado}" />
             </h:panelGrid>
 
             <!-- Botones -->
@@ -41,18 +41,18 @@
                              styleClass="p-button-secondary" />
 
             <!-- Tabla de descuentos -->
-            <p:dataTable id="tblDescuentos"
+            <p:dataTable citaId="tblDescuentos"
                          value="#{descuentoBean.list}"
                          var="d"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{d.id}"
+                         rowKey="#{d.citaId}"
                          selectionMode="single"
                          selection="#{descuentoBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{d.id}" />
+                    <h:outputText value="#{d.citaId}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -88,31 +88,31 @@
 
         <!-- ==================== BLOQUE DE SEGUROS ==================== -->
         <h2 style="margin-top:40px;">Seguros</h2>
-        <h:form id="frmSeguros">
-            <p:growl id="msgSeguro" showDetail="true" life="4000" />
+        <h:form citaId="frmSeguros">
+            <p:growl citaId="msgSeguro" showDetail="true" life="4000" />
 
             <!-- Formulario de seguros -->
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Código aseguradora:" for="codigoAseguradora"/>
-                <p:inputText id="codigoAseguradora" value="#{seguroBean.selected.codigoAseguradora}" required="true"/>
+                <p:inputText citaId="codigoAseguradora" value="#{seguroBean.selected.codigoAseguradora}" required="true"/>
 
                 <h:outputLabel value="Nombre aseguradora:" for="nombreAseguradora"/>
-                <p:inputText id="nombreAseguradora" value="#{seguroBean.selected.nombreAseguradora}" required="true"/>
+                <p:inputText citaId="nombreAseguradora" value="#{seguroBean.selected.nombreAseguradora}" required="true"/>
 
-                <h:outputLabel value="Porcentaje descuento:" for="porcentajeDescuento"/>
-                <p:inputText id="porcentajeDescuento" value="#{seguroBean.selected.porcentajeDescuento}" />
+                <h:outputLabel value="Porcentaje descuentoId:" for="porcentajeDescuento"/>
+                <p:inputText citaId="porcentajeDescuento" value="#{seguroBean.selected.porcentajeDescuento}" />
 
                 <h:outputLabel value="Fecha inicio:" for="fechaInicio"/>
-                <p:datePicker id="fechaInicio" value="#{seguroBean.selected.fechaInicio}" pattern="yyyy-MM-dd"/>
+                <p:datePicker citaId="fechaInicio" value="#{seguroBean.selected.fechaInicio}" pattern="yyyy-MM-dd"/>
 
                 <h:outputLabel value="Deducible:" for="deducible"/>
-                <p:inputText id="deducible" value="#{seguroBean.selected.deducible}" />
+                <p:inputText citaId="deducible" value="#{seguroBean.selected.deducible}" />
 
                 <h:outputLabel value="Fecha final:" for="fechaFinal"/>
-                <p:datePicker id="fechaFinal" value="#{seguroBean.selected.fechaFinal}" pattern="yyyy-MM-dd"/>
+                <p:datePicker citaId="fechaFinal" value="#{seguroBean.selected.fechaFinal}" pattern="yyyy-MM-dd"/>
 
                 <h:outputLabel value="Estado:" for="estadoSeguro"/>
-                <p:selectBooleanCheckbox id="estadoSeguro" value="#{seguroBean.selected.estado}" />
+                <p:selectBooleanCheckbox citaId="estadoSeguro" value="#{seguroBean.selected.estado}" />
             </h:panelGrid>
 
             <!-- Botones -->
@@ -128,18 +128,18 @@
                              styleClass="p-button-secondary" />
 
             <!-- Tabla de seguros -->
-            <p:dataTable id="tblSeguros"
+            <p:dataTable citaId="tblSeguros"
                          value="#{seguroBean.list}"
                          var="s"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{s.id}"
+                         rowKey="#{s.citaId}"
                          selectionMode="single"
                          selection="#{seguroBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{s.id}" />
+                    <h:outputText value="#{s.citaId}" />
                 </p:column>
 
                 <p:column headerText="Código">
@@ -150,7 +150,7 @@
                     <h:outputText value="#{s.nombreAseguradora}" />
                 </p:column>
 
-                <p:column headerText="Porcentaje descuento">
+                <p:column headerText="Porcentaje descuentoId">
                     <h:outputText value="#{s.porcentajeDescuento}" />
                 </p:column>
 
