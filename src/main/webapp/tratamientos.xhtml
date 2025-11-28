@@ -8,34 +8,34 @@
     <ui:define name="content">
         <h1>Gestión de Tratamientos</h1>
 
-        <h:form id="frmTratamientos">
-            <p:growl id="msgTratamiento" showDetail="true" life="4000" />
+        <h:form citaId="frmTratamientos">
+            <p:growl citaId="msgTratamiento" showDetail="true" life="4000" />
 
             <!-- Formulario de tratamiento -->
             <h:panelGrid columns="2" columnClasses="label,value">
 
                 <h:outputLabel value="Nombre:" for="nombreTratamiento"/>
-                <p:inputText id="nombreTratamiento"
+                <p:inputText citaId="nombreTratamiento"
                              value="#{tratamientoBean.selected.nombreTratamiento}"
                              required="true" />
 
                 <h:outputLabel value="Descripción:" for="descripcion"/>
-                <p:inputTextarea id="descripcion"
+                <p:inputTextarea citaId="descripcion"
                                  value="#{tratamientoBean.selected.descripcion}"
                                  rows="3"
                                  required="true" />
 
                 <h:outputLabel value="Duración estimada:" for="duracionEstimado"/>
-                <p:inputText id="duracionEstimado"
+                <p:inputText citaId="duracionEstimado"
                              value="#{tratamientoBean.selected.duracionEstimado}" />
 
                 <h:outputLabel value="Costo:" for="costo"/>
-                <p:inputText id="costo"
+                <p:inputText citaId="costo"
                              value="#{tratamientoBean.selected.costo}" />
 
-                <h:outputLabel value="Especialidad:" for="especialidad"/>
-                <p:inputText id="especialidad"
-                             value="#{tratamientoBean.selected.especialidad}" />
+                <h:outputLabel value="Especialidad:" for="especialidadId"/>
+                <p:inputText citaId="especialidadId"
+                             value="#{tratamientoBean.selected.especialidadId}" />
             </h:panelGrid>
 
             <!-- Botones -->
@@ -51,17 +51,17 @@
                              styleClass="p-button-secondary" />
 
             <!-- Tabla -->
-            <p:dataTable id="tblTratamientos"
+            <p:dataTable citaId="tblTratamientos"
                          value="#{tratamientoBean.list}"
                          var="t"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{t.id}"
+                         rowKey="#{t.citaId}"
                          selectionMode="single">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{t.id}" />
+                    <h:outputText value="#{t.citaId}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -81,7 +81,7 @@
                 </p:column>
 
                 <p:column headerText="Especialidad">
-                    <h:outputText value="#{t.especialidad}" />
+                    <h:outputText value="#{t.especialidadId}" />
                 </p:column>
 
                 <p:column headerText="Acciones">

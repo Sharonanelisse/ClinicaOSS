@@ -1,6 +1,7 @@
 package com.smarroquin.clinicaoss.service;
 
 
+import com.smarroquin.clinicaoss.dto.*;
 import com.smarroquin.clinicaoss.models.*;
 import com.smarroquin.clinicaoss.repositories.*;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -71,12 +72,66 @@ public class CatalogService implements Serializable {
     public void eliminar(Cita cita) { citaRepository.eliminar(cita); }
     public Cita findCitaById(Long id) { return citaRepository.find(id); }
 
+    public Cita crearCita(CitaDTO citaDTO) {
+        // Buscar el usuario por ID
+        Usuario usuario = userRepository.find(citaDTO.getUserId());
+        if (usuario == null) {
+            throw new RuntimeException("Usuario no encontrado con id: " + citaDTO.getUserId());
+        }
+
+        // Buscar el paciente por ID
+        Paciente paciente = pacienteRepository.find(citaDTO.getPacienteId());
+        if (paciente == null) {
+            throw new RuntimeException("Paciente no encontrado con id: " + citaDTO.getPacienteId());
+        }
+
+        // Buscar el tratamiento por ID
+        Tratamiento tratamiento = tratamientoRepository.find(citaDTO.getTratamientoId());
+        if (tratamiento == null) {
+            throw new RuntimeException("Tratamiento no encontrado con id: " + citaDTO.getTratamientoId());
+        }
+
+        // Mapear datos de la cita
+        Cita cita = new Cita();
+        cita.setCodigo(citaDTO.getCodigo());
+        cita.setFechaApertura(citaDTO.getFechaApertura());
+        cita.setEstado_cita(citaDTO.getEstado_cita());
+        cita.setObservacionesCita(citaDTO.getObservacionesCita());
+
+        // Asignar relaciones
+        cita.setUser(usuario);
+        cita.setPaciente(paciente);
+        cita.setTratamiento(tratamiento);
+
+        // Guardar la cita
+        return citaRepository.guardar(cita);
+    }
+
 
     //Tratamientos
     public List<Tratamiento> tratamientos() { return tratamientoRepository.findAll(); }
     public Tratamiento guardar(Tratamiento tratamiento) { return tratamientoRepository.guardar(tratamiento); }
     public void eliminar(Tratamiento tratamiento) { tratamientoRepository.eliminar(tratamiento); }
     public Tratamiento findTratamientoById(Long id) { return tratamientoRepository.find(id); }
+    public Tratamiento crearTratamiento(TratamientoDTO dto) {
+        // Buscar la especialidad por ID
+        Especialidad especialidad = especialidadesRepository.find(dto.getEspecialidadId());
+
+        if (especialidad == null) {
+            throw new RuntimeException("Especialidad no encontrada con id: " + dto.getEspecialidadId());
+        }
+
+        Tratamiento tratamiento = new Tratamiento();
+        tratamiento.setNombreTratamiento(dto.getNombreTratamiento());
+        tratamiento.setDescripcion(dto.getDescripcion());
+        tratamiento.setCosto(dto.getCosto());
+        tratamiento.setDuracionEstimado(dto.getDuracionEstimado());
+
+        // Asignar la especialidad existente
+        tratamiento.setEspecialidad(especialidad);
+
+        return tratamientoRepository.guardar(tratamiento);
+    }
 
 
     //Especialidad

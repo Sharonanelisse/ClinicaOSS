@@ -9,33 +9,33 @@
         <h1>Gestión de Usuarios</h1>
 
         <!-- Formulario de usuario -->
-        <h:form id="frmUsers">
-            <p:growl id="msgUser" showDetail="true" life="4000" />
+        <h:form citaId="frmUsers">
+            <p:growl citaId="msgUser" showDetail="true" life="4000" />
 
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Nombre:" for="nombreUsuario"/>
-                <p:inputText id="nombreUsuario" value="#{usuarioBean.selected.nombreUsuario}" required="true"/>
+                <p:inputText citaId="nombreUsuario" value="#{usuarioBean.selected.nombreUsuario}" required="true"/>
 
                 <h:outputLabel value="Apellido:" for="apellidoUsuario"/>
-                <p:inputText id="apellidoUsuario" value="#{usuarioBean.selected.apellidoUsuario}" required="true"/>
+                <p:inputText citaId="apellidoUsuario" value="#{usuarioBean.selected.apellidoUsuario}" required="true"/>
 
                 <h:outputLabel value="Email:" for="email"/>
-                <p:inputText id="email" value="#{usuarioBean.selected.email}" required="true"/>
+                <p:inputText citaId="email" value="#{usuarioBean.selected.email}" required="true"/>
 
                 <h:outputLabel value="Teléfono:" for="telefono"/>
-                <p:inputText id="telefono" value="#{usuarioBean.selected.telefono}"/>
+                <p:inputText citaId="telefono" value="#{usuarioBean.selected.telefono}"/>
 
                 <h:outputLabel value="Contraseña:" for="password"/>
-                <p:password id="password" value="#{usuarioBean.selected.password}" feedback="true"/>
+                <p:password citaId="password" value="#{usuarioBean.selected.password}" feedback="true"/>
 
                 <h:outputLabel value="Rol:" for="role"/>
-                <p:selectOneMenu id="role" value="#{usuarioBean.selected.role_name}">
+                <p:selectOneMenu citaId="role" value="#{usuarioBean.selected.role_name}">
                     <f:selectItems value="#{usuarioBean.roles}" var="r" itemLabel="#{r}" itemValue="#{r}"/>
                 </p:selectOneMenu>
 
 
                 <h:outputLabel value="Estado:" for="status"/>
-                <p:selectBooleanCheckbox id="status" value="#{usuarioBean.selected.status}" />
+                <p:selectBooleanCheckbox citaId="status" value="#{usuarioBean.selected.status}" />
             </h:panelGrid>
 
             <p:commandButton value="Guardar"
@@ -49,18 +49,18 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <p:dataTable id="tblUsers"
+            <p:dataTable citaId="tblUsers"
                          value="#{usuarioBean.list}"
                          var="u"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{u.id}"
+                         rowKey="#{u.citaId}"
                          selectionMode="single"
                          selection="#{usuarioBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{u.id}" />
+                    <h:outputText value="#{u.citaId}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -104,22 +104,22 @@
         </h:form>
 
         <!-- Subformulario de jornadas laborales -->
-        <h:form id="frmJornadas" style="margin-top:30px;">
-            <p:growl id="msgJornadas" showDetail="true" life="4000" />
+        <h:form citaId="frmJornadas" style="margin-top:30px;">
+            <p:growl citaId="msgJornadas" showDetail="true" life="4000" />
 
             <h3>Jornadas laborales del usuario seleccionado</h3>
 
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Día:" for="dia"/>
-                <p:selectOneMenu id="dia" value="#{jornadaLaboralBean.selected.dia_semana}">
+                <p:selectOneMenu citaId="dia" value="#{jornadaLaboralBean.selected.dia_semana}">
                     <f:selectItems value="#{jornadaLaboralBean.diasSemana}" var="d" itemLabel="#{d}" itemValue="#{d}"/>
                 </p:selectOneMenu>
 
                 <h:outputLabel value="Hora inicio:" for="horaInicio"/>
-                <p:datePicker id="horaInicio" value="#{jornadaLaboralBean.selected.horaInicio}" timeOnly="true"/>
+                <p:datePicker citaId="horaInicio" value="#{jornadaLaboralBean.selected.horaInicio}" timeOnly="true"/>
 
                 <h:outputLabel value="Hora fin:" for="horaFin"/>
-                <p:datePicker id="horaFin" value="#{jornadaLaboralBean.selected.horaFin}" timeOnly="true"/>
+                <p:datePicker citaId="horaFin" value="#{jornadaLaboralBean.selected.horaFin}" timeOnly="true"/>
             </h:panelGrid>
 
             <p:commandButton value="Guardar jornada"
@@ -133,18 +133,18 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <p:dataTable id="tblJornadas"
+            <p:dataTable citaId="tblJornadas"
                          value="#{jornadaLaboralBean.list}"
                          var="j"
                          paginator="true"
                          rows="7"
                          style="margin-top:20px;"
-                         rowKey="#{j.id}"
+                         rowKey="#{j.citaId}"
                          selectionMode="single"
                          selection="#{jornadaLaboralBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{j.id}" />
+                    <h:outputText value="#{j.citaId}" />
                 </p:column>
 
                 <p:column headerText="Día">
