@@ -2,7 +2,7 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Cita;
 import com.smarroquin.clinicaoss.models.Paciente;
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.models.Tratamiento;
 import com.smarroquin.clinicaoss.enums.estado_cita;
 import com.smarroquin.clinicaoss.service.CatalogService;
@@ -76,7 +76,7 @@ public class CitaBean extends Bean<Cita> implements Serializable {
         return service.pacientes();
     }
 
-    public List<User> getUsuarios() {
+    public List<Usuario> getUsuarios() {
         return service.users();
     }
 

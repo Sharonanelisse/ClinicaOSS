@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "dia_semana": "LUNES",
+    "horaInicio": "08:00:00",
+    "horaFin": "16:00:00",
+    "user": { "id": 2 }
+  },
+  {
+    "id": 2,
+    "dia_semana": "MARTES",
+    "horaInicio": "09:00:00",
+    "horaFin": "17:00:00",
+    "user": { "id": 4 }
+  },
+  {
+    "id": 3,
+    "dia_semana": "MIERCOLES",
+    "horaInicio": "08:30:00",
+    "horaFin": "16:30:00",
+    "user": { "id": 2 }
+  },
+  {
+    "id": 4,
+    "dia_semana": "JUEVES",
+    "horaInicio": "10:00:00",
+    "horaFin": "18:00:00",
+    "user": { "id": 4 }
+  },
+  {
+    "id": 5,
+    "dia_semana": "VIERNES",
+    "horaInicio": "08:00:00",
+    "horaFin": "14:00:00",
+    "user": { "id": 2 }
+  },
+  {
+    "id": 6,
+    "dia_semana": "SABADO",
+    "horaInicio": "09:00:00",
+    "horaFin": "13:00:00",
+    "user": { "id": 3 }
+  }
+]

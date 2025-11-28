@@ -18,7 +18,7 @@ public class CatalogService implements Serializable {
     public CatalogService() { }
 
     @Inject
-    private UserRepostory userRepository;
+    private UsuarioRepostory userRepository;
 
     @Inject
     private PacienteRepository pacienteRepository;
@@ -47,20 +47,12 @@ public class CatalogService implements Serializable {
     @Inject
     private SeguroRepository seguroRepository;
 
-    @Inject
-    FileRepository fileRepository;
-
 
     //Users
-    public List<User> users() { return userRepository.findAll(); }
-    public User guardar(User user) { return userRepository.guardar(user); }
-    public void eliminar(User user) { userRepository.eliminar(user); }
-    public User findUserById(Long id) { return userRepository.find(id); }
-
-    //Files
-    public File saveFile(File f) { return fileRepository.guardar(f); }
-    public List<File> files() { return fileRepository.findAll(); }
-    public void deleteFile(File f) { fileRepository.eliminar(f); }
+    public List<Usuario> users() { return userRepository.findAll(); }
+    public Usuario guardar(Usuario user) { return userRepository.guardar(user); }
+    public void eliminar(Usuario user) { userRepository.eliminar(user); }
+    public Usuario findUserById(Long id) { return userRepository.find(id); }
 
     //Pacientes
     public List<Paciente> pacientes() { return pacienteRepository.findAll(); }
@@ -69,7 +61,7 @@ public class CatalogService implements Serializable {
     public Paciente findPacienteById(Long id) { return pacienteRepository.find(id); }
 
     //JornadaLaboral
-    public List<JornadaLaboral> jornadasPorUsuario(User userContext) { return jornadalaboralRepository.findAll(); }
+    public List<JornadaLaboral> jornadasPorUsuario(Usuario userContext) { return jornadalaboralRepository.findAll(); }
     public JornadaLaboral guardar(JornadaLaboral jornadaLaboral) { return jornadalaboralRepository.guardar(jornadaLaboral); }
     public void eliminar(JornadaLaboral jornadaLaboral) { jornadalaboralRepository.eliminar(jornadaLaboral); }
 

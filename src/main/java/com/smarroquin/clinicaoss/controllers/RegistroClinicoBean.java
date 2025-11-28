@@ -2,7 +2,7 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.RegistroClinico;
 import com.smarroquin.clinicaoss.models.Paciente;
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.models.Cita;
 import com.smarroquin.clinicaoss.enums.tipo_archivo;
 import com.smarroquin.clinicaoss.service.CatalogService;
@@ -78,7 +78,7 @@ public class RegistroClinicoBean extends Bean<RegistroClinico> implements Serial
         return service.pacientes();
     }
 
-    public List<User> getUsuarios() {
+    public List<Usuario> getUsuarios() {
         return service.users();
     }
 

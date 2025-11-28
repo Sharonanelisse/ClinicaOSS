@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "codigoAseguradora": "SEG-001",
+    "nombreAseguradora": "DentalCare Plus",
+    "porcentajeDescuento": 15.0,
+    "fechaInicio": "2025-01-01",
+    "deducible": 100.00,
+    "fechaFinal": "2025-12-31",
+    "estado": true
+  },
+  {
+    "id": 2,
+    "codigoAseguradora": "SEG-002",
+    "nombreAseguradora": "Sonrisa Protegida",
+    "porcentajeDescuento": 20.0,
+    "fechaInicio": "2025-02-01",
+    "deducible": 120.00,
+    "fechaFinal": "2025-12-31",
+    "estado": true
+  },
+  {
+    "id": 3,
+    "codigoAseguradora": "SEG-003",
+    "nombreAseguradora": "Salud Bucal Segura",
+    "porcentajeDescuento": 10.0,
+    "fechaInicio": "2025-03-01",
+    "deducible": 90.00,
+    "fechaFinal": "2025-12-31",
+    "estado": true
+  },
+  {
+    "id": 4,
+    "codigoAseguradora": "SEG-004",
+    "nombreAseguradora": "OdontoLife",
+    "porcentajeDescuento": 25.0,
+    "fechaInicio": "2025-04-01",
+    "deducible": 150.00,
+    "fechaFinal": "2025-12-31",
+    "estado": true
+  },
+  {
+    "id": 5,
+    "codigoAseguradora": "SEG-005",
+    "nombreAseguradora": "SmileCare Insurance",
+    "porcentajeDescuento": 18.0,
+    "fechaInicio": "2025-05-01",
+    "deducible": 110.00,
+    "fechaFinal": "2025-12-31",
+    "estado": true
+  }
+]

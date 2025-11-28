@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "nombrePaciente": "José Manuel",
+    "apellidoPaciente": "Castillo Herrera",
+    "dpi": "DPI-10000001",
+    "fechaNacimiento": "1985-03-12",
+    "edad": 40,
+    "telefono": "+50255581234",
+    "email": "jose.castillo@correo.com",
+    "alergias": "Penicilina",
+    "condicionesMedicas": "Hipertensión",
+    "observaciones": "Paciente con antecedentes familiares de hipertensión, requiere control de presión arterial.",
+    "fechaRegistro": "2025-11-27T22:54:00"
+  },
+  {
+    "id": 2,
+    "nombrePaciente": "María Elena",
+    "apellidoPaciente": "Gómez López",
+    "dpi": "DPI-10000002",
+    "fechaNacimiento": "1992-07-25",
+    "edad": 33,
+    "telefono": "+50255582345",
+    "email": "maria.gomez@correo.com",
+    "alergias": "Polen",
+    "condicionesMedicas": "Ninguna",
+    "observaciones": "Consulta por limpieza dental, refiere sensibilidad en encías.",
+    "fechaRegistro": "2025-11-27T22:54:00"
+  },
+  {
+    "id": 3,
+    "nombrePaciente": "Luis Fernando",
+    "apellidoPaciente": "Ramírez Díaz",
+    "dpi": "DPI-10000003",
+    "fechaNacimiento": "1978-11-05",
+    "edad": 47,
+    "telefono": "+50255583456",
+    "email": "luis.ramirez@correo.com",
+    "alergias": "Ninguna",
+    "condicionesMedicas": "Diabetes tipo II",
+    "observaciones": "Paciente en tratamiento de periodontitis, requiere control glucémico.",
+    "fechaRegistro": "2025-11-27T22:54:00"
+  },
+  {
+    "id": 4,
+    "nombrePaciente": "Claudia Patricia",
+    "apellidoPaciente": "Morales Cruz",
+    "dpi": "DPI-10000004",
+    "fechaNacimiento": "2000-01-18",
+    "edad": 25,
+    "telefono": "+50255584567",
+    "email": "claudia.morales@correo.com",
+    "alergias": "Ninguna",
+    "condicionesMedicas": "Ninguna",
+    "observaciones": "Paciente joven, primera visita odontológica, solicita revisión general.",
+    "fechaRegistro": "2025-11-27T22:54:00"
+  },
+  {
+    "id": 5,
+    "nombrePaciente": "Ricardo Andrés",
+    "apellidoPaciente": "Pérez Soto",
+    "dpi": "DPI-10000005",
+    "fechaNacimiento": "1969-09-30",
+    "edad": 56,
+    "telefono": "+50255585678",
+    "email": "ricardo.perez@correo.com",
+    "alergias": "Aspirina",
+    "condicionesMedicas": "Cardiopatía",
+    "observaciones": "Paciente con prótesis dental parcial, requiere ajuste y revisión periódica.",
+    "fechaRegistro": "2025-11-27T22:54:00"
+  }
+]

@@ -1,7 +1,7 @@
 package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.JornadaLaboral;
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.enums.dia_semana;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.inject.Inject;
@@ -21,7 +21,7 @@ public class JornadaLaboralBean extends Bean<JornadaLaboral> implements Serializ
     @Inject
     private transient CatalogService service;
 
-    private User userContext;
+    private Usuario userContext;
 
     @Override
     protected JornadaLaboral createNew() {
@@ -70,11 +70,11 @@ public class JornadaLaboralBean extends Bean<JornadaLaboral> implements Serializ
     }
 
     // Setter para establecer el usuario en contexto desde UserBean
-    public void setUserContext(User user) {
+    public void setUserContext(Usuario user) {
         this.userContext = user;
     }
 
-    public User getUserContext() {
+    public Usuario getUserContext() {
         return userContext;
     }
 

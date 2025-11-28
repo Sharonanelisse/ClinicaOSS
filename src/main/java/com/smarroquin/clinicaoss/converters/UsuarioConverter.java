@@ -1,6 +1,6 @@
 package com.smarroquin.clinicaoss.converters;
 
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.repositories.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.faces.component.UIComponent;
@@ -11,13 +11,13 @@ import jakarta.inject.Inject;
 
 @FacesConverter(value = "userConverter", managed = true)
 @ApplicationScoped
-public class UserConverter implements Converter<User> {
+public class UsuarioConverter implements Converter<Usuario> {
 
     @Inject
-    private UserRepostory repo;
+    private UsuarioRepostory repo;
 
     @Override
-    public User getAsObject(FacesContext context, UIComponent component, String value) {
+    public Usuario getAsObject(FacesContext context, UIComponent component, String value) {
         if (value == null || value.trim().isEmpty() || "null".equalsIgnoreCase(value)) {
             return null;
         }
@@ -30,7 +30,7 @@ public class UserConverter implements Converter<User> {
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component, User value) {
+    public String getAsString(FacesContext context, UIComponent component, Usuario value) {
         return (value == null || value.getId() == null) ? "" : value.getId().toString();
     }
 }
