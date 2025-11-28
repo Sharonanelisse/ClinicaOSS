@@ -4,95 +4,191 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 
 @Entity
-@Table(
-        name = "pacientes",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_paciente_dpi", columnNames = "dpi")
-        }
-)
 public class Paciente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre completo es obligatorio")
+    @NotBlank(message = "Agregar el nombre del paciente")
     @Size(min = 3, max = 60)
-    @Column(name = "nombre_completo", length = 60, nullable = false)
-    private String nombreCompleto;
+    @Column(length = 60, nullable = false)
+    private String nombrePaciente;
+
+    @NotBlank(message = "Agregar el nombre del paciente")
+    @Size(min = 3, max = 60)
+    @Column(length = 60, nullable = false)
+    private String apellidoPaciente;
 
     @NotBlank(message = "El DPI es obligatorio")
     @Column(length = 20, nullable = false, unique = true)
     private String dpi;
 
     @NotNull(message = "La fecha de nacimiento es obligatoria")
-    @Column(name = "fecha_nacimiento", nullable = false)
+    @Column(nullable = false)
     private LocalDate fechaNacimiento;
 
     @Column
     private Integer edad;
 
     @NotBlank(message = "El teléfono es obligatorio")
-    @Column(length = 15, nullable = false)
+    @Pattern(regexp = "^\\+?\\d{8,15}$", message = "Teléfono internacional 8-15 dígitos")
     private String telefono;
 
     @Email(message = "Debe ser un correo válido")
+    @NotBlank(message = "Debes agregar un correo")
     @Column(length = 120)
     private String email;
 
-    @Column
+    @Column(length = 255)
     private String alergias;
 
-    @Column(name = "condiciones_medicas")
+    @Column
     private String condicionesMedicas;
 
     @Column
     private String observaciones;
 
-    @Column(name = "fecha_registro", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;
 
     @PrePersist
     protected void prePersist() {
         this.fechaRegistro = LocalDateTime.now();
-        if (fechaNacimiento != null) {
-            this.edad = LocalDate.now().getYear() - fechaNacimiento.getYear();
+        actualizarEdad();
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        actualizarEdad();
+    }
+
+    private void actualizarEdad() {
+        if (this.fechaNacimiento != null) {
+            this.edad = Period.between(this.fechaNacimiento, LocalDate.now()).getYears();
+        } else {
+            this.edad = null;
         }
     }
 
     // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getNombreCompleto() { return nombreCompleto; }
-    public void setNombreCompleto(String nombreCompleto) { this.nombreCompleto = nombreCompleto; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getDpi() { return dpi; }
-    public void setDpi(String dpi) { this.dpi = dpi; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
-    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+    public String getNombrePaciente() {
+        return nombrePaciente;
+    }
 
-    public Integer getEdad() { return edad; }
-    public void setEdad(Integer edad) { this.edad = edad; }
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+    }
 
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public String getApellidoPaciente() {
+        return apellidoPaciente;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setApellidoPaciente(String apellidoPaciente) {
+        this.apellidoPaciente = apellidoPaciente;
+    }
 
-    public String getAlergias() { return alergias; }
-    public void setAlergias(String alergias) { this.alergias = alergias; }
+    public String getDpi() {
+        return dpi;
+    }
 
-    public String getCondicionesMedicas() { return condicionesMedicas; }
-    public void setCondicionesMedicas(String condicionesMedicas) { this.condicionesMedicas = condicionesMedicas; }
+    public void setDpi(String dpi) {
+        this.dpi = dpi;
+    }
 
-    public String getObservaciones() { return observaciones; }
-    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
 
-    public LocalDateTime getFechaRegistro() { return fechaRegistro; }
-    public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public Integer getEdad() {
+        return edad;
+    }
+
+    public void setEdad(Integer edad) {
+        this.edad = edad;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAlergias() {
+        return alergias;
+    }
+
+    public void setAlergias(String alergias) {
+        this.alergias = alergias;
+    }
+
+    public String getCondicionesMedicas() {
+        return condicionesMedicas;
+    }
+
+    public void setCondicionesMedicas(String condicionesMedicas) {
+        this.condicionesMedicas = condicionesMedicas;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Paciente{");
+        sb.append("id=").append(id);
+        sb.append(", nombrePaciente='").append(nombrePaciente).append('\'');
+        sb.append(", apellidoPaciente='").append(apellidoPaciente).append('\'');
+        sb.append(", dpi='").append(dpi).append('\'');
+        sb.append(", fechaNacimiento='").append(fechaNacimiento).append('\'');
+        sb.append(", edad='").append(edad).append('\'');
+        sb.append(", telefono='").append(telefono).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", alergias='").append(alergias).append('\'');
+        sb.append(", condicionesMedicas='").append(condicionesMedicas).append('\'');
+        sb.append(", observaciones='").append(observaciones).append('\'');
+        sb.append(", fechaRegistro='").append(fechaRegistro).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
 }

@@ -1,15 +1,10 @@
 package com.smarroquin.clinicaoss.models;
 
+import com.smarroquin.clinicaoss.enums.role_name;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(
-        name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
-        }
-)
 public class User {
 
     @Id
@@ -18,8 +13,17 @@ public class User {
 
     @NotBlank(message = "El nombre completo es obligatorio.")
     @Size(min = 3, max = 60, message = "El nombre completo debe tener entre 3 y 60 caracteres.")
-    @Column(name = "nombre_completo", length = 60, nullable = false)
-    private String nombreCompleto;
+    @Column(length = 60, nullable = false)
+    private String nombreUsuario;
+
+    @NotBlank(message = "El nombre completo es obligatorio.")
+    @Size(min = 3, max = 60, message = "El nombre completo debe tener entre 3 y 60 caracteres.")
+    @Column(length = 60, nullable = false)
+    private String apellidoUsuario;
+
+    @NotNull(message = "Seleccionar el role")
+    @Enumerated(EnumType.STRING)
+    private role_name role_name;
 
     @NotBlank(message = "El correo electrónico es obligatorio.")
     @Email(message = "El correo electrónico no tiene un formato válido.")
@@ -37,46 +41,60 @@ public class User {
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s]).{8,20}$",
             message = "La contraseña debe incluir al menos: una letra mayúscula, una minúscula, un número y un carácter especial."
     )
-    @Column(name = "password", length = 60, nullable = false)
+    @Column(length = 60, nullable = false)
     private String password;
 
     @NotNull(message = "El estado es obligatorio.")
     @Column(nullable = false)
     private Boolean status = true;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "role_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_role_user")
-    )
-    private Role role;
-
     @PrePersist
     protected void prePersist() {
         if (status == null) status = true;
-        if (nombreCompleto != null) nombreCompleto = nombreCompleto.trim();
+        if (nombreUsuario != null) nombreUsuario = nombreUsuario.trim();
+        if (apellidoUsuario != null) apellidoUsuario = apellidoUsuario.trim();
         if (email != null) email = email.trim().toLowerCase();
         if (telefono != null) telefono = telefono.trim();
     }
 
+    // Getters y Setters
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getApellidoUsuario() {
+        return apellidoUsuario;
+    }
+
+    public role_name getRole_name() {
+        return role_name;
+    }
+
+    public void setRole_name(role_name role_name) {
+        this.role_name = role_name;
+    }
+
+    public void setApellidoUsuario(String apellidoUsuario) {
+        this.apellidoUsuario = apellidoUsuario;
     }
 
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -84,6 +102,7 @@ public class User {
     public String getTelefono() {
         return telefono;
     }
+
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
@@ -91,6 +110,7 @@ public class User {
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -98,14 +118,24 @@ public class User {
     public Boolean getStatus() {
         return status;
     }
+
     public void setStatus(Boolean status) {
         this.status = status;
     }
 
-    public Role getRole() {
-        return role;
-    }
-    public void setRole(Role role) {
-        this.role = role;
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("User{");
+        sb.append("id=").append(id);
+        sb.append(", nombreUsuario='").append(nombreUsuario).append('\'');
+        sb.append(", apellidoUsuario='").append(apellidoUsuario).append('\'');
+        sb.append(", role_name='").append(role_name).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", telefono='").append(telefono).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append('}');
+
+        return sb.toString();
     }
 }
