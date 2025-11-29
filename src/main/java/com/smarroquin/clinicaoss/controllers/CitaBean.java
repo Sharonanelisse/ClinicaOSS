@@ -7,6 +7,8 @@ import com.smarroquin.clinicaoss.models.Tratamiento;
 import com.smarroquin.clinicaoss.enums.estado_cita;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -35,7 +37,6 @@ public class CitaBean extends Bean<Cita> implements Serializable {
     private CatalogService service;
 
     private ScheduleModel schedule;
-
     private ScheduleEvent<?> event;
 
     @PostConstruct
@@ -52,15 +53,13 @@ public class CitaBean extends Bean<Cita> implements Serializable {
 
         if (listaCitas != null && !listaCitas.isEmpty()) {
             for (Cita c : listaCitas) {
-                // Validación básica de seguridad
                 if (c.getFechaApertura() == null) continue;
 
                 LocalDateTime start = c.getFechaApertura();
+                LocalDateTime end = start.plusHours(1); // Duración default 1h
 
-                LocalDateTime end = start.plusHours(1);
-
-                // Lógica de colores CSS según el Enum
-                String cssClass = "cita-pendiente"; // Default amarillo
+                // Colores según estado
+                String cssClass = "cita-pendiente";
                 if (c.getEstado_cita() != null) {
                     switch (c.getEstado_cita()) {
                         case PENDIENTE:    cssClass = "cita-pendiente"; break;
@@ -74,7 +73,6 @@ public class CitaBean extends Bean<Cita> implements Serializable {
                 String titulo = (c.getPaciente() != null ? c.getPaciente().getNombrePaciente() + " " + c.getPaciente().getApellidoPaciente() : "Sin Paciente")
                         + " - " + (c.getTratamiento() != null ? c.getTratamiento().getNombreTratamiento() : "Consulta");
 
-                // Crear el evento gráfico
                 DefaultScheduleEvent<?> ev = DefaultScheduleEvent.builder()
                         .title(titulo)
                         .startDate(start)
@@ -91,29 +89,61 @@ public class CitaBean extends Bean<Cita> implements Serializable {
     }
 
     public void onDateSelect(SelectEvent<LocalDateTime> selectEvent) {
-        this.newEntity(); // Llama al método del padre para limpiar
-
-        // Asignar la fecha donde se dio clic
+        this.newEntity();
+        // Asignar la fecha seleccionada en el calendario
         this.selected.setFechaApertura(selectEvent.getObject());
-
         // Valores por defecto
         this.selected.setEstado_cita(estado_cita.PENDIENTE);
 
-        // Mostrar el diálogo
         PrimeFaces.current().executeScript("PF('wdialogo').show();");
     }
 
     public void onEventSelect(SelectEvent<ScheduleEvent<?>> selectEvent) {
         this.event = selectEvent.getObject();
 
-        // Recuperamos el objeto Cita real que guardamos en .data(c)
         this.selected = (Cita) event.getData();
 
+
         this.dialogVisible = true;
-        // Mostrar el diálogo
         PrimeFaces.current().executeScript("PF('wdialogo').show();");
     }
 
+    public LocalDateTime getFechaMinima() {
+        return LocalDateTime.now().minusMinutes(1);
+    }
+
+    @Override
+    public void save() {
+        // 1. VALIDACIÓN: No permitir citas en el pasado
+        if (selected.getFechaApertura() != null && selected.getFechaApertura().isBefore(LocalDateTime.now())) {
+
+            // Si es edición, verificamos si la fecha cambió. Si es la misma de la BD, permitimos guardar.
+            Cita existente = (selected.getId() != null) ? service.findCitaById(selected.getId()) : null;
+
+            // Si es nueva (existente == null) O si la fecha cambió respecto a la BD
+            if (existente == null || !existente.getFechaApertura().isEqual(selected.getFechaApertura())) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error de Fecha", "No se pueden agendar citas en el pasado."));
+                // Mantiene el diálogo abierto
+                PrimeFaces.current().ajax().addCallbackParam("validationFailed", true);
+                return;
+            }
+        }
+
+        // 2. Guardar
+        super.save();
+
+        // 3. Refrescar calendario visualmente
+        loadEvents();
+        PrimeFaces.current().executeScript("PF('wdialogo').hide();");
+    }
+
+    @Override
+    public void delete(Cita entity) {
+        super.delete(entity);
+        loadEvents();
+        PrimeFaces.current().executeScript("PF('wdialogo').hide();");
+    }
 
 
     @Override
@@ -135,23 +165,6 @@ public class CitaBean extends Bean<Cita> implements Serializable {
     protected void remove(Cita entity) {
         service.eliminarCita(entity);
     }
-
-
-    @Override
-    public void save() {
-        super.save();
-        loadEvents();
-
-        PrimeFaces.current().executeScript("PF('wdialogo').hide();");
-    }
-
-    @Override
-    public void delete(Cita entity) {
-        super.delete(entity);
-        loadEvents();
-        PrimeFaces.current().executeScript("PF('wdialogo').hide();");
-    }
-
 
     @Override
     protected String getFacesClientId() {
@@ -180,28 +193,14 @@ public class CitaBean extends Bean<Cita> implements Serializable {
         return labels;
     }
 
-    public List<Paciente> getPacientes() {
-        return service.pacientes();
-    }
 
+    public List<Paciente> getPacientes() { return service.pacientes(); }
     public List<Usuario> getUsuarios() {
-        return service.users();
+        return service.odontologos();
     }
+    public List<Tratamiento> getTratamientos() { return service.tratamientos(); }
+    public estado_cita[] getEstadosCita() { return estado_cita.values(); }
 
-    public List<Tratamiento> getTratamientos() {
-        return service.tratamientos();
-    }
-
-    public estado_cita[] getEstadosCita() {
-        return estado_cita.values();
-    }
-
-    public ScheduleModel getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(ScheduleModel schedule) {
-        this.schedule = schedule;
-    }
-
+    public ScheduleModel getSchedule() { return schedule; }
+    public void setSchedule(ScheduleModel schedule) { this.schedule = schedule; }
 }

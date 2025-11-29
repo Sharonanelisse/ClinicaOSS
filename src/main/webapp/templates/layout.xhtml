@@ -32,6 +32,7 @@
             display: flex;
             position: fixed;
             top: 0;
+            z-index: 10;
         }
 
         .wrapper .top_navbar .logo{
@@ -226,12 +227,13 @@
                 <a href="#"><h:graphicImage library="img" name="logo.png" style="width: 115px;filter: brightness(0) invert(1);" /></a>
             </div>
             <div class="top_menu">
-                <div>#{sessionScope.usuarioLogueado.nombreUsuario}</div>
+                <div>Hola, #{sessionScope.usuarioLogeado.nombreUsuario}</div>
                 <div class="right_info">
                     <div class="icon_wrap">
-                        <div class="icon">
-                            Cerrar sesión
-                        </div>
+                        <h:form>
+                            <h:commandLink value="Cerrar Sesión"
+                                           action="#{usuarioBean.logout}" style="color:#fff!important" />
+                        </h:form>
                     </div>
                 </div>
             </div>
@@ -242,82 +244,130 @@
             <div class="sidebar_menu">
                 <div class="inner__sidebar_menu">
                     <ul>
-                        <li>
-                            <a href="home.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-home" ></i>
-                          </span>
-                                <span class="list">Home</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="pacientes.xhtml">
-                          <span class="icon">
-                             <i class="pi pi-exclamation-circle" ></i>
-                          </span>
-                                <span class="list">Pacientes</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="usuarios.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-users" ></i>
-                          </span>
-                                <span class="list">Usuarios</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="citas.xhtml">
-                          <span class="icon">
-                             <i class="pi pi-calendar" ></i>
-                          </span>
-                                <span class="list">Citas</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="registroclinico.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-calendar-plus" ></i>
-                          </span>
-                                <span class="list">Registro Clínico</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="tratamientos.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-exclamation-triangle"></i>
-                          </span>
-                                <span class="list">Tratamiento</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="especialidades.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-check-circle"></i>
-                          </span>
-                                <span class="list">Especialidades</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="facturacion.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-inbox"></i>
-                          </span>
-                                <span class="list">Facturación</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="descuentosseguros.xhtml">
-                          <span class="icon">
-                            <i class="pi pi-percentage"></i>
-                          </span>
-                                <span class="list">Descuentos y seguros</span>
-                            </a>
-                        </li>
-                    </ul>
 
+                        <!-- HOME - visible para todos con sesión -->
+                        <h:panelGroup rendered="#{not empty sessionScope.usuarioLogeado}">
+                            <li>
+                                <a href="home.xhtml">
+                                    <span class="icon"><i class="pi pi-home"></i></span>
+                                    <span class="list">Home</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- PACIENTES: admin, recepcionista, odontólogo -->
+                        <h:panelGroup rendered="#{
+                sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR' or
+                sessionScope.usuarioLogeado.role_name eq 'RECEPCIONISTA' or
+                sessionScope.usuarioLogeado.role_name eq 'ODONTOLOGO'
+            }">
+                            <li>
+                                <a href="pacientes.xhtml">
+                                    <span class="icon"><i class="pi pi-exclamation-circle"></i></span>
+                                    <span class="list">Pacientes</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- USUARIOS: solo administrador -->
+                        <h:panelGroup rendered="#{sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR'}">
+                            <li>
+                                <a href="usuarios.xhtml">
+                                    <span class="icon"><i class="pi pi-users"></i></span>
+                                    <span class="list">Usuarios</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- CITAS: admin, recepcionista, odontólogo -->
+                        <h:panelGroup rendered="#{
+                sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR' or
+                sessionScope.usuarioLogeado.role_name eq 'RECEPCIONISTA' or
+                sessionScope.usuarioLogeado.role_name eq 'ODONTOLOGO'
+            }">
+                            <li>
+                                <a href="citas.xhtml">
+                                    <span class="icon"><i class="pi pi-calendar"></i></span>
+                                    <span class="list">Citas</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- REGISTRO CLÍNICO: admin, odontólogo -->
+                        <h:panelGroup rendered="#{
+                sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR' or
+                sessionScope.usuarioLogeado.role_name eq 'ODONTOLOGO'
+            }">
+                            <li>
+                                <a href="registroclinico.xhtml">
+                                    <span class="icon"><i class="pi pi-calendar-plus"></i></span>
+                                    <span class="list">Registro Clínico</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- TRATAMIENTOS: admin, odontólogo -->
+                        <h:panelGroup rendered="#{
+                sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR' or
+                sessionScope.usuarioLogeado.role_name eq 'ODONTOLOGO'
+            }">
+                            <li>
+                                <a href="tratamientos.xhtml">
+                                    <span class="icon"><i class="pi pi-exclamation-triangle"></i></span>
+                                    <span class="list">Tratamiento</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- ESPECIALIDADES: solo admin -->
+                        <h:panelGroup rendered="#{sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR'}">
+                            <li>
+                                <a href="especialidades.xhtml">
+                                    <span class="icon"><i class="pi pi-check-circle"></i></span>
+                                    <span class="list">Especialidades</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- FACTURACIÓN: admin y recepcionista -->
+                        <h:panelGroup rendered="#{
+                sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR' or
+                sessionScope.usuarioLogeado.role_name eq 'RECEPCIONISTA'
+            }">
+                            <li>
+                                <a href="facturacion.xhtml">
+                                    <span class="icon"><i class="pi pi-inbox"></i></span>
+                                    <span class="list">Facturación</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+
+                        <!-- DESCUENTOS Y SEGUROS: admin y recepcionista -->
+                        <h:panelGroup rendered="#{
+                sessionScope.usuarioLogeado.role_name eq 'ADMINISTRADOR' or
+                sessionScope.usuarioLogeado.role_name eq 'RECEPCIONISTA'
+            }">
+                            <li>
+                                <a href="descuentosseguros.xhtml">
+                                    <span class="icon"><i class="pi pi-percentage"></i></span>
+                                    <span class="list">Descuentos y seguros</span>
+                                </a>
+                            </li>
+                        </h:panelGroup>
+
+                    </ul>
                 </div>
             </div>
+
+
 
             <div class="container">
                 <h:form citaId="global">

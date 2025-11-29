@@ -1,16 +1,19 @@
 package com.smarroquin.clinicaoss.controllers;
 
-import com.smarroquin.clinicaoss.enums.role_name;
+import com.smarroquin.clinicaoss.models.JornadaLaboral;
 import com.smarroquin.clinicaoss.models.Usuario;
+import com.smarroquin.clinicaoss.enums.role_name;
+import com.smarroquin.clinicaoss.enums.dia_semana;
 import com.smarroquin.clinicaoss.service.CatalogService;
-import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.faces.view.ViewScoped;
+import org.primefaces.PrimeFaces;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,43 +24,34 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private transient CatalogService service;
+    private CatalogService service;
 
-    @PostConstruct
-    public void initBean() {
-        System.out.println("Usuarios encontrados en init: " + service.users().size());
-    }
+    // --- VARIABLES PARA JORNADA LABORAL ---
+    private List<JornadaLaboral> jornadasUsuario;
 
+    // CORRECCIÓN 1: Inicializar aquí para que NUNCA sea null al cargar la página
+    private JornadaLaboral nuevaJornada = new JornadaLaboral();
+
+    // ==========================================================
+    // MÉTODOS DEL PADRE (BEAN<T>)
+    // ==========================================================
 
     @Override
     protected Usuario createNew() {
-        return new Usuario();
+        Usuario u = new Usuario();
+        u.setStatus(true);
+
+        // CORRECCIÓN 2: Reiniciar el objeto auxiliar al crear nuevo usuario
+        this.nuevaJornada = new JornadaLaboral();
+        this.jornadasUsuario = new ArrayList<>(); // Reiniciar lista también
+
+        return u;
     }
 
     @Override
     protected List<Usuario> findAll() {
-        List<Usuario> usuarios = service.users();
-        System.out.println("Usuarios encontrados: " + usuarios.size());
-        return usuarios;
+        return service.usuario();
     }
-
-
-    public role_name[] getRoles() {
-        return role_name.values();
-    }
-
-    public void toggleStatus(Usuario u) {
-        u.setStatus(!u.getStatus());
-        service.guardarUsuario(u);
-
-        FacesContext.getCurrentInstance().addMessage(
-                null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Estado actualizado",
-                        "El usuario ahora está " + (u.getStatus() ? "Activo" : "Inactivo"))
-        );
-    }
-
 
     @Override
     protected void persist(Usuario entity) {
@@ -66,8 +60,115 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
 
     @Override
     protected void remove(Usuario entity) {
-        service.eliminarUsuario(entity);
+        entity.setStatus(false);
+        service.guardarUsuario(entity);
     }
+
+    @Override
+    public void delete(Usuario entity) {
+        try {
+            remove(entity);
+            addInfoMessage("Usuario desactivado correctamente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error al desactivar usuario");
+        }
+    }
+
+    public void activar(Usuario entity) {
+        try {
+            entity.setStatus(true);
+            service.guardarUsuario(entity);
+            addInfoMessage("Usuario reactivado correctamente");
+        } catch (Exception e) {
+            addErrorMessage("Error al reactivar usuario");
+        }
+    }
+
+    // ==========================================================
+    // LÓGICA DE JORNADA LABORAL
+    // ==========================================================
+
+    public void cargarUsuario(Usuario u) {
+        this.selected = u;
+
+        // Cargar horarios. Si viene null del servicio, ponemos lista vacía.
+        List<JornadaLaboral> encontradas = service.jornadasPorUsuario(u);
+        this.jornadasUsuario = (encontradas != null) ? encontradas : new ArrayList<>();
+
+        // Preparar nueva jornada
+        this.nuevaJornada = new JornadaLaboral();
+        this.nuevaJornada.setUser(u);
+
+        PrimeFaces.current().executeScript("PF('wdialogo').show();");
+    }
+
+    public void agregarJornada() {
+        if (selected == null || selected.getId() == null) {
+            addErrorMessage("Error: Guarde el usuario antes de asignar horarios.");
+            return;
+        }
+
+        try {
+            nuevaJornada.setUser(selected);
+            service.guardarJornada(nuevaJornada);
+
+            // Refrescar lista
+            this.jornadasUsuario = service.jornadasPorUsuario(selected);
+
+            // Limpiar form
+            this.nuevaJornada = new JornadaLaboral();
+            this.nuevaJornada.setUser(selected); // Importante volver a setear el usuario
+
+            addInfoMessage("Horario agregado exitosamente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            addErrorMessage("Error al guardar horario: " + e.getMessage());
+        }
+    }
+
+    public void eliminarJornada(JornadaLaboral j) {
+        try {
+            service.eliminarJornada(j);
+            this.jornadasUsuario.remove(j);
+            addInfoMessage("Horario eliminado");
+        } catch (Exception e) {
+            addErrorMessage("No se pudo eliminar el horario");
+        }
+    }
+
+    // ==========================================================
+    // GETTERS
+    // ==========================================================
+
+    public role_name[] getRoles() {
+        return role_name.values();
+    }
+
+    public dia_semana[] getDiasSemana() {
+        return dia_semana.values();
+    }
+
+    public List<JornadaLaboral> getJornadasUsuario() {
+        return jornadasUsuario;
+    }
+
+    public JornadaLaboral getNuevaJornada() {
+        return nuevaJornada;
+    }
+
+    public void setNuevaJornada(JornadaLaboral nuevaJornada) {
+        this.nuevaJornada = nuevaJornada;
+    }
+
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "/login.xhtml?faces-redirect=true";
+    }
+
+    // ==========================================================
+    // CONFIGURACIÓN VISUAL
+    // ==========================================================
 
     @Override
     protected Map<String, String> fieldLabels() {
@@ -84,16 +185,16 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
 
     @Override
     protected String getFacesClientId() {
-        return "frmUsers:msgUser";
+        return "frmPrincipal:msgGlobal";
     }
 
     @Override
     protected String successSaveMessage() {
-        return "Usuario guardado";
+        return "Usuario guardado correctamente";
     }
 
     @Override
     protected String successDeleteMessage() {
-        return "Usuario eliminado";
+        return "Usuario desactivado";
     }
 }

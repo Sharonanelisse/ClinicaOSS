@@ -60,6 +60,19 @@ public class Usuario {
         if (telefono != null) telefono = telefono.trim();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id != null && id.equals(usuario.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
     // Getters y Setters
 
     public Long getId() {
@@ -131,7 +144,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Usuario{");
+        final StringBuffer sb = new StringBuffer("usuario{");
         sb.append("id=").append(id);
         sb.append(", nombreUsuario='").append(nombreUsuario).append('\'');
         sb.append(", apellidoUsuario='").append(apellidoUsuario).append('\'');

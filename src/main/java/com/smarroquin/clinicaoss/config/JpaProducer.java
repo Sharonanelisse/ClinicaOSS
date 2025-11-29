@@ -20,7 +20,9 @@ public class JpaProducer {
 
     @Produces
     @ApplicationScoped
+
     public EntityManagerFactory createEntityManagerFactory() {
+        System.out.println("URL REAL USADA POR JPA: " + System.getProperty("DB_URL"));
         Map<String, Object> props = new HashMap<>();
         props.put("jakarta.persistence.jdbc.driver", System.getProperty("DB_DRIVER"));
         props.put("jakarta.persistence.jdbc.url", System.getProperty("DB_URL"));

@@ -89,6 +89,18 @@ public class Paciente {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Paciente paciente = (Paciente) o;
+        return id != null && id.equals(paciente.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
     // Getters y Setters
 
     public Boolean getActivo() {

@@ -2,17 +2,20 @@ package com.smarroquin.clinicaoss.repositories;
 
 import com.smarroquin.clinicaoss.models.Usuario;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
 
 @ApplicationScoped
 public class UsuarioRepository extends BaseRepository<Usuario, Long> {
-    @Override
-    protected Class<Usuario> entity(){return Usuario.class;}
 
-    @PersistenceContext
+    @Override
+    protected Class<Usuario> entity() {
+        return Usuario.class;
+    }
+
+    @Inject
     private EntityManager em;
 
     public List<Usuario> findAll() {
@@ -38,5 +41,12 @@ public class UsuarioRepository extends BaseRepository<Usuario, Long> {
 
     public Usuario find(Long id) {
         return em.find(Usuario.class, id);
+    }
+
+    // En UsuarioRepository.java
+
+    public List<Usuario> findByRolOdontologo() {
+        return getEm().createQuery("SELECT u FROM Usuario u WHERE u.role_name = 'ODONTOLOGO' AND u.status = true", Usuario.class)
+                .getResultList();
     }
 }
