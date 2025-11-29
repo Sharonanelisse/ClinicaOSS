@@ -7,188 +7,175 @@
 
     <ui:define name="content">
 
-        <h2>Agenda de Citas</h2>
+        <style>
+            /* Ajustes generales */
+            body .ui-widget { font-size: 13px !important; }
 
-        <h:outputStylesheet>
-            /* ---- Form grid responsive sin PrimeFlex ---- */
-            .form-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-column-gap: 1.25rem;
-                grid-row-gap: .75rem;
+            /* Colores de Eventos (FullCalendar) */
+            /* Pendiente: Amarillo Cálido */
+            .cita-pendiente, .cita-pendiente .fc-event-main {
+                background-color: #FFC107 !important;
+                border-color: #FFC107 !important;
+                color: #212529 !important; /* Texto oscuro para contraste */
             }
-            .form-field {
-                display: flex;
-                flex-direction: column;
+            /* Confirmada: Naranja */
+            .cita-confirmada, .cita-confirmada .fc-event-main {
+                background-color: #FD7E14 !important;
+                border-color: #FD7E14 !important;
+                color: #fff !important;
             }
-            .form-field label {
-                font-weight: 600;
-                color: #495057;
-                margin: 0 0 .25rem;
+            /* Atendida: Verde Suave */
+            .cita-atendida, .cita-atendida .fc-event-main {
+                background-color: #28A745 !important;
+                border-color: #28A745 !important;
+                color: #fff !important;
             }
-            .form-field .w-full {
-                width: 100%;
+            /* Cancelada: Rojo Suave */
+            .cita-cancelada, .cita-cancelada .fc-event-main {
+                background-color: #DC3545 !important;
+                border-color: #DC3545 !important;
+                color: #fff !important;
+                opacity: 0.7; /* Un poco transparente */
+                text-decoration: line-through;
             }
-            .form-field .ui-message,
-            .form-field .p-message {
-                margin: .25rem 0 0 0;
+            /* Reprogramada: Azul */
+            .cita-reprogramada, .cita-reprogramada .fc-event-main {
+                background-color: #0D6EFD !important;
+                border-color: #0D6EFD !important;
+                color: #fff !important;
             }
-            .form-footer {
-                display: flex;
-                justify-content: flex-end;
-                gap: .5rem;
-                margin-top: .75rem;
-            }
-            @media (max-width: 992px) {
-                .form-grid { grid-template-columns: 1fr; }
-            }
-            .ui-dialog .ui-dialog-content {
-                padding-top: .5rem;
-            }
-            .colLabel {
-                width: 180px;
-                padding: .5rem .75rem .25rem 0;
-                text-align: right;
-                vertical-align: top;
-                white-space: nowrap;
-                font-weight: 600;
-                color: #495057;
-            }
-            .colField {
-                width: 320px;
-                padding: .25rem .75rem .5rem 0;
-                vertical-align: top;
-            }
-            .w100 { width: 100%; }
-            .fieldMsg .ui-message, .fieldMsg .p-message { margin:.25rem 0 0 0; }
 
-            .toolbar {
-                display: flex;
-                justify-content: flex-end;
-                margin-bottom: 1rem;
-            }
-        </h:outputStylesheet>
+            /* Ajustes del Dialogo para Laptop */
+            .ui-dialog .ui-dialog-content { padding: 10px 15px !important; }
+            .field-label { font-weight: bold; color: #495057; }
+        </style>
 
-        <h:form cita="frmCitas">
+        <h:form id="frmCitas">
+            <p:growl id="msgCitas" showDetail="true" life="4000"/>
 
-            <div class="toolbar">
-                <p:commandButton value="Nueva cita" icon="pi pi-plus"
-                                 actionListener="#{citaBean.newEvent}"
-                                 process="@this"
-                                 update="dlgCita"
-                                 resetValues="true"/>
+            <div class="card">
+                <h3 style="margin-top:0">Agenda de Citas</h3>
+
+                <p:toolbar style="margin-bottom: 10px; padding: 5px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Agendar Cita" icon="pi pi-plus"
+                                         action="#{citaBean.newEntity}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="ui-button-success">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">
+                        <span style="margin-right:10px;"><i class="pi pi-circle-fill" style="color:#FFC107"></i> Pendiente</span>
+                        <span style="margin-right:10px;"><i class="pi pi-circle-fill" style="color:#FD7E14"></i> Confirmada</span>
+                        <span style="margin-right:10px;"><i class="pi pi-circle-fill" style="color:#28A745"></i> Atendida</span>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:schedule id="calendario" value="#{citaBean.schedule}" widgetVar="miCalendario"
+                            locale="es" timeZone="GMT-6"
+                            height="auto"
+                            rightHeaderTemplate="dayGridMonth,timeGridWeek,timeGridDay,listYear">
+
+                    <p:ajax event="eventSelect" listener="#{citaBean.onEventSelect}"
+                            update=":dialogoGestion" oncomplete="PF('wdialogo').show();" />
+
+                    <p:ajax event="dateSelect" listener="#{citaBean.onDateSelect}"
+                            update=":dialogoGestion" oncomplete="PF('wdialogo').show();" />
+
+                </p:schedule>
             </div>
+        </h:form>
+        <p:dialog id="dialogoGestion" header="Detalle de la Cita" showEffect="fade" modal="true"
+                  widgetVar="wdialogo" responsive="true" width="600" closeOnEscape="true">
 
-            <!-- CALENDARIO -->
-            <p:schedule id="cal" value="#{citaBean.schedule}" widgetVar="sch"
-                        locale="es" timeZone="GMT-6" allDaySlot="false"
-                        view="dayGridMonth" style="height:600px">
+            <h:form id="frmDialogo">
+                <div class="ui-fluid">
 
-                <p:ajax event="eventSelect"
-                        listener="#{citaBean.onEventSelect}"
-                        update="dlgDetail"/>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4 field-label, ui-grid-col-8"
+                                 layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
 
-            </p:schedule>
+                        <p:outputLabel value="Código:" rendered="#{citaBean.selected.id != null}"/>
+                        <p:inputText value="#{citaBean.selected.codigo}" readonly="true"
+                                     rendered="#{citaBean.selected.id != null}" styleClass="ui-state-disabled"/>
 
-            <!-- DIÁLOGO DETALLE -->
-            <p:dialog id="dlgDetail" widgetVar="dlgDetail"
-                      header="Detalle de la cita"
-                      visible="#{citaBean.detailVisible}"
-                      modal="true" width="600">
-
-                <h:panelGrid columns="2" cellpadding="5">
-
-                    <h:outputText value="Paciente:"/>
-                    <h:outputText value="#{citaBean.selected.paciente.nombrePaciente}"/>
-
-                    <h:outputText value="Fecha:"/>
-                    <h:outputText value="#{citaBean.selected.fechaApertura}"/>
-
-                    <h:outputText value="Estado:"/>
-                    <h:outputText value="#{citaBean.selected.estado_cita}"/>
-
-                    <h:outputText value="Tratamiento:"/>
-                    <h:outputText value="#{citaBean.selected.tratamiento.nombreTratamiento}"/>
-
-                    <h:outputText value="Observaciones:"/>
-                    <h:outputText value="#{citaBean.selected.observacionesCita}"/>
-                </h:panelGrid>
-
-                <f:facet name="footer">
-                    <p:commandButton value="Editar" icon="pi pi-pencil"
-                                     actionListener="#{citaBean.edit(citaBean.selected)}"
-                                     update="dlgCita"
-                                     oncomplete="PF('dlgDetail').hide(); PF('dlgCita').show();"/>
-
-                    <p:commandButton value="Eliminar" icon="pi pi-trash"
-                                     styleClass="ui-button-danger"
-                                     actionListener="#{citaBean.delete}"
-                                     update="cal"
-                                     oncomplete="PF('dlgDetail').hide();"/>
-
-                </f:facet>
-            </p:dialog>
-
-            <!-- DIÁLOGO FORMULARIO DE CITA -->
-            <p:dialog id="dlgCita" widgetVar="dlgCita"
-                      header="Registrar/Editar Cita"
-                      visible="#{citaBean.dialogVisible}"
-                      modal="true" width="650">
-
-                <div class="form-grid">
-
-                    <div class="form-field">
-                        <label>Paciente *</label>
-                        <p:selectOneMenu value="#{citaBean.cita.paciente}" styleClass="w-full"
-                                         filter="true" filterMatchMode="contains">
-                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                        <p:outputLabel value="Paciente:" for="paciente"/>
+                        <p:selectOneMenu id="paciente" value="#{citaBean.selected.paciente}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{pacienteConverter}">
+                            <f:selectItem itemLabel="Seleccione Paciente..." itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{citaBean.pacientes}" var="p"
-                                           itemValue="#{p}" itemLabel="#{p.nombrePaciente}"/>
+                                           itemValue="#{p}"
+                                           itemLabel="#{p.nombrePaciente} #{p.apellidoPaciente} - DPI: #{p.dpi}"/>
                         </p:selectOneMenu>
-                    </div>
 
-                    <div class="form-field">
-                        <label>Fecha *</label>
-                        <p:datePicker value="#{citaBean.cita.fechaApertura}"
-                                      showTime="true" hourFormat="24" pattern="yyyy-MM-dd HH:mm"
-                                      styleClass="w-full"/>
-                    </div>
-
-                    <div class="form-field">
-                        <label>Tratamiento *</label>
-                        <p:selectOneMenu value="#{citaBean.cita.tratamiento}" styleClass="w-full">
+                        <p:outputLabel value="Tratamiento:" for="tratamiento"/>
+                        <p:selectOneMenu id="tratamiento" value="#{citaBean.selected.tratamiento}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{tratamientoConverter}">
+                            <f:selectItem itemLabel="Seleccione Tratamiento..." itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{citaBean.tratamientos}" var="t"
-                                           itemValue="#{t}" itemLabel="#{t.nombreTratamiento}"/>
+                                           itemValue="#{t}" itemLabel="#{t.nombreTratamiento} - Q#{t.costo}"/>
                         </p:selectOneMenu>
-                    </div>
 
-                    <div class="form-field">
-                        <label>Estado</label>
-                        <p:selectOneMenu value="#{citaBean.cita.estado_cita}" styleClass="w-full">
-                            <f:selectItems value="#{citaBean.estadosCita}"/>
+                        <p:outputLabel value="Atendido por:" for="usuario"/>
+                        <p:selectOneMenu id="usuario" value="#{citaBean.selected.user}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{userConverter}">
+                            <f:selectItem itemLabel="Seleccione Usuario..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{citaBean.usuarios}" var="u"
+                                           itemValue="#{u}" itemLabel="#{u.username}"/>
                         </p:selectOneMenu>
-                    </div>
 
-                    <div class="form-field" style="grid-column:1/span 2">
-                        <label>Observaciones</label>
-                        <p:inputTextarea value="#{citaBean.cita.observacionesCita}"
-                                         rows="3" styleClass="w-full"/>
+                        <p:outputLabel value="Fecha/Hora:" for="fecha"/>
+                        <p:datePicker id="fecha" value="#{citaBean.selected.fechaApertura}"
+                                      showTime="true" stepMinute="15" pattern="dd/MM/yyyy HH:mm"
+                                      locale="es" required="true" showIcon="false"/>
+
+                        <p:outputLabel value="Estado:" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{citaBean.selected.estado_cita}" required="true">
+                            <f:selectItems value="#{citaBean.estadosCita}" var="e" itemValue="#{e}" itemLabel="#{e}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Notas:" for="obs"/>
+                        <p:inputTextarea id="obs" value="#{citaBean.selected.observacionesCita}" rows="3" autoResize="false"/>
+
+                    </p:panelGrid>
+
+                    <p:separator style="margin: 10px 0" />
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+
+                        <div>
+                            <p:commandButton value="Cancelar Cita" icon="pi pi-trash"
+                                             rendered="#{citaBean.selected.id != null}"
+                                             action="#{citaBean.delete(citaBean.selected)}"
+                                             update=":frmCitas:calendario, :frmCitas:msgCitas"
+                                             styleClass="ui-button-danger ui-button-outlined">
+                                <p:confirm header="Confirmar" message="¿Desea eliminar esta cita permanentemente?" icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </div>
+
+                        <div>
+                            <p:commandButton value="Cerrar" icon="pi pi-times"
+                                             onclick="PF('wdialogo').hide()"
+                                             styleClass="ui-button-secondary ui-button-flat"
+                                             type="button" style="margin-right: 5px;"/>
+
+                            <p:commandButton value="Guardar Cita" icon="pi pi-check"
+                                             action="#{citaBean.save}"
+                                             update=":frmCitas:calendario, :frmCitas:msgCitas"
+                                             oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}"/>
+                        </div>
                     </div>
                 </div>
+            </h:form>
+        </p:dialog>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
+        </p:confirmDialog>
 
-                <f:facet name="footer">
-                    <p:commandButton value="Guardar" icon="pi pi-check"
-                                     actionListener="#{citaBean.save}"
-                                     update="cal"
-                                     oncomplete="PF('dlgCita').hide();"/>
-
-                    <p:commandButton value="Cancelar" icon="pi pi-times"
-                                     onclick="PF('dlgCita').hide(); return false;"
-                                     styleClass="ui-button-secondary"/>
-                </f:facet>
-
-            </p:dialog>
-
-        </h:form>
     </ui:define>
 </ui:composition>
