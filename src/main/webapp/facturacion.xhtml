@@ -6,138 +6,250 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h1>Gestión de Facturación</h1>
 
-        <h:form citaId="frmFacturacion">
-            <p:growl citaId="msgFacturacion" showDetail="true" life="4000" />
+        <style>
+            body .ui-widget { font-size: 13px !important; }
+            body .ui-button { font-size: 13px !important; padding: 0.3rem 0.8rem; }
+            .fila-anulada {
+                background-color: #fff5f5 !important;
+                color: #c00 !important;
+                text-decoration: line-through;
+            }
+            .field-label { font-weight: bold; color: #495057; }
+            .total-text { font-size: 1.2em; font-weight: bold; color: #28a745; }
+        </style>
 
-            <!-- Formulario de facturación -->
-            <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputLabel value="Fecha de emisión:" for="fechaEmision"/>
-                <p:datePicker citaId="fechaEmision" value="#{facturacionBean.selected.fechaEmision}"
-                              showTime="true" pattern="yyyy-MM-dd HH:mm"/>
+        <h:form id="frmPrincipal">
+            <p:growl id="msgGlobal" showDetail="true" life="4000" />
 
-                <h:outputLabel value="Subtotal:" for="subtotal"/>
-                <p:inputText citaId="subtotal" value="#{facturacionBean.selected.subtotal}" />
+            <div class="card">
+                <h3 style="margin-top:0">Control de Facturación</h3>
 
-                <h:outputLabel value="Total:" for="total"/>
-                <p:inputText citaId="total" value="#{facturacionBean.selected.total}" />
+                <p:toolbar style="margin-bottom: 10px; padding: 5px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nueva Factura" icon="pi pi-plus"
+                                         action="#{facturacionBean.newEntity}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="ui-button-success">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
-                <h:outputLabel value="Estado de pago:" for="estadoPago"/>
-                <p:selectOneMenu citaId="estadoPago" value="#{facturacionBean.selected.estado_pago}">
-                    <f:selectItems value="#{facturacionBean.estadosPago}" var="ep"
-                                   itemLabel="#{ep}" itemValue="#{ep}"/>
-                </p:selectOneMenu>
+                <p:dataTable id="tblFacturacion"
+                             value="#{facturacionBean.list}"
+                             var="f"
+                             paginator="true"
+                             rows="10"
+                             size="small"
+                             paginatorPosition="bottom"
+                             rowKey="#{f.id}"
+                             selectionMode="single"
+                             selection="#{facturacionBean.selected}"
+                             striped="true"
+                             rowStyleClass="#{f.estado_pago eq 'ANULADO' ? 'fila-anulada' : null}">
 
-                <h:outputLabel value="Tratamiento:" for="tratamiento"/>
-                <p:selectOneMenu citaId="tratamiento" value="#{facturacionBean.selected.tratamiento}">
-                    <f:selectItems value="#{facturacionBean.tratamientos}" var="t"
-                                   itemLabel="#{t.nombreTratamiento}" itemValue="#{t}"/>
-                </p:selectOneMenu>
+                    <p:column headerText="No." width="50" style="text-align: center;" sortBy="#{f.id}">
+                        <h:outputText value="#{f.id}" />
+                    </p:column>
 
-                <h:outputLabel value="Paciente:" for="pacienteId"/>
-                <p:selectOneMenu citaId="pacienteId" value="#{facturacionBean.selected.pacienteId}">
-                    <f:selectItems value="#{facturacionBean.pacientes}" var="p"
-                                   itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
-                </p:selectOneMenu>
+                    <p:column headerText="Emisión" width="120" sortBy="#{f.fechaEmision}">
+                        <h:outputText value="#{f.fechaEmision}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="localDateTime"/>
+                        </h:outputText>
+                    </p:column>
 
-                <h:outputLabel value="Cita:" for="citaId"/>
-                <p:selectOneMenu citaId="citaId" value="#{facturacionBean.selected.citaId}">
-                    <f:selectItems value="#{facturacionBean.citas}" var="c"
-                                   itemLabel="#{c.codigo}" itemValue="#{c}"/>
-                </p:selectOneMenu>
+                    <p:column headerText="Paciente" sortBy="#{f.paciente.nombrePaciente}">
+                        <h:outputText value="#{f.paciente.nombrePaciente} #{f.paciente.apellidoPaciente}" />
+                    </p:column>
 
-                <h:outputLabel value="Descuento:" for="descuentoId"/>
-                <p:selectOneMenu citaId="descuentoId" value="#{facturacionBean.selected.descuentoId}">
-                    <f:selectItems value="#{facturacionBean.descuentos}" var="d"
-                                   itemLabel="#{d.nombre}" itemValue="#{d}"/>
-                </p:selectOneMenu>
+                    <p:column headerText="Tratamiento">
+                        <h:outputText value="#{f.tratamiento.nombreTratamiento}" />
+                    </p:column>
 
-                <h:outputLabel value="Seguro:" for="seguro"/>
-                <p:selectOneMenu citaId="seguro" value="#{facturacionBean.selected.seguro}">
-                    <f:selectItems value="#{facturacionBean.seguros}" var="s"
-                                   itemLabel="#{s.nombre}" itemValue="#{s}"/>
-                </p:selectOneMenu>
-            </h:panelGrid>
+                    <p:column headerText="Total" width="100" style="text-align: right;">
+                        <h:outputText value="#{f.total}" style="font-weight: bold;">
+                            <f:convertNumber type="currency" currencySymbol="Q" />
+                        </h:outputText>
+                    </p:column>
 
-            <!-- Botones -->
-            <p:commandButton value="Guardar"
-                             action="#{facturacionBean.save}"
-                             update="tblFacturacion,frmFacturacion,msgFacturacion"
-                             icon="pi pi-check" />
+                    <p:column headerText="Estado" width="100" style="text-align: center;">
+                        <p:tag value="#{f.estado_pago}"
+                               severity="#{f.estado_pago eq 'PAGADO' ? 'success' : (f.estado_pago eq 'PENDIENTE' ? 'warning' : 'danger')}" />
+                    </p:column>
 
-            <p:commandButton value="Cancelar"
-                             action="#{facturacionBean.newEntity}"
-                             update="frmFacturacion"
-                             icon="pi pi-times"
-                             styleClass="p-button-secondary" />
+                    <p:column headerText="Acciones" width="140" style="text-align: center;">
 
-            <!-- Tabla de facturación -->
-            <p:dataTable citaId="tblFacturacion"
-                         value="#{facturacionBean.list}"
-                         var="f"
-                         paginator="true"
-                         rows="10"
-                         style="margin-top:20px;"
-                         rowKey="#{f.citaId}"
-                         selectionMode="single"
-                         selection="#{facturacionBean.selected}">
+                        <p:commandButton icon="pi pi-eye"
+                                         action="#{facturacionBean.setSelected(f)}"
+                                         update=":dialogoDetalle"
+                                         oncomplete="PF('wDetalle').show()"
+                                         styleClass="rounded-button ui-button-flat ui-button-info"
+                                         title="Ver Detalle Completo" />
 
-                <p:column headerText="ID">
-                    <h:outputText value="#{f.citaId}" />
-                </p:column>
+                        <p:commandButton icon="pi pi-pencil"
+                                         action="#{facturacionBean.edit(f)}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="rounded-button ui-button-flat ui-button-warning"
+                                         disabled="#{f.estado_pago eq 'ANULADO'}"
+                                         title="Editar / Cambiar Estado">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
 
-                <p:column headerText="Fecha emisión">
-                    <h:outputText value="#{f.fechaEmision}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                    </h:outputText>
-                </p:column>
+                        <p:commandButton icon="pi pi-ban"
+                                         action="#{facturacionBean.delete(f)}"
+                                         update="tblFacturacion, :frmPrincipal:msgGlobal"
+                                         rendered="#{f.estado_pago ne 'ANULADO'}"
+                                         styleClass="rounded-button ui-button-flat ui-button-danger"
+                                         title="Anular Factura">
+                            <p:confirm header="Confirmar" message="¿Desea anular esta factura?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </div>
 
-                <p:column headerText="Subtotal">
-                    <h:outputText value="#{f.subtotal}" />
-                </p:column>
-
-                <p:column headerText="Total">
-                    <h:outputText value="#{f.total}" />
-                </p:column>
-
-                <p:column headerText="Estado pago">
-                    <h:outputText value="#{f.estado_pago}" />
-                </p:column>
-
-                <p:column headerText="Paciente">
-                    <h:outputText value="#{f.pacienteId.nombrePaciente}" />
-                </p:column>
-
-                <p:column headerText="Tratamiento">
-                    <h:outputText value="#{f.tratamiento.nombreTratamiento}" />
-                </p:column>
-
-                <p:column headerText="Cita">
-                    <h:outputText value="#{f.citaId.codigo}" />
-                </p:column>
-
-                <p:column headerText="Descuento">
-                    <h:outputText value="#{f.descuentoId.nombre}" />
-                </p:column>
-
-                <p:column headerText="Seguro">
-                    <h:outputText value="#{f.seguro.nombre}" />
-                </p:column>
-
-                <p:column headerText="Acciones">
-                    <p:commandButton value="Editar"
-                                     action="#{facturacionBean.edit(f)}"
-                                     update="frmFacturacion"
-                                     icon="pi pi-pencil" />
-
-                    <p:commandButton value="Eliminar"
-                                     action="#{facturacionBean.delete(f)}"
-                                     update="tblFacturacion"
-                                     icon="pi pi-trash"
-                                     styleClass="ui-button-danger" />
-                </p:column>
-            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
         </h:form>
+
+        <p:dialog id="dialogoGestion" header="Datos de Facturación" showEffect="fade" modal="true"
+                  widgetVar="wdialogo" responsive="true" width="700" closeOnEscape="true">
+
+            <h:form id="frmDialogo">
+                <div class="ui-fluid">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4 field-label, ui-grid-col-8"
+                                 layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+                        <p:outputLabel value="Fecha Emisión:" for="fecha"/>
+                        <p:datePicker id="fecha" value="#{facturacionBean.selected.fechaEmision}"
+                                      showTime="true" pattern="dd/MM/yyyy HH:mm" required="true" showIcon="false"/>
+
+                        <p:outputLabel value="Paciente:" for="paciente"/>
+                        <p:selectOneMenu id="paciente" value="#{facturacionBean.selected.paciente}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{pacienteConverter}">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{facturacionBean.pacientes}" var="p"
+                                           itemLabel="#{p.nombrePaciente} #{p.apellidoPaciente}" itemValue="#{p}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Tratamiento:" for="tratamiento"/>
+                        <p:selectOneMenu id="tratamiento" value="#{facturacionBean.selected.tratamiento}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{tratamientoConverter}">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{facturacionBean.tratamientos}" var="t"
+                                           itemLabel="#{t.nombreTratamiento} - Q#{t.costo}" itemValue="#{t}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Cita Relacionada:" for="cita"/>
+                        <p:selectOneMenu id="cita" value="#{facturacionBean.selected.cita}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{citaConverter}">
+                            <f:selectItem itemLabel="Seleccione Código..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{facturacionBean.citas}" var="c"
+                                           itemLabel="#{c.codigo}" itemValue="#{c}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Subtotal:" for="subtotal"/>
+                        <p:inputNumber id="subtotal" value="#{facturacionBean.selected.subtotal}"
+                                       symbol="Q " symbolPosition="p" decimalPlaces="2" required="true"/>
+
+                        <p:outputLabel value="Descuento:" for="descuento"/>
+                        <p:selectOneMenu id="descuento" value="#{facturacionBean.selected.descuento}"
+                                         converter="#{descuentoConverter}"> <f:selectItem itemLabel="Ninguno" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{facturacionBean.descuentos}" var="d"
+                                           itemLabel="#{d.nombrePromocion} (#{d.descuentoPromocion}%)" itemValue="#{d}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Seguro:" for="seguro"/>
+                        <p:selectOneMenu id="seguro" value="#{facturacionBean.selected.seguro}"
+                                         converter="#{seguroConverter}"> <f:selectItem itemLabel="Ninguno" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{facturacionBean.seguros}" var="s"
+                                           itemLabel="#{s.nombreAseguradora}" itemValue="#{s}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="TOTAL A PAGAR:" for="total" style="font-weight:900;"/>
+                        <p:inputNumber id="total" value="#{facturacionBean.selected.total}"
+                                       symbol="Q " symbolPosition="p" decimalPlaces="2" required="true"
+                                       inputStyle="font-weight:bold; color:#28a745;"/>
+
+                        <p:outputLabel value="Estado del Pago:" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{facturacionBean.selected.estado_pago}" required="true">
+                            <f:selectItems value="#{facturacionBean.estadosPago}" var="ep" itemLabel="#{ep}" itemValue="#{ep}"/>
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+
+                    <p:separator/>
+
+                    <div style="text-align: right;">
+                        <p:commandButton value="Guardar Factura" icon="pi pi-check"
+                                         action="#{facturacionBean.save}"
+                                         update=":frmPrincipal:tblFacturacion, :frmPrincipal:msgGlobal"
+                                         oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}" />
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dialogoDetalle" header="Detalle de Factura" showEffect="fade" modal="true"
+                  widgetVar="wDetalle" responsive="true" width="500" closeOnEscape="true">
+
+            <p:panelGrid columns="2" columnClasses="field-label, value"
+                         layout="grid" styleClass="ui-panelgrid-blank">
+
+                <h:outputText value="No. Factura:" />
+                <h:outputText value="#{facturacionBean.selected.id}" style="font-weight:bold"/>
+
+                <h:outputText value="Fecha Emisión:" />
+                <h:outputText value="#{facturacionBean.selected.fechaEmision}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
+
+                <p:divider /> <p:divider />
+
+                <h:outputText value="Paciente:" />
+                <h:outputText value="#{facturacionBean.selected.paciente.nombrePaciente} #{facturacionBean.selected.paciente.apellidoPaciente}" />
+
+                <h:outputText value="DPI:" />
+                <h:outputText value="#{facturacionBean.selected.paciente.dpi}" />
+
+                <h:outputText value="Tratamiento:" />
+                <h:outputText value="#{facturacionBean.selected.tratamiento.nombreTratamiento}" />
+
+                <h:outputText value="Cita Ref:" />
+                <h:outputText value="#{facturacionBean.selected.cita.codigo}" />
+
+                <p:divider /> <p:divider />
+
+                <h:outputText value="Subtotal:" />
+                <h:outputText value="Q #{facturacionBean.selected.subtotal}" />
+
+                <h:outputText value="Descuento Aplicado:" />
+                <h:outputText value="#{facturacionBean.selected.descuento.nombrePromocion}" />
+
+                <h:outputText value="Seguro:" />
+                <h:outputText value="#{facturacionBean.selected.seguro.nombreAseguradora}" />
+
+                <h:outputText value="TOTAL:" style="font-size:1.2em; font-weight:bold; color:#28a745"/>
+                <h:outputText value="Q #{facturacionBean.selected.total}" style="font-size:1.2em; font-weight:bold; color:#28a745"/>
+
+                <h:outputText value="Estado:" />
+                <p:tag value="#{facturacionBean.selected.estado_pago}"
+                       severity="#{facturacionBean.selected.estado_pago eq 'PAGADO' ? 'success' : (facturacionBean.selected.estado_pago eq 'PENDIENTE' ? 'warning' : 'danger')}" />
+
+            </p:panelGrid>
+
+            <f:facet name="footer">
+                <p:commandButton value="Cerrar" icon="pi pi-times"
+                                 onclick="PF('wDetalle').hide()" styleClass="ui-button-secondary ui-button-flat"/>
+            </f:facet>
+        </p:dialog>
+
     </ui:define>
 </ui:composition>

@@ -121,6 +121,7 @@ public class CargarDesdeJson {
             e.setId(json.getEspecialidadId());
             e.setNombreEspecialidad(json.getNombreEspecialidad());
             e.setDescripcion(json.getDescripcion());
+            e.setActivoEspecialidad(json.getActivoEspecialidad());
             em.persist(e);
         }
         System.out.println("Especialidades insertadas: " + lista.size());
@@ -468,6 +469,7 @@ public class CargarDesdeJson {
     public static class EspecialidadJson {private Long especialidadId;
         private String nombreEspecialidad;
         private String descripcion;
+        private Boolean activoEspecialidad;
         // getters y setters...
 
         public Long getEspecialidadId() {
@@ -492,6 +494,13 @@ public class CargarDesdeJson {
 
         public void setDescripcion(String descripcion) {
             this.descripcion = descripcion;
+        }
+        public Boolean getActivoEspecialidad() {
+            return activoEspecialidad;
+        }
+
+        public void setActivoEspecialidad(Boolean activoEspecialidad) {
+            this.activoEspecialidad = activoEspecialidad;
         }
     }
 

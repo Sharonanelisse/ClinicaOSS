@@ -49,11 +49,11 @@
                              striped="true"
                              rowStyleClass="#{t.activoTratamiento ? null : 'fila-desactivada'}">
 
-                    <p:column headerText="ID" width="40" style="text-align: center;">
+                    <p:column headerText="ID" width="40" style="text-align: center;" sortBy="#{t.id}">
                         <h:outputText value="#{t.id}" />
                     </p:column>
 
-                    <p:column headerText="Nombre Tratamiento" sortBy="#{t.nombreTratamiento}">
+                    <p:column headerText="Tratamiento" sortBy="#{t.nombreTratamiento}">
                         <h:outputText value="#{t.nombreTratamiento}" />
                     </p:column>
 
@@ -75,15 +75,13 @@
                         <p:tag styleClass="mr-2" severity="#{t.activoTratamiento ? 'success' : 'danger'}" value="#{t.activoTratamiento ? 'Activo' : 'Inactivo'}"/>
                     </p:column>
 
-                    <p:column headerText="Acciones" width="110" style="text-align: center;">
-
+                    <p:column headerText="Acciones" width="120" style="text-align: center;">
                         <p:commandButton icon="pi pi-pencil"
                                          action="#{tratamientoBean.edit(t)}"
                                          update=":dialogoGestion"
                                          oncomplete="PF('wdialogo').show()"
                                          styleClass="rounded-button ui-button-flat ui-button-warning"
-                                         disabled="#{!t.activoTratamiento}"
-                                         title="Editar">
+                                         disabled="#{!t.activoTratamiento}">
                             <p:resetInput target=":dialogoGestion" />
                         </p:commandButton>
 
@@ -91,8 +89,7 @@
                                          rendered="#{t.activoTratamiento}"
                                          action="#{tratamientoBean.delete(t)}"
                                          update="tblTratamientos, :frmPrincipal:msgGlobal"
-                                         styleClass="rounded-button ui-button-flat ui-button-danger"
-                                         title="Desactivar">
+                                         styleClass="rounded-button ui-button-flat ui-button-danger">
                             <p:confirm header="Confirmar" message="¿Desactivar este tratamiento?" icon="pi pi-exclamation-triangle" />
                         </p:commandButton>
 
@@ -100,10 +97,8 @@
                                          rendered="#{!t.activoTratamiento}"
                                          action="#{tratamientoBean.activar(t)}"
                                          update="tblTratamientos, :frmPrincipal:msgGlobal"
-                                         styleClass="rounded-button ui-button-flat ui-button-success"
-                                         title="Reactivar">
+                                         styleClass="rounded-button ui-button-flat ui-button-success">
                         </p:commandButton>
-
                     </p:column>
                 </p:dataTable>
             </div>

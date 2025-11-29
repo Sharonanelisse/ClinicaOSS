@@ -2,6 +2,8 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Descuento;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -21,7 +23,9 @@ public class DescuentoBean extends Bean<Descuento> implements Serializable {
 
     @Override
     protected Descuento createNew() {
-        return new Descuento();
+        Descuento d = new Descuento();
+        d.setEstado(true); // Activo por defecto
+        return d;
     }
 
     @Override
@@ -32,6 +36,25 @@ public class DescuentoBean extends Bean<Descuento> implements Serializable {
     @Override
     protected void persist(Descuento entity) {
         service.guardarDescuento(entity);
+    }
+
+    @Override
+    public void delete(Descuento entity) {
+        try {
+            entity.setEstado(false);
+            service.guardarDescuento(entity);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Descuento desactivado", null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void activar(Descuento entity) {
+        entity.setEstado(true);
+        service.guardarDescuento(entity);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Descuento reactivado", null));
     }
 
     @Override
