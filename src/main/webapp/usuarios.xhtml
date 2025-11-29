@@ -9,35 +9,53 @@
         <h1>Gestión de Usuarios</h1>
 
         <!-- Formulario de usuario -->
-        <h:form citaId="frmUsers">
-            <p:growl citaId="msgUser" showDetail="true" life="4000" />
+        <h:form id="frmUsers">
+            <p:growl id="msgUser" showDetail="true" life="4000" />
 
-            <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputLabel value="Nombre:" for="nombreUsuario"/>
-                <p:inputText citaId="nombreUsuario" value="#{usuarioBean.selected.nombreUsuario}" required="true"/>
+            <!-- FORMULARIO EN DOS COLUMNAS -->
+            <p:panelGrid columns="2" layout="grid" styleClass="p-fluid p-mb-3"
+                         columnClasses="ui-g-6,ui-g-6">
 
-                <h:outputLabel value="Apellido:" for="apellidoUsuario"/>
-                <p:inputText citaId="apellidoUsuario" value="#{usuarioBean.selected.apellidoUsuario}" required="true"/>
+                <!-- Columna izquierda -->
+                <h:panelGroup>
+                    <p:panelGrid columns="2" columnClasses="label,value" styleClass="p-fluid">
 
-                <h:outputLabel value="Email:" for="email"/>
-                <p:inputText citaId="email" value="#{usuarioBean.selected.email}" required="true"/>
+                        <h:outputLabel value="Nombre:" for="nombreUsuario"/>
+                        <p:inputText id="nombreUsuario" value="#{usuarioBean.selected.nombreUsuario}" required="true"/>
 
-                <h:outputLabel value="Teléfono:" for="telefono"/>
-                <p:inputText citaId="telefono" value="#{usuarioBean.selected.telefono}"/>
+                        <h:outputLabel value="Apellido:" for="apellidoUsuario"/>
+                        <p:inputText id="apellidoUsuario" value="#{usuarioBean.selected.apellidoUsuario}" required="true"/>
 
-                <h:outputLabel value="Contraseña:" for="password"/>
-                <p:password citaId="password" value="#{usuarioBean.selected.password}" feedback="true"/>
+                        <h:outputLabel value="Email:" for="email"/>
+                        <p:inputText id="email" value="#{usuarioBean.selected.email}" required="true"/>
 
-                <h:outputLabel value="Rol:" for="role"/>
-                <p:selectOneMenu citaId="role" value="#{usuarioBean.selected.role_name}">
-                    <f:selectItems value="#{usuarioBean.roles}" var="r" itemLabel="#{r}" itemValue="#{r}"/>
-                </p:selectOneMenu>
+                    </p:panelGrid>
+                </h:panelGroup>
 
+                <!-- Columna derecha -->
+                <h:panelGroup>
+                    <p:panelGrid columns="2" columnClasses="label,value" styleClass="p-fluid">
 
-                <h:outputLabel value="Estado:" for="status"/>
-                <p:selectBooleanCheckbox citaId="status" value="#{usuarioBean.selected.status}" />
-            </h:panelGrid>
+                        <h:outputLabel value="Teléfono:" for="telefono"/>
+                        <p:inputText id="telefono" value="#{usuarioBean.selected.telefono}"/>
 
+                        <h:outputLabel value="Contraseña:" for="password"/>
+                        <p:password id="password" value="#{usuarioBean.selected.password}" feedback="true"/>
+
+                        <h:outputLabel value="Rol:" for="role"/>
+                        <p:selectOneMenu id="role" value="#{usuarioBean.selected.role_name}">
+                            <f:selectItems value="#{usuarioBean.roles}" var="r" itemLabel="#{r}" itemValue="#{r}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Estado:" for="status"/>
+                        <p:selectBooleanCheckbox id="status" value="#{usuarioBean.selected.status}" />
+
+                    </p:panelGrid>
+                </h:panelGroup>
+
+            </p:panelGrid>
+
+            <!-- BOTONES -->
             <p:commandButton value="Guardar"
                              action="#{usuarioBean.save}"
                              update="tblUsers,frmUsers,msgUser"
@@ -49,18 +67,19 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <p:dataTable citaId="tblUsers"
+            <!-- TABLA -->
+            <p:dataTable id="tblUsers"
                          value="#{usuarioBean.list}"
                          var="u"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{u.citaId}"
+                         rowKey="#{u.Id}"
                          selectionMode="single"
                          selection="#{usuarioBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{u.citaId}" />
+                    <h:outputText value="#{u.Id}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -101,7 +120,9 @@
                                      styleClass="ui-button-danger" />
                 </p:column>
             </p:dataTable>
+
         </h:form>
+
 
         <!-- Subformulario de jornadas laborales -->
         <h:form citaId="frmJornadas" style="margin-top:30px;">
