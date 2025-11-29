@@ -1,7 +1,10 @@
 package com.smarroquin.clinicaoss.controllers;
 
+import com.smarroquin.clinicaoss.models.Especialidad;
 import com.smarroquin.clinicaoss.models.Tratamiento;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -33,6 +36,34 @@ public class TratamientoBean extends Bean<Tratamiento> implements Serializable {
     @Override
     protected void persist(Tratamiento entity) {
         service.guardarTratamiento(entity);
+    }
+
+    @Override
+    public void delete(Tratamiento entity) {
+        try {
+            entity.setActivoTratamiento(false);
+            service.guardarTratamiento(entity); // Guardamos el cambio de estado
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Tratamiento desactivado", "Ya no podrá seleccionarse para nuevas citas."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo desactivar."));
+        }
+    }
+
+    // Método para reactivar si fue un error
+    public void activar(Tratamiento entity) {
+        entity.setActivoTratamiento(true);
+        service.guardarTratamiento(entity);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Tratamiento reactivado", null));
+    }
+
+    // --- LISTA PARA EL SELECTONEMENU ---
+    public List<Especialidad> getEspecialidades() {
+        return service.especialidades();
     }
 
     @Override

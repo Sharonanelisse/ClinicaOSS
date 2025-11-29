@@ -171,6 +171,8 @@ public class CargarDesdeJson {
                 throw new RuntimeException("Especialidad no encontrada con id: " + json.getEspecialidadId());
             t.setEspecialidad(especialidad);
 
+            t.setActivoTratamiento(json.getActivoTratamiento());
+
             em.persist(t);
         }
         System.out.println("Tratamientos insertados: " + lista.size());
@@ -621,7 +623,11 @@ public class CargarDesdeJson {
         private Double duracionEstimado;
         private BigDecimal costo;
         private Long especialidadId;
+        private Boolean activoTratamiento;
         // getters y setters...
+
+        public Boolean getActivoTratamiento() { return activoTratamiento; }
+        public void setActivoTratamiento(Boolean activoTratamiento) { this.activoTratamiento = activoTratamiento; }
 
         public Long getTratamientoId() {
             return tratamientoId;

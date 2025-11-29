@@ -23,7 +23,7 @@ public abstract class BaseRepository<T, ID> {
     public List<T> findAll() {
         String entityName = em.getMetamodel().entity(entity()).getName();
 
-        return em.createQuery("select e from " + entityName + " e", entity())
+        return em.createQuery("select e from " + entityName + " e ORDER BY e.id ASC", entity())
                 .getResultList();
     }
 
