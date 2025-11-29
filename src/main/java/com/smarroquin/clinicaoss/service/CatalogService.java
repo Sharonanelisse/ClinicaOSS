@@ -166,4 +166,12 @@ public class CatalogService implements Serializable {
     public void eliminarSeguro(Seguro seguro) { seguroRepository.eliminar(seguro); }
     public Seguro findSeguroById(Long id) { return seguroRepository.find(id); }
 
+    public List<Cita> historialCitas(Long pacienteId) {
+        return citaRepository.findByPacienteId(pacienteId);
+    }
+
+    public List<Facturacion> historialFacturas(Long pacienteId) {
+        return facturacionRepository.findByPacienteId(pacienteId);
+    }
+
 }
