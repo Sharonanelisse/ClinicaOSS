@@ -149,9 +149,6 @@ public class CitaBean extends Bean<Cita> implements Serializable {
                 .toLocalDateTime();
     }
 
-    /* ================================
-              GETTERS / SETTERS
-       ================================ */
 
     public ScheduleModel getSchedule() {
         return schedule;

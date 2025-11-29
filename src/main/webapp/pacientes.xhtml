@@ -84,8 +84,9 @@
                 </p:column>
 
                 <p:column headerText="Fecha nacimiento">
-                    <h:outputText value="#{p.fechaNacimiento}" converter="javax.faces.converter.LocalDateConverter"/>
+                    <h:outputText value="#{pacienteBean.formatFecha(p.fechaNacimiento)}" />
                 </p:column>
+
 
                 <p:column headerText="Edad">
                     <h:outputText value="#{p.edad}" />

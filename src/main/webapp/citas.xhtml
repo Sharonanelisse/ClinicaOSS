@@ -69,10 +69,10 @@
             }
         </h:outputStylesheet>
 
-        <h:form citaId="frmCitas">
+        <h:form cita="frmCitas">
 
             <div class="toolbar">
-                <p:commandButton value="Nueva citaId" icon="pi pi-plus"
+                <p:commandButton value="Nueva cita" icon="pi pi-plus"
                                  actionListener="#{citaBean.newEvent}"
                                  process="@this"
                                  update="dlgCita"
@@ -80,7 +80,7 @@
             </div>
 
             <!-- CALENDARIO -->
-            <p:schedule citaId="cal" value="#{citaBean.schedule}" widgetVar="sch"
+            <p:schedule id="cal" value="#{citaBean.schedule}" widgetVar="sch"
                         locale="es" timeZone="GMT-6" allDaySlot="false"
                         view="dayGridMonth" style="height:600px">
 
@@ -91,15 +91,15 @@
             </p:schedule>
 
             <!-- DIÁLOGO DETALLE -->
-            <p:dialog citaId="dlgDetail" widgetVar="dlgDetail"
-                      header="Detalle de la citaId"
+            <p:dialog id="dlgDetail" widgetVar="dlgDetail"
+                      header="Detalle de la cita"
                       visible="#{citaBean.detailVisible}"
                       modal="true" width="600">
 
                 <h:panelGrid columns="2" cellpadding="5">
 
                     <h:outputText value="Paciente:"/>
-                    <h:outputText value="#{citaBean.selected.pacienteId.nombre}"/>
+                    <h:outputText value="#{citaBean.selected.paciente.nombrePaciente}"/>
 
                     <h:outputText value="Fecha:"/>
                     <h:outputText value="#{citaBean.selected.fechaApertura}"/>
@@ -108,7 +108,7 @@
                     <h:outputText value="#{citaBean.selected.estado_cita}"/>
 
                     <h:outputText value="Tratamiento:"/>
-                    <h:outputText value="#{citaBean.selected.tratamiento.nombre}"/>
+                    <h:outputText value="#{citaBean.selected.tratamiento.nombreTratamiento}"/>
 
                     <h:outputText value="Observaciones:"/>
                     <h:outputText value="#{citaBean.selected.observacionesCita}"/>
@@ -130,7 +130,7 @@
             </p:dialog>
 
             <!-- DIÁLOGO FORMULARIO DE CITA -->
-            <p:dialog citaId="dlgCita" widgetVar="dlgCita"
+            <p:dialog id="dlgCita" widgetVar="dlgCita"
                       header="Registrar/Editar Cita"
                       visible="#{citaBean.dialogVisible}"
                       modal="true" width="650">
@@ -139,39 +139,39 @@
 
                     <div class="form-field">
                         <label>Paciente *</label>
-                        <p:selectOneMenu value="#{citaBean.citaId.pacienteId}" styleClass="w-full"
+                        <p:selectOneMenu value="#{citaBean.cita.paciente}" styleClass="w-full"
                                          filter="true" filterMatchMode="contains">
                             <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{citaBean.pacientes}" var="p"
-                                           itemValue="#{p}" itemLabel="#{p.nombre}"/>
+                                           itemValue="#{p}" itemLabel="#{p.nombrePaciente}"/>
                         </p:selectOneMenu>
                     </div>
 
                     <div class="form-field">
                         <label>Fecha *</label>
-                        <p:datePicker value="#{citaBean.citaId.fechaApertura}"
+                        <p:datePicker value="#{citaBean.cita.fechaApertura}"
                                       showTime="true" hourFormat="24" pattern="yyyy-MM-dd HH:mm"
                                       styleClass="w-full"/>
                     </div>
 
                     <div class="form-field">
                         <label>Tratamiento *</label>
-                        <p:selectOneMenu value="#{citaBean.citaId.tratamiento}" styleClass="w-full">
+                        <p:selectOneMenu value="#{citaBean.cita.tratamiento}" styleClass="w-full">
                             <f:selectItems value="#{citaBean.tratamientos}" var="t"
-                                           itemValue="#{t}" itemLabel="#{t.nombre}"/>
+                                           itemValue="#{t}" itemLabel="#{t.nombreTratamiento}"/>
                         </p:selectOneMenu>
                     </div>
 
                     <div class="form-field">
                         <label>Estado</label>
-                        <p:selectOneMenu value="#{citaBean.citaId.estado_cita}" styleClass="w-full">
+                        <p:selectOneMenu value="#{citaBean.cita.estado_cita}" styleClass="w-full">
                             <f:selectItems value="#{citaBean.estadosCita}"/>
                         </p:selectOneMenu>
                     </div>
 
                     <div class="form-field" style="grid-column:1/span 2">
                         <label>Observaciones</label>
-                        <p:inputTextarea value="#{citaBean.citaId.observacionesCita}"
+                        <p:inputTextarea value="#{citaBean.cita.observacionesCita}"
                                          rows="3" styleClass="w-full"/>
                     </div>
                 </div>
