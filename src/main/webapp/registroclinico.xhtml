@@ -6,106 +6,182 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h1>Gestión de Registros Clínicos</h1>
+
+        <style>
+            body .ui-widget { font-size: 13px !important; }
+            body .ui-button { font-size: 13px !important; padding: 0.3rem 0.8rem; }
+            .field-label { font-weight: bold; color: #495057; }
+            .fila-desactivada { background-color: #f4f4f4 !important; color: #9e9e9e !important; }
+
+            /* Scroll para laptops */
+            .scroll-content {
+                max-height: 65vh;
+                overflow-y: auto;
+                padding-right: 10px;
+                overflow-x: hidden;
+            }
+        </style>
 
         <h:form id="frmRegistros">
             <p:growl id="msgRegistro" showDetail="true" life="4000" />
 
-            <!-- Formulario de registro clínico -->
-            <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputLabel value="Tipo de archivo:" for="tipoArchivo"/>
-                <p:selectOneMenu id="tipoArchivo" value="#{registroClinicoBean.selected.tipo_archivo}">
-                    <f:selectItems value="#{registroClinicoBean.tiposArchivo}" var="ta" itemLabel="#{ta}" itemValue="#{ta}"/>
-                </p:selectOneMenu>
+            <div class="card">
+                <h3 style="margin-top:0">Gestión de Registros Clínicos</h3>
 
-                <h:outputLabel value="Tipo de contenido (MIME):" for="tipoContenido"/>
-                <p:inputText id="tipoContenido" value="#{registroClinicoBean.selected.tipo_contenido}" />
+                <p:toolbar style="margin-bottom: 10px; padding: 5px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nuevo Registro" icon="pi pi-plus"
+                                         action="#{registroClinicoBean.newEntity}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="ui-button-success">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
-                <h:outputLabel value="URL del archivo:" for="blobUrl"/>
-                <p:inputText id="blobUrl" value="#{registroClinicoBean.selected.blob_url}" required="true"/>
+                <p:dataTable id="tblRegistros"
+                             value="#{registroClinicoBean.list}"
+                             var="r"
+                             paginator="true"
+                             rows="10"
+                             size="small"
+                             paginatorPosition="bottom"
+                             rowKey="#{r.id}"
+                             selectionMode="single"
+                             selection="#{registroClinicoBean.selected}"
+                             striped="true">
 
-                <h:outputLabel value="Nombre del archivo:" for="blobName"/>
-                <p:inputText id="blobName" value="#{registroClinicoBean.selected.blobName}" required="true"/>
+                    <p:column headerText="Código" width="120">
+                        <h:outputText value="#{r.numeroRegistro}" style="font-weight:bold"/>
+                    </p:column>
 
-                <h:outputLabel value="Fecha de carga:" for="fechaCarga"/>
-                <p:datePicker id="fechaCarga" value="#{registroClinicoBean.selected.fechaCarga}" showTime="true" pattern="yyyy-MM-dd HH:mm"/>
+                    <p:column headerText="Tipo">
+                        <p:tag value="#{r.tipo_archivo}" severity="warning"/>
+                    </p:column>
 
-                <h:outputLabel value="Paciente:" for="paciente"/>
-                <p:selectOneMenu id="paciente" value="#{registroClinicoBean.selected.paciente}">
-                    <f:selectItems value="#{registroClinicoBean.pacientes}" var="p" itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
-                </p:selectOneMenu>
+                    <p:column headerText="Descripción / Nombre">
+                        <h:outputText value="#{r.blobName}" />
+                    </p:column>
 
-                <h:outputLabel value="Usuario" for="usuario"/>
-                <p:selectOneMenu id="usuario" value="#{registroClinicoBean.selected.user}">
-                    <f:selectItems value="#{registroClinicoBean.usuarios}" var="u" itemLabel="#{u.nombreUsuario}" itemValue="#{u}"/>
-                </p:selectOneMenu>
+                    <p:column headerText="Paciente" sortBy="#{r.paciente.nombrePaciente}">
+                        <h:outputText value="#{r.paciente.nombrePaciente} #{r.paciente.apellidoPaciente}" />
+                    </p:column>
 
-                <h:outputLabel value="Cita asociada:" for="cita"/>
-                <p:selectOneMenu id="cita" value="#{registroClinicoBean.selected.cita}">
-                    <f:selectItems value="#{registroClinicoBean.citas}" var="c" itemLabel="#{c.codigo}" itemValue="#{c}"/>
-                </p:selectOneMenu>
-            </h:panelGrid>
+                    <p:column headerText="Responsable">
+                        <h:outputText value="#{r.user.nombreUsuario} #{r.user.apellidoUsuario}" />
+                    </p:column>
 
-            <!-- Botones -->
-            <p:commandButton value="Guardar"
-                             action="#{registroClinicoBean.save}"
-                             update="tblRegistros,frmRegistros,msgRegistro"
-                             icon="pi pi-check" />
+                    <p:column headerText="Fecha Carga" width="120">
+                        <h:outputText value="#{r.fechaCarga}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="localDateTime"/>
+                        </h:outputText>
+                    </p:column>
 
-            <p:commandButton value="Cancelar"
-                             action="#{registroClinicoBean.newEntity}"
-                             update="frmRegistros"
-                             icon="pi pi-times"
-                             styleClass="p-button-secondary" />
+                    <p:column headerText="Acciones" width="120" style="text-align: center;">
+                        <p:commandButton icon="pi pi-pencil"
+                                         action="#{registroClinicoBean.edit(r)}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="rounded-button ui-button-flat ui-button-warning"
+                                         title="Editar">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
 
-            <!-- Tabla de registros clínicos -->
-            <p:dataTable id="tblRegistros"
-                         value="#{registroClinicoBean.list}"
-                         var="r"
-                         paginator="true"
-                         rows="10"
-                         style="margin-top:20px;"
-                         rowKey="#{r.numeroRegistro}"
-                         selectionMode="single"
-                         selection="#{registroClinicoBean.selected}">
+                        <p:commandButton icon="pi pi-trash"
+                                         action="#{registroClinicoBean.delete(r)}"
+                                         update="tblRegistros, :frmRegistros:msgRegistro"
+                                         styleClass="rounded-button ui-button-flat ui-button-danger">
+                            <p:confirm header="Confirmar" message="¿Eliminar este registro?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </div>
 
-                <p:column headerText="Número registro">
-                    <h:outputText value="#{r.numeroRegistro}" />
-                </p:column>
-
-                <p:column headerText="Tipo archivo">
-                    <h:outputText value="#{r.tipo_archivo}" />
-                </p:column>
-
-                <p:column headerText="Nombre archivo">
-                    <h:outputText value="#{r.blobName}" />
-                </p:column>
-
-                <p:column headerText="Paciente">
-                    <h:outputText value="#{r.paciente.nombrePaciente}" />
-                </p:column>
-
-                <p:column headerText="Usuario">
-                    <h:outputText value="#{r.user.nombreUsuario}" />
-                </p:column>
-
-                <p:column headerText="Cita">
-                    <h:outputText value="#{r.cita.codigo}" />
-                </p:column>
-
-                <p:column headerText="Acciones">
-                    <p:commandButton value="Editar"
-                                     action="#{registroClinicoBean.edit(r)}"
-                                     update="frmRegistros"
-                                     icon="pi pi-pencil" />
-
-                    <p:commandButton value="Eliminar"
-                                     action="#{registroClinicoBean.delete(r)}"
-                                     update="tblRegistros"
-                                     icon="pi pi-trash"
-                                     styleClass="ui-button-danger" />
-                </p:column>
-            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" />
+            </p:confirmDialog>
         </h:form>
+
+        <p:dialog id="dialogoGestion" header="Datos del Registro" showEffect="fade" modal="true"
+                  widgetVar="wdialogo" responsive="true" width="600" closeOnEscape="true"
+                  appendTo="@(body)">
+
+            <h:form id="frmDialogo">
+                <div class="ui-fluid scroll-content">
+
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4 field-label, ui-grid-col-8"
+                                 layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+                        <p:outputLabel value="No. Registro:" rendered="#{registroClinicoBean.selected.id != null}"/>
+                        <p:inputText value="#{registroClinicoBean.selected.numeroRegistro}" readonly="true"
+                                     rendered="#{registroClinicoBean.selected.id != null}" styleClass="ui-state-disabled"/>
+
+                        <p:outputLabel value="Tipo de Documento:" for="tipoArchivo"/>
+                        <p:selectOneMenu id="tipoArchivo" value="#{registroClinicoBean.selected.tipo_archivo}" required="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{registroClinicoBean.tiposArchivo}" var="ta" itemLabel="#{ta}" itemValue="#{ta}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Paciente:" for="paciente"/>
+                        <p:selectOneMenu id="paciente" value="#{registroClinicoBean.selected.paciente}"
+                                         required="true" filter="true" filterMatchMode="contains"
+                                         converter="#{pacienteConverter}">
+                            <f:selectItem itemLabel="Seleccione Paciente..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{registroClinicoBean.pacientes}" var="p"
+                                           itemLabel="#{p.nombrePaciente} #{p.apellidoPaciente} (DPI: #{p.dpi})" itemValue="#{p}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Responsable:" for="usuario"/>
+                        <p:selectOneMenu id="usuario" value="#{registroClinicoBean.selected.user}"
+                                         required="true" converter="#{userConverter}">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{registroClinicoBean.usuarios}" var="u"
+                                           itemLabel="#{u.nombreUsuario} #{u.apellidoUsuario}" itemValue="#{u}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Cita Relacionada:" for="cita"/>
+                        <p:selectOneMenu id="cita" value="#{registroClinicoBean.selected.cita}"
+                                         filter="true" filterMatchMode="contains"
+                                         converter="#{citaConverter}">
+                            <f:selectItem itemLabel="Ninguna" itemValue="#{null}"/>
+                            <f:selectItems value="#{registroClinicoBean.citas}" var="c"
+                                           itemLabel="#{c.codigo} - #{c.paciente.nombrePaciente}" itemValue="#{c}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Fecha Carga:" for="fechaCarga"/>
+                        <p:datePicker id="fechaCarga" value="#{registroClinicoBean.selected.fechaCarga}"
+                                      showTime="true" pattern="dd/MM/yyyy HH:mm" showIcon="false"/>
+
+                        <p:outputLabel value="Descripción / Ref:" for="blobName"/>
+                        <p:inputText id="blobName" value="#{registroClinicoBean.selected.blobName}"
+                                     placeholder="Ej: Receta Física #1234" required="true"/>
+
+                        <p:outputLabel value="Enlace Externo (Opcional):" for="blobUrl"/>
+                        <p:inputText id="blobUrl" value="#{registroClinicoBean.selected.blob_url}"
+                                     placeholder="Ej: Link a Google Drive..."/>
+
+                    </p:panelGrid>
+                </div>
+
+                <p:separator style="margin: 10px 0" />
+
+                <div style="text-align: right;">
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                                     onclick="PF('wdialogo').hide()"
+                                     styleClass="ui-button-secondary ui-button-outlined"
+                                     style="margin-right: 10px;"
+                                     type="button" />
+
+                    <p:commandButton value="Guardar Registro" icon="pi pi-check"
+                                     action="#{registroClinicoBean.save}"
+                                     update=":frmRegistros:tblRegistros, :frmRegistros:msgRegistro"
+                                     oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}"
+                                     styleClass="ui-button-success"/>
+                </div>
+            </h:form>
+        </p:dialog>
+
     </ui:define>
 </ui:composition>
