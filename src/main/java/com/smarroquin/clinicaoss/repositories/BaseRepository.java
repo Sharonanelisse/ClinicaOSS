@@ -12,11 +12,9 @@ public abstract class BaseRepository<T, ID> {
     @Inject
     private EntityManager em;
 
-    // === único cambio necesario ===
     protected EntityManager getEm() {
         return em;
     }
-    // ==============================
 
     protected abstract Class<T> entity();
 
