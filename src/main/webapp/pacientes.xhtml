@@ -6,113 +6,222 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h5>Gestión de Pacientes</h5>
 
-        <h:form id="frmPacientes">
-            <p:growl id="msgPacientes" showDetail="true" life="4000" />
+        <style>
+            /* Reducir tamaño de fuente general */
+            body .ui-widget {
+                font-size: 13px !important;
+            }
+            /* Hacer los inputs un poco más compactos */
+            body .ui-inputfield {
+                padding: 0.3rem 0.5rem;
+            }
+            /* Ajustar botones */
+            body .ui-button {
+                font-size: 13px !important;
+                padding: 0.3rem 0.8rem;
+            }
+            /* Ajustar espaciado del Dialogo */
+            .ui-dialog .ui-dialog-content {
+                padding: 10px 15px !important;
+            }
+            /* Negrita en las etiquetas */
+            .field-label {
+                font-weight: bold;
+                color: #495057;
+            }
 
-            <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputLabel value="Nombre:" for="nombrePaciente"/>
-                <p:inputText id="nombrePaciente" value="#{pacienteBean.selected.nombrePaciente}" required="true"/>
+            .fila-desactivada {
+                background-color: #f4f4f4 !important; /* Fondo gris claro */
+                color: #9e9e9e !important;           /* Texto gris medio */
+                font-style: italic;                  /* Letra itálica para diferenciar más */
+            }
 
-                <h:outputLabel value="Apellido:" for="apellidoPaciente"/>
-                <p:inputText id="apellidoPaciente" value="#{pacienteBean.selected.apellidoPaciente}" required="true"/>
+            .fila-desactivada .ui-button {
+                opacity: 0.8;
+            }
+        </style>
 
-                <h:outputLabel value="DPI:" for="dpi"/>
-                <p:inputText id="dpi" value="#{pacienteBean.selected.dpi}" required="true"/>
+        <script type="text/javascript">
+            PrimeFaces.locales['es'] = {
+                closeText: 'Cerrar', prevText: 'Anterior', nextText: 'Siguiente',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                weekHeader: 'Semana', firstDay: 1, isRTL: false, showMonthAfterYear: false, yearSuffix: '',
+                timeOnlyTitle: 'Sólo hora', timeText: 'Tiempo', hourText: 'Hora', minuteText: 'Minuto', secondText: 'Segundo',
+                currentText: 'Fecha actual', ampm: false, month: 'Mes', week: 'Semana', day: 'Día', allDayText: 'Todo el día'
+            };
+        </script>
 
-                <h:outputLabel value="Fecha de nacimiento:" for="fechaNacimiento"/>
-                <p:datePicker id="fechaNacimiento" value="#{pacienteBean.selected.fechaNacimiento}" pattern="dd/MM/yyyy"/>
+        <h:form id="frmPrincipal">
+            <p:growl id="msgGlobal" showDetail="true" life="4000" />
 
-                <h:outputLabel value="Edad:" for="edad"/>
-                <p:inputText id="edad" value="#{pacienteBean.selected.edad}" />
+            <div class="card">
+                <h3 style="margin-top:0">Gestión de Pacientes</h3>
 
-                <h:outputLabel value="Teléfono:" for="telefono"/>
-                <p:inputText id="telefono" value="#{pacienteBean.selected.telefono}" />
+                <p:toolbar style="margin-bottom: 10px; padding: 5px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nuevo Paciente" icon="pi pi-plus"
+                                         action="#{pacienteBean.newEntity}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="ui-button-success">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
-                <h:outputLabel value="Email:" for="email"/>
-                <p:inputText id="email" value="#{pacienteBean.selected.email}" />
+                <p:dataTable id="tblPacientes"
+                             value="#{pacienteBean.list}"
+                             var="p"
+                             paginator="true"
+                             rows="10"
+                             size="small"
+                             paginatorPosition="bottom"
+                             rowKey="#{p.id}"
+                             selectionMode="single"
+                             selection="#{pacienteBean.selected}"
+                             striped="true"
+                             rowStyleClass="#{p.activo ? null : 'fila-desactivada'}">
+                    <p:column headerText="ID" width="40" style="text-align: center;">
+                        <h:outputText value="#{p.id}" />
+                    </p:column>
 
-                <h:outputLabel value="Alergias:" for="alergias"/>
-                <p:inputTextarea id="alergias" value="#{pacienteBean.selected.alergias}" rows="2"/>
+                    <p:column headerText="Nombre Completo" sortBy="#{p.apellidoPaciente}">
+                        <h:outputText value="#{p.nombrePaciente} #{p.apellidoPaciente}" />
+                    </p:column>
 
-                <h:outputLabel value="Condiciones médicas:" for="condicionesMedicas"/>
-                <p:inputTextarea id="condicionesMedicas" value="#{pacienteBean.selected.condicionesMedicas}" rows="2"/>
+                    <p:column headerText="DPI" width="100">
+                        <h:outputText value="#{p.dpi}" />
+                    </p:column>
 
-                <h:outputLabel value="Observaciones:" for="observaciones"/>
-                <p:inputTextarea id="observaciones" value="#{pacienteBean.selected.observaciones}" rows="2"/>
+                    <p:column headerText="Edad" width="40" style="text-align: center;">
+                        <h:outputText value="#{p.edad}" />
+                    </p:column>
 
-                <h:outputLabel value="Fecha de registro:" for="fechaRegistro"/>
-                <p:datePicker id="fechaRegistro" value="#{pacienteBean.selected.fechaRegistro}" pattern="dd/MM/yyyy"/>
-            </h:panelGrid>
+                    <p:column headerText="Teléfono" width="90">
+                        <h:outputText value="#{p.telefono}" />
+                    </p:column>
 
-            <p:commandButton value="Guardar"
-                             action="#{pacienteBean.save}"
-                             update="tblPacientes,frmPacientes,msgPacientes"
-                             icon="pi pi-check" />
+                    <p:column headerText="Email">
+                        <h:outputText value="#{p.email}" />
+                    </p:column>
 
-            <p:commandButton value="Cancelar"
-                             action="#{pacienteBean.newEntity}"
-                             update="frmPacientes"
-                             icon="pi pi-times"
-                             styleClass="p-button-secondary" />
+                    <p:column headerText="Estado" width="80" style="text-align: center;">
+                        <p:tag styleClass="mr-2" severity="#{p.activo ? 'success' : 'danger'}" value="#{p.activo ? 'Activo' : 'Inactivo'}"/>
+                    </p:column>
 
-            <p:dataTable id="tblPacientes"
-                         value="#{pacienteBean.list}"
-                         var="p"
-                         paginator="true"
-                         rows="10"
-                         style="margin-top:20px;"
-                         rowKey="#{p.id}"
-                         selectionMode="single"
-                         selection="#{pacienteBean.selected}">
+                    <p:column headerText="Acciones" width="100" style="text-align: center;">
 
-                <p:column headerText="ID">
-                    <h:outputText value="#{p.id}" />
-                </p:column>
+                        <p:commandButton icon="pi pi-pencil"
+                                         action="#{pacienteBean.edit(p)}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="rounded-button ui-button-flat ui-button-warning"
+                                         disabled="#{!p.activo}"
+                                         title="Editar">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
 
-                <p:column headerText="Nombre">
-                    <h:outputText value="#{p.nombrePaciente}" />
-                </p:column>
+                        <p:commandButton icon="pi pi-ban"
+                                         rendered="#{p.activo}"
+                                         action="#{pacienteBean.delete(p)}"
+                                         update="tblPacientes, :frmPrincipal:msgGlobal"
+                                         styleClass="rounded-button ui-button-flat ui-button-danger"
+                                         title="Desactivar Paciente">
+                            <p:confirm header="Confirmar" message="¿Desactivar este paciente?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
 
-                <p:column headerText="Apellido">
-                    <h:outputText value="#{p.apellidoPaciente}" />
-                </p:column>
+                        <p:commandButton icon="pi pi-check-circle"
+                                         rendered="#{!p.activo}"
+                                         action="#{pacienteBean.activar(p)}"
+                                         update="tblPacientes, :frmPrincipal:msgGlobal"
+                                         styleClass="rounded-button ui-button-flat ui-button-success"
+                                         title="Reactivar Paciente">
+                        </p:commandButton>
 
-                <p:column headerText="DPI">
-                    <h:outputText value="#{p.dpi}" />
-                </p:column>
+                    </p:column>
+                </p:dataTable>
+            </div>
 
-                <p:column headerText="Fecha nacimiento">
-                    <h:outputText value="#{pacienteBean.formatFecha(p.fechaNacimiento)}" />
-                </p:column>
-
-
-                <p:column headerText="Edad">
-                    <h:outputText value="#{p.edad}" />
-                </p:column>
-
-                <p:column headerText="Teléfono">
-                    <h:outputText value="#{p.telefono}" />
-                </p:column>
-
-                <p:column headerText="Email">
-                    <h:outputText value="#{p.email}" />
-                </p:column>
-
-                <p:column headerText="Acciones">
-                    <p:commandButton value="Editar"
-                                     action="#{pacienteBean.edit(p)}"
-                                     update="frmPacientes"
-                                     icon="pi pi-pencil" />
-
-                    <p:commandButton value="Eliminar"
-                                     action="#{pacienteBean.delete(p)}"
-                                     update="tblPacientes"
-                                     icon="pi pi-trash"
-                                     styleClass="ui-button-danger" />
-                </p:column>
-            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
         </h:form>
+
+        <p:dialog id="dialogoGestion" header="Detalles del Paciente" showEffect="fade" modal="true"
+                  widgetVar="wdialogo" responsive="true" width="70vw" fitViewport="true" closeOnEscape="true">
+
+            <h:form id="frmDialogo">
+                <div class="ui-fluid">
+                    <p:panelGrid columns="4"
+                                 columnClasses="ui-grid-col-2 field-label, ui-grid-col-4, ui-grid-col-2 field-label, ui-grid-col-4"
+                                 layout="grid"
+                                 styleClass="ui-panelgrid-blank ui-fluid"
+                                 style="border:0px none; background-color:transparent;">
+
+                        <p:outputLabel value="Nombre:" for="nombre"/>
+                        <p:inputText id="nombre" value="#{pacienteBean.selected.nombrePaciente}" required="true"/>
+
+                        <p:outputLabel value="Apellido:" for="apellido"/>
+                        <p:inputText id="apellido" value="#{pacienteBean.selected.apellidoPaciente}" required="true"/>
+
+                        <p:outputLabel value="DPI:" for="dpi"/>
+                        <p:inputText id="dpi" value="#{pacienteBean.selected.dpi}" required="true"/>
+
+                        <p:outputLabel value="Nacimiento:" for="fechaNacimiento"/>
+                        <p:datePicker id="fechaNacimiento" value="#{pacienteBean.selected.fechaNacimiento}"
+                                      pattern="dd/MM/yyyy" required="true"
+                                      monthNavigator="true" yearNavigator="true" yearRange="1920:2030"
+                                      locale="es" showIcon="false"/>
+                        <p:outputLabel value="Edad:" for="edad"/>
+                        <p:inputText id="edad" value="#{pacienteBean.selected.edad}" disabled="true" placeholder="Auto"/>
+
+                        <p:outputLabel value="Teléfono:" for="telefono"/>
+                        <p:inputText id="telefono" value="#{pacienteBean.selected.telefono}" required="true"/>
+
+                        <p:outputLabel value="Email:" for="email"/>
+                        <p:inputText id="email" value="#{pacienteBean.selected.email}" required="true"/>
+
+                        <h:outputText value=""/>
+                        <h:outputText value=""/>
+
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 field-label, ui-grid-col-10"
+                                 layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+                        <p:outputLabel value="Alergias:" for="alergias"/>
+                        <p:inputTextarea id="alergias" value="#{pacienteBean.selected.alergias}" rows="1" autoResize="true"/>
+
+                        <p:outputLabel value="Condiciones:" for="condiciones"/>
+                        <p:inputTextarea id="condiciones" value="#{pacienteBean.selected.condicionesMedicas}" rows="1" autoResize="true"/>
+
+                        <p:outputLabel value="Observaciones:" for="observaciones"/>
+                        <p:inputTextarea id="observaciones" value="#{pacienteBean.selected.observaciones}" rows="2" autoResize="true"/>
+                    </p:panelGrid>
+
+                    <p:separator style="margin: 10px 0" />
+
+                    <div style="text-align: right;">
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         onclick="PF('wdialogo').hide()"
+                                         styleClass="ui-button-secondary ui-button-outlined"
+                                         style="margin-right: 10px;"
+                                         immediate="true" />
+
+                        <p:commandButton value="Guardar Datos" icon="pi pi-check"
+                                         action="#{pacienteBean.save}"
+                                         update=":frmPrincipal:tblPacientes, :frmPrincipal:msgGlobal"
+                                         oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}" />
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
     </ui:define>
 </ui:composition>

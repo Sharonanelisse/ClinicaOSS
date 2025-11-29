@@ -8,8 +8,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class BaseRepository<T, ID> {
+
     @Inject
     private EntityManager em;
+
+    protected EntityManager getEm() {
+        return em;
+    }
 
     protected abstract Class<T> entity();
 
@@ -18,7 +23,7 @@ public abstract class BaseRepository<T, ID> {
     public List<T> findAll() {
         String entityName = em.getMetamodel().entity(entity()).getName();
 
-        return em.createQuery("select e from " + entityName + " e", entity())
+        return em.createQuery("select e from " + entityName + " e ORDER BY e.id ASC", entity())
                 .getResultList();
     }
 
@@ -57,3 +62,4 @@ public abstract class BaseRepository<T, ID> {
     }
 
 }
+

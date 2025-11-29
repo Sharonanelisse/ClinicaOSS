@@ -2,6 +2,8 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Paciente;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -39,6 +41,31 @@ public class PacienteBean extends Bean<Paciente> implements Serializable {
 
     public String formatFecha(LocalDate fecha) {
         return fecha != null ? fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "";
+    }
+
+    @Override
+    public void delete(Paciente entity) {
+        try {
+            // En vez de borrar, lo desactivamos
+            entity.setActivo(false);
+
+            // Usamos el servicio de guardar (update)
+            service.guardarPaciente(entity);
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Paciente desactivado", "El registro ha pasar a estado inactivo."));
+
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo cambiar el estado."));
+        }
+    }
+
+    // Opcional: Un método para reactivarlo si te equivocaste
+    public void activar(Paciente entity) {
+        entity.setActivo(true);
+        service.guardarPaciente(entity);
+        addInfoMessage("Paciente reactivado exitosamente.");
     }
 
     @Override

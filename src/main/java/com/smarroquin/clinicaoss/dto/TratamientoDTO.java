@@ -11,6 +11,10 @@ public class TratamientoDTO {
     private Double duracionEstimado;
     private BigDecimal costo;
     private Long especialidadId;
+    private Boolean activoTratamiento;
+
+    public Boolean getActivoTratamiento() { return activoTratamiento; }
+    public void setActivoTratamiento(Boolean activoTratamiento) { this.activoTratamiento = activoTratamiento; }
 
     public Long getTratamientoId() {
         return tratamientoId;

@@ -13,6 +13,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,17 @@ public class FacturacionBean extends Bean<Facturacion> implements Serializable {
 
     @Override
     protected Facturacion createNew() {
-        return new Facturacion();
+        Facturacion f = new Facturacion();
+        f.setFechaEmision(LocalDateTime.now());
+        f.setEstado_pago(estado_pago.PENDIENTE); // Pendiente por defecto
+        f.setSubtotal(BigDecimal.ZERO);
+        f.setTotal(BigDecimal.ZERO);
+        return f;
+    }
+
+    public String formatFecha(LocalDateTime fecha) {
+        if (fecha == null) return "";
+        return fecha.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     @Override
@@ -37,12 +49,28 @@ public class FacturacionBean extends Bean<Facturacion> implements Serializable {
 
     @Override
     protected void persist(Facturacion entity) {
+
+        if (entity.getFechaEmision() == null) {
+            entity.setFechaEmision(LocalDateTime.now());
+        }
+        if (entity.getSubtotal() == null) entity.setSubtotal(BigDecimal.ZERO);
+        if (entity.getTotal() == null) entity.setTotal(BigDecimal.ZERO);
+        if (entity.getEstado_pago() == null) {
+            if (entity.getTotal().compareTo(BigDecimal.ZERO) > 0) {
+                entity.setEstado_pago(estado_pago.PENDIENTE);
+            }
+            else {
+                entity.setEstado_pago(estado_pago.PAGADO);
+            }
+        }
         service.guardarFacturacion(entity);
     }
 
     @Override
     protected void remove(Facturacion entity) {
-        service.eliminarFacturacion(entity);
+        // En facturación, NUNCA se elimina físicamente, se ANULA.
+        entity.setEstado_pago(estado_pago.ANULADO);
+        service.guardarFacturacion(entity);
     }
 
     @Override

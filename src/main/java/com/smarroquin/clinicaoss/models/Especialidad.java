@@ -17,7 +17,20 @@ public class Especialidad {
     @Column
     private String descripcion;
 
+    @Column(nullable = false)
+    private Boolean activoEspecialidad = true;
+
+    @PrePersist
+    protected void onCreate() {
+        if (activoEspecialidad == null) {
+            activoEspecialidad = true;
+        }
+    }
+
     // Getters y setters
+
+    public Boolean getActivoEspecialidad() { return activoEspecialidad; }
+    public void setActivoEspecialidad(Boolean activoEspecialidad) { this.activoEspecialidad = activoEspecialidad; }
 
     public Long getId() {
         return id;

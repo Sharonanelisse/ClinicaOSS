@@ -107,6 +107,7 @@ public class CargarDesdeJson {
             p.setAlergias(json.getAlergias());
             p.setCondicionesMedicas(json.getCondicionesMedicas());
             p.setObservaciones(json.getObservaciones());
+            p.setActivo(json.getActivoPaciente());
             p.setFechaRegistro(json.getFechaRegistro() != null ? json.getFechaRegistro() : LocalDateTime.now());
             em.persist(p);
         }
@@ -120,6 +121,7 @@ public class CargarDesdeJson {
             e.setId(json.getEspecialidadId());
             e.setNombreEspecialidad(json.getNombreEspecialidad());
             e.setDescripcion(json.getDescripcion());
+            e.setActivoEspecialidad(json.getActivoEspecialidad());
             em.persist(e);
         }
         System.out.println("Especialidades insertadas: " + lista.size());
@@ -169,6 +171,8 @@ public class CargarDesdeJson {
             if (especialidad == null)
                 throw new RuntimeException("Especialidad no encontrada con id: " + json.getEspecialidadId());
             t.setEspecialidad(especialidad);
+
+            t.setActivoTratamiento(json.getActivoTratamiento());
 
             em.persist(t);
         }
@@ -352,8 +356,18 @@ public class CargarDesdeJson {
         private String condicionesMedicas;
         private String observaciones;
         private LocalDateTime fechaRegistro;
+        private Boolean activoPaciente;
+
         // getters y setters...
 
+
+        public Boolean getActivoPaciente() {
+            return activoPaciente;
+        }
+
+        public void setActivoPaciente(Boolean activoPaciente) {
+            this.activoPaciente = activoPaciente;
+        }
 
         public Long getPacienteId() {
             return pacienteId;
@@ -455,6 +469,7 @@ public class CargarDesdeJson {
     public static class EspecialidadJson {private Long especialidadId;
         private String nombreEspecialidad;
         private String descripcion;
+        private Boolean activoEspecialidad;
         // getters y setters...
 
         public Long getEspecialidadId() {
@@ -479,6 +494,13 @@ public class CargarDesdeJson {
 
         public void setDescripcion(String descripcion) {
             this.descripcion = descripcion;
+        }
+        public Boolean getActivoEspecialidad() {
+            return activoEspecialidad;
+        }
+
+        public void setActivoEspecialidad(Boolean activoEspecialidad) {
+            this.activoEspecialidad = activoEspecialidad;
         }
     }
 
@@ -610,7 +632,11 @@ public class CargarDesdeJson {
         private Double duracionEstimado;
         private BigDecimal costo;
         private Long especialidadId;
+        private Boolean activoTratamiento;
         // getters y setters...
+
+        public Boolean getActivoTratamiento() { return activoTratamiento; }
+        public void setActivoTratamiento(Boolean activoTratamiento) { this.activoTratamiento = activoTratamiento; }
 
         public Long getTratamientoId() {
             return tratamientoId;

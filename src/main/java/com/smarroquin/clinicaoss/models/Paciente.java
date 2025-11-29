@@ -55,10 +55,16 @@ public class Paciente {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;
 
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     @PrePersist
     protected void prePersist() {
         this.fechaRegistro = LocalDateTime.now();
         actualizarEdad();
+        if (this.activo == null) {
+            this.activo = true;
+        }
     }
 
     @PreUpdate
@@ -75,6 +81,14 @@ public class Paciente {
     }
 
     // Getters y Setters
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 
     public Long getId() {
         return id;

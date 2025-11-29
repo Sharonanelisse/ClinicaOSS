@@ -10,7 +10,8 @@
     "alergias": "Penicilina",
     "condicionesMedicas": "Hipertensión",
     "observaciones": "Paciente con antecedentes familiares de hipertensión, requiere control de presión arterial.",
-    "fechaRegistro": "2025-11-27T22:54:00"
+    "fechaRegistro": "2025-11-27T22:54:00",
+    "activoPaciente": true
   },
   {
     "nombrePaciente": "María Elena",
@@ -23,7 +24,8 @@
     "alergias": "Polen",
     "condicionesMedicas": "Ninguna",
     "observaciones": "Consulta por limpieza dental, refiere sensibilidad en encías.",
-    "fechaRegistro": "2025-11-27T22:54:00"
+    "fechaRegistro": "2025-11-27T22:54:00",
+    "activoPaciente": true
   },
   {
     "nombrePaciente": "Luis Fernando",
@@ -36,7 +38,8 @@
     "alergias": "Ninguna",
     "condicionesMedicas": "Diabetes tipo II",
     "observaciones": "Paciente en tratamiento de periodontitis, requiere control glucémico.",
-    "fechaRegistro": "2025-11-27T22:54:00"
+    "fechaRegistro": "2025-11-27T22:54:00",
+    "activoPaciente": true
   },
   {
     "nombrePaciente": "Claudia Patricia",
@@ -49,7 +52,8 @@
     "alergias": "Ninguna",
     "condicionesMedicas": "Ninguna",
     "observaciones": "Paciente joven, primera visita odontológica, solicita revisión general.",
-    "fechaRegistro": "2025-11-27T22:54:00"
+    "fechaRegistro": "2025-11-27T22:54:00",
+    "activoPaciente": true
   },
   {
     "nombrePaciente": "Ricardo Andrés",
@@ -62,6 +66,7 @@
     "alergias": "Aspirina",
     "condicionesMedicas": "Cardiopatía",
     "observaciones": "Paciente con prótesis dental parcial, requiere ajuste y revisión periódica.",
-    "fechaRegistro": "2025-11-27T22:54:00"
+    "fechaRegistro": "2025-11-27T22:54:00",
+    "activoPaciente": true
   }
 ]
