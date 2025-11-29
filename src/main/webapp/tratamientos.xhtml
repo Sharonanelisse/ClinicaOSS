@@ -6,101 +6,165 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h1>Gestión de Tratamientos</h1>
 
-        <h:form id="frmTratamientos">
-            <p:growl id="msgTratamiento" showDetail="true" life="4000" />
+        <style>
+            body .ui-widget { font-size: 13px !important; }
+            body .ui-button { font-size: 13px !important; padding: 0.3rem 0.8rem; }
+            .fila-desactivada {
+                background-color: #f4f4f4 !important;
+                color: #9e9e9e !important;
+                font-style: italic;
+            }
+            .field-label { font-weight: bold; color: #495057; }
+        </style>
 
+        <h:form id="frmPrincipal">
+            <p:growl id="msgGlobal" showDetail="true" life="4000" />
 
-            <h:panelGrid columns="2" columnClasses="label,value">
+            <div class="card">
+                <h3 style="margin-top:0">Catálogo de Tratamientos</h3>
 
-                <h:outputLabel value="Nombre:" for="nombreTratamiento"/>
-                <p:inputText id="nombreTratamiento"
-                             value="#{tratamientoBean.selected.nombreTratamiento}"
-                             required="true" />
+                <p:toolbar style="margin-bottom: 10px; padding: 5px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nuevo Tratamiento" icon="pi pi-plus"
+                                         action="#{tratamientoBean.newEntity}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="ui-button-success">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
-                <h:outputLabel value="Descripción:" for="descripcion"/>
-                <p:inputTextarea id="descripcion"
-                                 value="#{tratamientoBean.selected.descripcion}"
-                                 rows="3"
-                                 required="true" />
+                <p:dataTable id="tblTratamientos"
+                             value="#{tratamientoBean.list}"
+                             var="t"
+                             paginator="true"
+                             rows="10"
+                             size="small"
+                             paginatorPosition="bottom"
+                             rowKey="#{t.id}"
+                             selectionMode="single"
+                             selection="#{tratamientoBean.selected}"
+                             striped="true"
+                             rowStyleClass="#{t.activoTratamiento ? null : 'fila-desactivada'}">
 
-                <h:outputLabel value="Duración estimada:" for="duracionEstimado"/>
-                <p:inputText id="duracionEstimado"
-                             value="#{tratamientoBean.selected.duracionEstimado}" />
+                    <p:column headerText="ID" width="40" style="text-align: center;">
+                        <h:outputText value="#{t.id}" />
+                    </p:column>
 
-                <h:outputLabel value="Costo:" for="costo"/>
-                <p:inputText id="costo"
-                             value="#{tratamientoBean.selected.costo}" />
+                    <p:column headerText="Nombre Tratamiento" sortBy="#{t.nombreTratamiento}">
+                        <h:outputText value="#{t.nombreTratamiento}" />
+                    </p:column>
 
-                <h:outputLabel value="Especialidad:" for="especialidad"/>
-                <p:inputText id="especialidad"
-                             value="#{tratamientoBean.selected.especialidad}" />
-            </h:panelGrid>
+                    <p:column headerText="Especialidad" sortBy="#{t.especialidad.nombreEspecialidad}">
+                        <h:outputText value="#{t.especialidad != null ? t.especialidad.nombreEspecialidad : '---'}" />
+                    </p:column>
 
+                    <p:column headerText="Duración (h)" width="100" style="text-align: center;">
+                        <h:outputText value="#{t.duracionEstimado}" />
+                    </p:column>
 
-            <p:commandButton value="Guardar"
-                             action="#{tratamientoBean.save}"
-                             update="tblTratamientos,frmTratamientos,msgTratamiento"
-                             icon="pi pi-check" />
+                    <p:column headerText="Costo" width="100" style="text-align: right;">
+                        <h:outputText value="#{t.costo}">
+                            <f:convertNumber type="currency" currencySymbol="Q" />
+                        </h:outputText>
+                    </p:column>
 
-            <p:commandButton value="Cancelar"
-                             action="#{tratamientoBean.newEntity}"
-                             update="frmTratamientos"
-                             icon="pi pi-times"
-                             styleClass="p-button-secondary" />
+                    <p:column headerText="Estado" width="80" style="text-align: center;">
+                        <p:tag styleClass="mr-2" severity="#{t.activoTratamiento ? 'success' : 'danger'}" value="#{t.activoTratamiento ? 'Activo' : 'Inactivo'}"/>
+                    </p:column>
 
+                    <p:column headerText="Acciones" width="110" style="text-align: center;">
 
-            <p:dataTable id="tblTratamientos"
-                         value="#{tratamientoBean.list}"
-                         var="t"
-                         paginator="true"
-                         rows="10"
-                         style="margin-top:20px;"
-                         rowKey="#{t.id}"
-                         selectionMode="single">
+                        <p:commandButton icon="pi pi-pencil"
+                                         action="#{tratamientoBean.edit(t)}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="rounded-button ui-button-flat ui-button-warning"
+                                         disabled="#{!t.activoTratamiento}"
+                                         title="Editar">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
 
-                <p:column headerText="ID">
-                    <h:outputText value="#{t.id}" />
-                </p:column>
+                        <p:commandButton icon="pi pi-ban"
+                                         rendered="#{t.activoTratamiento}"
+                                         action="#{tratamientoBean.delete(t)}"
+                                         update="tblTratamientos, :frmPrincipal:msgGlobal"
+                                         styleClass="rounded-button ui-button-flat ui-button-danger"
+                                         title="Desactivar">
+                            <p:confirm header="Confirmar" message="¿Desactivar este tratamiento?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
 
-                <p:column headerText="Nombre">
-                    <h:outputText value="#{t.nombreTratamiento}" />
-                </p:column>
+                        <p:commandButton icon="pi pi-check-circle"
+                                         rendered="#{!t.activoTratamiento}"
+                                         action="#{tratamientoBean.activar(t)}"
+                                         update="tblTratamientos, :frmPrincipal:msgGlobal"
+                                         styleClass="rounded-button ui-button-flat ui-button-success"
+                                         title="Reactivar">
+                        </p:commandButton>
 
-                <p:column headerText="Descripción">
-                    <h:outputText value="#{t.descripcion}" />
-                </p:column>
+                    </p:column>
+                </p:dataTable>
+            </div>
 
-                <p:column headerText="Duración estimada">
-                    <h:outputText value="#{t.duracionEstimado}" />
-                </p:column>
-
-                <p:column headerText="Costo">
-                    <h:outputText value="#{t.costo}" />
-                </p:column>
-
-                <p:column headerText="Especialidad">
-                    <h:outputText value="#{t.especialidad.nombre}" />
-                </p:column>
-
-                <p:column headerText="Acciones">
-
-
-                    <p:commandButton value="Editar"
-                                     action="#{tratamientoBean.edit(t)}"
-                                     update="frmTratamientos"
-                                     icon="pi pi-pencil" />
-
-
-                    <p:commandButton value="Eliminar"
-                                     action="#{tratamientoBean.delete(t)}"
-                                     update="tblTratamientos msgTratamiento"
-                                     icon="pi pi-trash"
-                                     styleClass="ui-button-danger" />
-
-                </p:column>
-            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
         </h:form>
+
+        <p:dialog id="dialogoGestion" header="Detalles del Tratamiento" showEffect="fade" modal="true"
+                  widgetVar="wdialogo" responsive="true" width="600" closeOnEscape="true">
+
+            <h:form id="frmDialogo">
+                <div class="ui-fluid">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4 field-label, ui-grid-col-8"
+                                 layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+                        <p:outputLabel value="Nombre:" for="nombre"/>
+                        <p:inputText id="nombre" value="#{tratamientoBean.selected.nombreTratamiento}" required="true"/>
+
+                        <p:outputLabel value="Especialidad:" for="especialidad"/>
+                        <p:selectOneMenu id="especialidad" value="#{tratamientoBean.selected.especialidad}"
+                                         required="true" converter="especialidadConverter"
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{tratamientoBean.especialidades}" var="e"
+                                           itemLabel="#{e.nombreEspecialidad}" itemValue="#{e}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Duración (Horas):" for="duracion"/>
+                        <p:inputNumber id="duracion" value="#{tratamientoBean.selected.duracionEstimado}"
+                                       decimalPlaces="1" symbol=" h" symbolPosition="s"
+                                       minValue="0.5" required="true"/>
+
+                        <p:outputLabel value="Costo Estimado:" for="costo"/>
+                        <p:inputNumber id="costo" value="#{tratamientoBean.selected.costo}"
+                                       symbol="Q " symbolPosition="p" decimalPlaces="2" required="true"/>
+
+                        <p:outputLabel value="Descripción:" for="descripcion"/>
+                        <p:inputTextarea id="descripcion" value="#{tratamientoBean.selected.descripcion}" rows="3" autoResize="false"/>
+
+                    </p:panelGrid>
+
+                    <p:separator style="margin: 10px 0" />
+
+                    <div style="text-align: right;">
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         onclick="PF('wdialogo').hide()"
+                                         styleClass="ui-button-secondary ui-button-outlined"
+                                         style="margin-right: 10px;"
+                                         immediate="true" />
+
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         action="#{tratamientoBean.save}"
+                                         update=":frmPrincipal:tblTratamientos, :frmPrincipal:msgGlobal"
+                                         oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}" />
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
     </ui:define>
 </ui:composition>

@@ -32,7 +32,18 @@ public class Tratamiento {
     @ManyToOne(optional = false)
     private Especialidad especialidad;
 
+    @Column(nullable = false)
+    private Boolean activoTratamiento = true;
+
+    @PrePersist
+    protected void onCreate() {
+        if (activoTratamiento == null) activoTratamiento = true;
+    }
+
     // Getters y setters
+
+    public Boolean getActivoTratamiento() { return activoTratamiento; }
+    public void setActivoTratamiento(Boolean activoTratamiento) { this.activoTratamiento = activoTratamiento; }
 
     public Long getId() {
         return id;
