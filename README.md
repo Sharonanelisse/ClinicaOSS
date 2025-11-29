@@ -10,6 +10,10 @@ Sistema web y catálogo de sistema para clínica odontológica.
 - Ismael Alejandro Liquez Muñoz
 - Josimar Brandon Andrée Hernández Calzadia
 
+## Programa desplegado en azure
+
+https://clinicaoss-evdua7cwa0etejc0.canadacentral-01.azurewebsites.net/ClinicaOSS
+
 ## Estructura del Proyecto
 
 ```
