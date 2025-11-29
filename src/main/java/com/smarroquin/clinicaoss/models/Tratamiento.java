@@ -40,6 +40,19 @@ public class Tratamiento {
         if (activoTratamiento == null) activoTratamiento = true;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tratamiento that = (Tratamiento) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
     // Getters y setters
 
     public Boolean getActivoTratamiento() { return activoTratamiento; }

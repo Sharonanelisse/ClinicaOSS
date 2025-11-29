@@ -42,4 +42,11 @@ public class UsuarioRepository extends BaseRepository<Usuario, Long> {
     public Usuario find(Long id) {
         return em.find(Usuario.class, id);
     }
+
+    // En UsuarioRepository.java
+
+    public List<Usuario> findByRolOdontologo() {
+        return getEm().createQuery("SELECT u FROM Usuario u WHERE u.role_name = 'ODONTOLOGO' AND u.status = true", Usuario.class)
+                .getResultList();
+    }
 }

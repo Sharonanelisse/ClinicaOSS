@@ -174,4 +174,7 @@ public class CatalogService implements Serializable {
         return facturacionRepository.findByPacienteId(pacienteId);
     }
 
+    public List<Usuario> odontologos() {
+        return userRepository.findByRolOdontologo();
+    }
 }

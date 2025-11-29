@@ -59,6 +59,19 @@ public class Usuario {
         if (telefono != null) telefono = telefono.trim();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id != null && id.equals(usuario.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
     // Getters y Setters
 
     public Long getId() {
