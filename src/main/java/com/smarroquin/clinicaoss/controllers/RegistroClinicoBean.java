@@ -53,7 +53,7 @@ public class RegistroClinicoBean extends Bean<RegistroClinico> implements Serial
         labels.put("blobName", "Nombre del archivo");
         labels.put("fechaCarga", "Fecha de carga");
         labels.put("paciente", "Paciente");
-        labels.put("user", "Usuario (Odontólogo)");
+        labels.put("user", "Usuario");
         labels.put("cita", "Cita asociada");
         return labels;
     }

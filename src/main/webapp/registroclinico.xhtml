@@ -35,7 +35,7 @@
                     <f:selectItems value="#{registroClinicoBean.pacientes}" var="p" itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
                 </p:selectOneMenu>
 
-                <h:outputLabel value="Usuario (Odontólogo):" for="usuario"/>
+                <h:outputLabel value="Usuario" for="usuario"/>
                 <p:selectOneMenu id="usuario" value="#{registroClinicoBean.selected.user}">
                     <f:selectItems value="#{registroClinicoBean.usuarios}" var="u" itemLabel="#{u.nombreUsuario}" itemValue="#{u}"/>
                 </p:selectOneMenu>

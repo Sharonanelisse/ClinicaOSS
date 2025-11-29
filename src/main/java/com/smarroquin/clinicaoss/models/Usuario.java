@@ -127,7 +127,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("User{");
+        final StringBuffer sb = new StringBuffer("Usuario{");
         sb.append("id=").append(id);
         sb.append(", nombreUsuario='").append(nombreUsuario).append('\'');
         sb.append(", apellidoUsuario='").append(apellidoUsuario).append('\'');

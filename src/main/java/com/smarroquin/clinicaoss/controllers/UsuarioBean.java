@@ -4,6 +4,8 @@ import com.smarroquin.clinicaoss.enums.role_name;
 import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -51,6 +53,19 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     public role_name[] getRoles() {
         return role_name.values();
     }
+
+    public void toggleStatus(Usuario u) {
+        u.setStatus(!u.getStatus());
+        service.guardar(u);
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Estado actualizado",
+                        "El usuario ahora está " + (u.getStatus() ? "Activo" : "Inactivo"))
+        );
+    }
+
 
     @Override
     protected void persist(Usuario entity) {
