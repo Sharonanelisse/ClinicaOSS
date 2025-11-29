@@ -48,14 +48,17 @@
             border-radius: 15px!important;
         }
         .buttonLogin {
-            background: #0f70b7;
-            border: none;
-            color: #fff;
-            padding: 7px 22px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 200px;
-            cursor:pointer;
+            background: #0f70b7!important;
+            border: none!important;
+            color: #fff!important;
+            padding: 7px 22px!important;
+            border-radius: 16px!important;
+            width: 100%!important;
+            cursor:pointer!important;
+            font-size:12px!important;
+        }
+        .buttonLogin span{
+            padding: 0px!important;
         }
         button.buttonLogin:hover {
             background: #054c80;
@@ -74,32 +77,35 @@
 
 
 
-            <h:form id="frmLogin">
-                <p:growl id="msgLogin" showDetail="true" life="4000" />
+            <h:form>
 
-                <p:panel header="Login" style="width:350px; margin:auto; margin-top:100px;">
-                    <p:panelGrid columns="2" columnClasses="label,value" styleClass="p-fluid">
+                <p:messages showDetail="true" closable="true"/>
 
-                        <h:outputLabel value="Usuario o correo:" for="login" />
-                        <p:inputText id="login"
-                                     value="#{usuarioBean.selected.email}"
-                                     required="true" />
+                <p:inputText
+                        value="#{loginBean.username}"
+                        required="true"
+                        placeholder="Usuario o correo"
+                        style="width:100%;margin-bottom:15px;"
+                />
 
-                        <h:outputLabel value="Contraseña:" for="password" />
-                        <p:password id="password"
-                                    value="#{usuarioBean.selected.password}"
-                                    required="true" />
+                <p:password
+                        value="#{loginBean.password}"
+                        required="true"
+                        placeholder="Contraseña"
+                        style="width:100%;margin-bottom:15px;"
+                />
 
-                    </p:panelGrid>
+                <p:commandButton
+                        value="Ingresar"
+                        action="#{loginBean.login}"
+                        update="@form"
+                        class="buttonLogin"
+                />
 
-                    <p:commandButton value="Ingresar"
-                                     action="#{usuarioBean.login}"
-                                     update="frmLogin:msgLogin"
-                                     style="width:100%; margin-top:10px;" />
-                </p:panel>
             </h:form>
 
-<!--            <form method="post" action="${pageContext.request.contextPath}/login" class="row g-3">-->
+
+            <!--            <form method="post" action="${pageContext.request.contextPath}/login" class="row g-3">-->
 <!--                <div class="inputStyle">-->
 <!--                    <label class="form-label">Usuario</label>-->
 <!--                    <p:inputText name="username" value="admin" required="true"/>-->
