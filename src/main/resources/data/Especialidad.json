@@ -1,30 +1,36 @@
 [
   {
     "nombreEspecialidad": "Odontología General",
-    "descripcion": "Atención básica en salud bucal: limpiezas, obturaciones y diagnósticos iniciales."
+    "descripcion": "Atención básica en salud bucal: limpiezas, obturaciones y diagnósticos iniciales.",
+    "activoEspecialidad": true
   },
   {
     "nombreEspecialidad": "Ortodoncia",
-    "descripcion": "Corrección de la posición de los dientes y maloclusiones mediante brackets y alineadores."
+    "descripcion": "Corrección de la posición de los dientes y maloclusiones mediante brackets y alineadores.",
+    "activoEspecialidad": true
   },
   {
     "nombreEspecialidad": "Endodoncia",
-    "descripcion": "Tratamiento de conductos radiculares para salvar piezas dentales dañadas."
+    "descripcion": "Tratamiento de conductos radiculares para salvar piezas dentales dañadas.",
+    "activoEspecialidad": true
   },
   {
     "nombreEspecialidad": "Periodoncia",
-    "descripcion": "Prevención y tratamiento de enfermedades de las encías y tejidos de soporte."
+    "descripcion": "Prevención y tratamiento de enfermedades de las encías y tejidos de soporte.",
+    "activoEspecialidad": true
   },
   {
     "nombreEspecialidad": "Odontopediatría",
-    "descripcion": "Atención especializada en niños, incluyendo prevención y tratamientos adaptados."
+    "descripcion": "Atención especializada en niños, incluyendo prevención y tratamientos adaptados.",
+    "activoEspecialidad": true
   },
   {
     "nombreEspecialidad": "Cirugía Oral",
-    "descripcion": "Extracciones complejas, implantes dentales y procedimientos quirúrgicos de la cavidad oral."
+    "descripcion": "Extracciones complejas, implantes dentales y procedimientos quirúrgicos de la cavidad oral.",
+    "activoEspecialidad": true
   },
   {
     "nombreEspecialidad": "Estética Dental",
-    "descripcion": "Blanqueamiento, carillas y procedimientos para mejorar la apariencia de la sonrisa."
-  }
+    "descripcion": "Blanqueamiento, carillas y procedimientos para mejorar la apariencia de la sonrisa.",
+    "activoEspecialidad": true}
 ]

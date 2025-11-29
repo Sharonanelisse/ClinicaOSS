@@ -4,12 +4,13 @@ public class EspecialidadDTO {
     private Long especialidadId;
     private String nombreEspecialidad;
     private String descripcion;
+    private Boolean activoEspecialidad;
 
     public Long getEspecialidadId() {
         return especialidadId;
     }
 
-    public void getEspecialidadId(Long especialidadId) {
+    public void setEspecialidadId(Long especialidadId) {
         this.especialidadId = especialidadId;
     }
 
@@ -27,5 +28,13 @@ public class EspecialidadDTO {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Boolean getActivoEspecialidad() {
+        return activoEspecialidad;
+    }
+
+    public void setActivoEspecialidad(Boolean activoEspecialidad) {
+        this.activoEspecialidad = activoEspecialidad;
     }
 }

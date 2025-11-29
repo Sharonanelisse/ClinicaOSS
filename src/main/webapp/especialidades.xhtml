@@ -8,21 +8,22 @@
     <ui:define name="content">
         <h1>Gestión de Especialidades</h1>
 
-        <h:form id="frmEspecialidades">
-            <p:growl id="msgEspecialidad" showDetail="true" life="4000" />
+        <h:form citaId="frmEspecialidades">
+            <p:growl citaId="msgEspecialidad" showDetail="true" life="4000" />
 
+            <!-- Formulario de especialidadId -->
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Nombre:" for="nombreEspecialidad"/>
-                <p:inputText id="nombreEspecialidad" value="#{especialidadBean.selected.nombreEspecialidad}" required="true"/>
+                <p:inputText citaId="nombreEspecialidad" value="#{especialidadBean.selected.nombreEspecialidad}" required="true"/>
 
                 <h:outputLabel value="Descripción:" for="descripcion"/>
-                <p:inputTextarea id="descripcion" value="#{especialidadBean.selected.descripcion}" rows="3"/>
+                <p:inputTextarea citaId="descripcion" value="#{especialidadBean.selected.descripcion}" rows="3"/>
             </h:panelGrid>
 
-
+            <!-- Botones -->
             <p:commandButton value="Guardar"
                              action="#{especialidadBean.save}"
-                             update=":frmEspecialidades:tblEspecialidades :frmEspecialidades msgEspecialidad"
+                             update="tblEspecialidades,frmEspecialidades,msgEspecialidad"
                              icon="pi pi-check" />
 
             <p:commandButton value="Cancelar"
@@ -31,19 +32,19 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <!-- Tabla -->
-            <p:dataTable id="tblEspecialidades"
+            <!-- Tabla de especialidades -->
+            <p:dataTable citaId="tblEspecialidades"
                          value="#{especialidadBean.list}"
                          var="e"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{e.id}"
+                         rowKey="#{e.citaId}"
                          selectionMode="single"
                          selection="#{especialidadBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{e.id}" />
+                    <h:outputText value="#{e.citaId}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -62,11 +63,10 @@
 
                     <p:commandButton value="Eliminar"
                                      action="#{especialidadBean.delete(e)}"
-                                     update=":frmEspecialidades:tblEspecialidades"
+                                     update="tblEspecialidades"
                                      icon="pi pi-trash"
                                      styleClass="ui-button-danger" />
                 </p:column>
-
             </p:dataTable>
         </h:form>
     </ui:define>

@@ -2,6 +2,8 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Especialidad;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -32,6 +34,28 @@ public class EspecialidadBean extends Bean<Especialidad> implements Serializable
     @Override
     protected void persist(Especialidad entity) {
         service.guardarEspecialidad(entity);
+    }
+
+    @Override
+    public void delete(Especialidad entity) {
+        try {
+            entity.setActivoEspecialidad(false);
+            service.guardarEspecialidad(entity); // Guardar cambio de estado
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Especialidad desactivada", "No aparecerá en nuevos registros."));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo desactivar."));
+        }
+    }
+
+    // Método para reactivar
+    public void activar(Especialidad entity) {
+        entity.setActivoEspecialidad(true);
+        service.guardarEspecialidad(entity);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Especialidad reactivada", null));
     }
 
     @Override

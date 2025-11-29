@@ -2,6 +2,8 @@ package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.models.Seguro;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -21,7 +23,28 @@ public class SeguroBean extends Bean<Seguro> implements Serializable {
 
     @Override
     protected Seguro createNew() {
-        return new Seguro();
+        Seguro s = new Seguro();
+        s.setEstado(true);
+        return s;
+    }
+
+    @Override
+    public void delete(Seguro entity) {
+        try {
+            entity.setEstado(false);
+            service.guardarSeguro(entity);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Seguro desactivado", null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void activar(Seguro entity) {
+        entity.setEstado(true);
+        service.guardarSeguro(entity);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Seguro reactivado", null));
     }
 
     @Override
