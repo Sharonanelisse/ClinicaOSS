@@ -8,25 +8,15 @@
     <ui:define name="content">
 
         <style>
-            /* Ajustes generales */
             body .ui-widget { font-size: 13px !important; }
             body .ui-button { font-size: 13px !important; padding: 0.3rem 0.8rem; }
-            .field-label { font-weight: bold; color: #495057; }
-
-            /* Estilo para facturas anuladas (tachadas y rojas) */
             .fila-anulada {
                 background-color: #fff5f5 !important;
                 color: #c00 !important;
                 text-decoration: line-through;
             }
-
-            /* CLASE CLAVE: Scroll para pantallas pequeñas/laptops */
-            .scroll-content {
-                max-height: 65vh; /* Máximo 65% de la altura de la pantalla */
-                overflow-y: auto; /* Barra lateral si es necesario */
-                padding-right: 10px;
-                overflow-x: hidden;
-            }
+            .field-label { font-weight: bold; color: #495057; }
+            .total-text { font-size: 1.2em; font-weight: bold; color: #28a745; }
         </style>
 
         <h:form id="frmPrincipal">
@@ -65,7 +55,9 @@
                     </p:column>
 
                     <p:column headerText="Emisión" width="120" sortBy="#{f.fechaEmision}">
-                        <h:outputText value="#{facturacionBean.formatFecha(f.fechaEmision)}" />
+                        <h:outputText value="#{f.fechaEmision}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="localDateTime"/>
+                        </h:outputText>
                     </p:column>
 
                     <p:column headerText="Paciente" sortBy="#{f.paciente.nombrePaciente}">
@@ -102,7 +94,7 @@
                                          oncomplete="PF('wdialogo').show()"
                                          styleClass="rounded-button ui-button-flat ui-button-warning"
                                          disabled="#{f.estado_pago eq 'ANULADO'}"
-                                         title="Editar">
+                                         title="Editar / Cambiar Estado">
                             <p:resetInput target=":dialogoGestion" />
                         </p:commandButton>
 
@@ -112,7 +104,7 @@
                                          rendered="#{f.estado_pago ne 'ANULADO'}"
                                          styleClass="rounded-button ui-button-flat ui-button-danger"
                                          title="Anular Factura">
-                            <p:confirm header="Confirmar" message="¿Anular factura?" icon="pi pi-exclamation-triangle" />
+                            <p:confirm header="Confirmar" message="¿Desea anular esta factura?" icon="pi pi-exclamation-triangle" />
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
@@ -128,8 +120,7 @@
                   widgetVar="wdialogo" responsive="true" width="700" closeOnEscape="true">
 
             <h:form id="frmDialogo">
-                <div class="ui-fluid scroll-content">
-
+                <div class="ui-fluid">
                     <p:panelGrid columns="2" columnClasses="ui-grid-col-4 field-label, ui-grid-col-8"
                                  layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
 
@@ -170,16 +161,14 @@
 
                         <p:outputLabel value="Descuento:" for="descuento"/>
                         <p:selectOneMenu id="descuento" value="#{facturacionBean.selected.descuento}"
-                                         converter="#{descuentoConverter}">
-                            <f:selectItem itemLabel="Ninguno" itemValue="#{null}" noSelectionOption="true"/>
+                                         converter="#{descuentoConverter}"> <f:selectItem itemLabel="Ninguno" itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{facturacionBean.descuentos}" var="d"
-                                           itemLabel="#{d.nombrePromocion}" itemValue="#{d}"/>
+                                           itemLabel="#{d.nombrePromocion} (#{d.descuentoPromocion}%)" itemValue="#{d}"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel value="Seguro:" for="seguro"/>
                         <p:selectOneMenu id="seguro" value="#{facturacionBean.selected.seguro}"
-                                         converter="#{seguroConverter}">
-                            <f:selectItem itemLabel="Ninguno" itemValue="#{null}" noSelectionOption="true"/>
+                                         converter="#{seguroConverter}"> <f:selectItem itemLabel="Ninguno" itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{facturacionBean.seguros}" var="s"
                                            itemLabel="#{s.nombreAseguradora}" itemValue="#{s}"/>
                         </p:selectOneMenu>
@@ -195,15 +184,15 @@
                         </p:selectOneMenu>
 
                     </p:panelGrid>
-                </div>
 
-                <p:separator/>
+                    <p:separator/>
 
-                <div style="text-align: right;">
-                    <p:commandButton value="Guardar Factura" icon="pi pi-check"
-                                     action="#{facturacionBean.save}"
-                                     update=":frmPrincipal:tblFacturacion, :frmPrincipal:msgGlobal"
-                                     oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}" />
+                    <div style="text-align: right;">
+                        <p:commandButton value="Guardar Factura" icon="pi pi-check"
+                                         action="#{facturacionBean.save}"
+                                         update=":frmPrincipal:tblFacturacion, :frmPrincipal:msgGlobal"
+                                         oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}" />
+                    </div>
                 </div>
             </h:form>
         </p:dialog>
@@ -211,81 +200,55 @@
         <p:dialog id="dialogoDetalle" header="Detalle de Factura" showEffect="fade" modal="true"
                   widgetVar="wDetalle" responsive="true" width="500" closeOnEscape="true">
 
-            <h:form id="frmDetalle">
-                <div class="scroll-content">
-                    <p:panelGrid columns="2" columnClasses="field-label, value"
-                                 layout="grid" styleClass="ui-panelgrid-blank">
+            <p:panelGrid columns="2" columnClasses="field-label, value"
+                         layout="grid" styleClass="ui-panelgrid-blank">
 
-                        <h:outputText value="No. Factura:" />
-                        <h:outputText value="#{facturacionBean.selected.id}" style="font-weight:bold"/>
+                <h:outputText value="No. Factura:" />
+                <h:outputText value="#{facturacionBean.selected.id}" style="font-weight:bold"/>
 
-                        <h:outputText value="Fecha Emisión:" />
-                        <h:outputText value="#{facturacionBean.formatFecha(facturacionBean.selected.fechaEmision)}" />
+                <h:outputText value="Fecha Emisión:" />
+                <h:outputText value="#{facturacionBean.selected.fechaEmision}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
 
-                        <p:divider /> <p:divider />
+                <p:divider /> <p:divider />
 
-                        <h:outputText value="Paciente:" />
-                        <h:outputText value="#{facturacionBean.selected.paciente.nombrePaciente} #{facturacionBean.selected.paciente.apellidoPaciente}" />
+                <h:outputText value="Paciente:" />
+                <h:outputText value="#{facturacionBean.selected.paciente.nombrePaciente} #{facturacionBean.selected.paciente.apellidoPaciente}" />
 
-                        <h:outputText value="DPI:" />
-                        <h:outputText value="#{facturacionBean.selected.paciente.dpi}" />
+                <h:outputText value="DPI:" />
+                <h:outputText value="#{facturacionBean.selected.paciente.dpi}" />
 
-                        <h:outputText value="Tratamiento:" />
-                        <h:outputText value="#{facturacionBean.selected.tratamiento.nombreTratamiento}" />
+                <h:outputText value="Tratamiento:" />
+                <h:outputText value="#{facturacionBean.selected.tratamiento.nombreTratamiento}" />
 
-                        <h:outputText value="Cita Ref:" />
-                        <h:outputText value="#{facturacionBean.selected.cita.codigo}" />
+                <h:outputText value="Cita Ref:" />
+                <h:outputText value="#{facturacionBean.selected.cita.codigo}" />
 
-                        <p:divider /> <p:divider />
+                <p:divider /> <p:divider />
 
-                        <h:outputText value="Subtotal Base:" />
-                        <h:outputText value="Q #{facturacionBean.selected.subtotal}" style="font-weight:bold"/>
+                <h:outputText value="Subtotal:" />
+                <h:outputText value="Q #{facturacionBean.selected.subtotal}" />
 
-                        <h:outputText value="Descuento Aplicado:" />
-                        <h:panelGroup>
-                            <h:outputText value="Ninguno" rendered="#{facturacionBean.selected.descuento == null}" style="color:#aaa"/>
+                <h:outputText value="Descuento Aplicado:" />
+                <h:outputText value="#{facturacionBean.selected.descuento.nombrePromocion}" />
 
-                            <h:outputText value="#{facturacionBean.selected.descuento.nombrePromocion}"
-                                          rendered="#{facturacionBean.selected.descuento != null}"/>
+                <h:outputText value="Seguro:" />
+                <h:outputText value="#{facturacionBean.selected.seguro.nombreAseguradora}" />
 
-                            <h:outputText value=" (-#{facturacionBean.selected.descuento.descuentoPromocion}%)"
-                                          rendered="#{facturacionBean.selected.descuento != null}"
-                                          style="color:#dc3545; font-weight:bold; margin-left:5px;"/>
-                        </h:panelGroup>
+                <h:outputText value="TOTAL:" style="font-size:1.2em; font-weight:bold; color:#28a745"/>
+                <h:outputText value="Q #{facturacionBean.selected.total}" style="font-size:1.2em; font-weight:bold; color:#28a745"/>
 
-                        <h:outputText value="Seguro:" />
-                        <h:panelGroup>
-                            <h:outputText value="Ninguno" rendered="#{facturacionBean.selected.seguro == null}" style="color:#aaa"/>
+                <h:outputText value="Estado:" />
+                <p:tag value="#{facturacionBean.selected.estado_pago}"
+                       severity="#{facturacionBean.selected.estado_pago eq 'PAGADO' ? 'success' : (facturacionBean.selected.estado_pago eq 'PENDIENTE' ? 'warning' : 'danger')}" />
 
-                            <h:outputText value="#{facturacionBean.selected.seguro.nombreAseguradora}"
-                                          rendered="#{facturacionBean.selected.seguro != null}"/>
+            </p:panelGrid>
 
-                            <h:outputText value=" (-#{facturacionBean.selected.seguro.porcentajeDescuento}%)"
-                                          rendered="#{facturacionBean.selected.seguro != null}"
-                                          style="color:#0d6efd; font-weight:bold; margin-left:5px;"/>
-                        </h:panelGroup>
-
-                        <p:divider /> <p:divider />
-
-                        <h:outputText value="TOTAL FINAL:" style="font-size:1.2em; font-weight:900; color:#28a745"/>
-                        <h:outputText value="Q #{facturacionBean.selected.total}" style="font-size:1.2em; font-weight:900; color:#28a745"/>
-
-                        <h:outputText value="Estado:" />
-                        <p:tag value="#{facturacionBean.selected.estado_pago}"
-                               severity="#{facturacionBean.selected.estado_pago eq 'PAGADO' ? 'success' : (facturacionBean.selected.estado_pago eq 'PENDIENTE' ? 'warning' : 'danger')}" />
-
-                    </p:panelGrid>
-                </div>
-
-                <p:separator />
-
-                <div style="text-align: right;">
-                    <p:commandButton value="Cerrar" icon="pi pi-times"
-                                     onclick="PF('wDetalle').hide()"
-                                     styleClass="ui-button-secondary ui-button-flat"
-                                     type="button"/>
-                </div>
-            </h:form>
+            <f:facet name="footer">
+                <p:commandButton value="Cerrar" icon="pi pi-times"
+                                 onclick="PF('wDetalle').hide()" styleClass="ui-button-secondary ui-button-flat"/>
+            </f:facet>
         </p:dialog>
 
     </ui:define>

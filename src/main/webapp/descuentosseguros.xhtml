@@ -6,236 +6,187 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
+        <h1>Gestión de Descuentos y Seguros</h1>
 
-        <style>
-            body .ui-widget { font-size: 13px !important; }
-            body .ui-button { font-size: 13px !important; padding: 0.3rem 0.8rem; }
-            .fila-desactivada {
-                background-color: #f4f4f4 !important;
-                color: #9e9e9e !important;
-                font-style: italic;
-            }
-            .field-label { font-weight: bold; color: #495057; }
-        </style>
+        <!-- ==================== BLOQUE DE DESCUENTOS ==================== -->
+        <h2>Descuentos</h2>
+        <h:form citaId="frmDescuentos">
+            <p:growl citaId="msgDescuento" showDetail="true" life="4000" />
 
-        <div class="card">
-            <h2>Gestión Comercial</h2>
+            <!-- Formulario de descuentos -->
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputLabel value="Nombre promoción:" for="nombrePromocion"/>
+                <p:inputText citaId="nombrePromocion" value="#{descuentoBean.selected.nombrePromocion}" required="true"/>
 
-            <p:tabView id="tabViewGeneral">
+                <h:outputLabel value="Descripción promoción:" for="descripcionPromocion"/>
+                <p:inputTextarea citaId="descripcionPromocion" value="#{descuentoBean.selected.descripcionPromocion}" rows="3" required="true"/>
 
-                <p:tab title="Promociones y Descuentos">
-                    <h:form id="frmDescuentos">
-                        <p:growl id="msgDescuentos" showDetail="true" life="4000" />
+                <h:outputLabel value="Porcentaje descuentoId:" for="descuentoPromocion"/>
+                <p:inputText citaId="descuentoPromocion" value="#{descuentoBean.selected.descuentoPromocion}" />
 
-                        <p:toolbar style="margin-bottom: 10px; padding: 5px;">
-                            <p:toolbarGroup>
-                                <p:commandButton value="Nueva Promoción" icon="pi pi-plus"
-                                                 action="#{descuentoBean.newEntity}"
-                                                 update=":dialogoDescuento"
-                                                 oncomplete="PF('dlgDescuento').show()"
-                                                 styleClass="ui-button-success">
-                                    <p:resetInput target=":dialogoDescuento" />
-                                </p:commandButton>
-                            </p:toolbarGroup>
-                        </p:toolbar>
+                <h:outputLabel value="Estado:" for="estado"/>
+                <p:selectBooleanCheckbox citaId="estado" value="#{descuentoBean.selected.estado}" />
+            </h:panelGrid>
 
-                        <p:dataTable id="tblDescuentos" value="#{descuentoBean.list}" var="d"
-                                     paginator="true" rows="10" size="small" paginatorPosition="bottom"
-                                     rowKey="#{d.id}" selectionMode="single" selection="#{descuentoBean.selected}"
-                                     striped="true" rowStyleClass="#{d.estado ? null : 'fila-desactivada'}">
+            <!-- Botones -->
+            <p:commandButton value="Guardar"
+                             action="#{descuentoBean.save}"
+                             update="tblDescuentos,frmDescuentos,msgDescuento"
+                             icon="pi pi-check" />
 
-                            <p:column headerText="Nombre" sortBy="#{d.nombrePromocion}">
-                                <h:outputText value="#{d.nombrePromocion}" />
-                            </p:column>
+            <p:commandButton value="Cancelar"
+                             action="#{descuentoBean.newEntity}"
+                             update="frmDescuentos"
+                             icon="pi pi-times"
+                             styleClass="p-button-secondary" />
 
-                            <p:column headerText="Descripción">
-                                <h:outputText value="#{d.descripcionPromocion}" />
-                            </p:column>
+            <!-- Tabla de descuentos -->
+            <p:dataTable citaId="tblDescuentos"
+                         value="#{descuentoBean.list}"
+                         var="d"
+                         paginator="true"
+                         rows="10"
+                         style="margin-top:20px;"
+                         rowKey="#{d.citaId}"
+                         selectionMode="single"
+                         selection="#{descuentoBean.selected}">
 
-                            <p:column headerText="Valor" width="100" style="text-align: center;">
-                                <h:outputText value="#{d.descuentoPromocion}%" style="font-weight:bold"/>
-                            </p:column>
+                <p:column headerText="ID">
+                    <h:outputText value="#{d.citaId}" />
+                </p:column>
 
-                            <p:column headerText="Estado" width="90" style="text-align: center;">
-                                <p:tag severity="#{d.estado ? 'success' : 'danger'}" value="#{d.estado ? 'Activo' : 'Inactivo'}"/>
-                            </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{d.nombrePromocion}" />
+                </p:column>
 
-                            <p:column headerText="Acciones" width="120" style="text-align: center;">
-                                <p:commandButton icon="pi pi-pencil"
-                                                 action="#{descuentoBean.edit(d)}"
-                                                 update=":dialogoDescuento"
-                                                 oncomplete="PF('dlgDescuento').show()"
-                                                 styleClass="rounded-button ui-button-flat ui-button-warning"
-                                                 disabled="#{!d.estado}">
-                                    <p:resetInput target=":dialogoDescuento" />
-                                </p:commandButton>
+                <p:column headerText="Descripción">
+                    <h:outputText value="#{d.descripcionPromocion}" />
+                </p:column>
 
-                                <p:commandButton icon="pi pi-ban" rendered="#{d.estado}"
-                                                 action="#{descuentoBean.delete(d)}"
-                                                 update=":tabViewGeneral:frmDescuentos:tblDescuentos, :tabViewGeneral:frmDescuentos:msgDescuentos"
-                                                 styleClass="rounded-button ui-button-flat ui-button-danger">
-                                    <p:confirm header="Confirmar" message="¿Desactivar promoción?" icon="pi pi-exclamation-triangle" />
-                                </p:commandButton>
+                <p:column headerText="Descuento (%)">
+                    <h:outputText value="#{d.descuentoPromocion}" />
+                </p:column>
 
-                                <p:commandButton icon="pi pi-check-circle" rendered="#{!d.estado}"
-                                                 action="#{descuentoBean.activar(d)}"
-                                                 update=":tabViewGeneral:frmDescuentos:tblDescuentos, :tabViewGeneral:frmDescuentos:msgDescuentos"
-                                                 styleClass="rounded-button ui-button-flat ui-button-success" />
-                            </p:column>
-                        </p:dataTable>
-                    </h:form>
-                </p:tab>
+                <p:column headerText="Estado">
+                    <h:outputText value="#{d.estado ? 'Activo' : 'Inactivo'}" />
+                </p:column>
 
-                <p:tab title="Aseguradoras">
-                    <h:form id="frmSeguros">
-                        <p:growl id="msgSeguros" showDetail="true" life="4000" />
+                <p:column headerText="Acciones">
+                    <p:commandButton value="Editar"
+                                     action="#{descuentoBean.edit(d)}"
+                                     update="frmDescuentos"
+                                     icon="pi pi-pencil" />
 
-                        <p:toolbar style="margin-bottom: 10px; padding: 5px;">
-                            <p:toolbarGroup>
-                                <p:commandButton value="Nueva Aseguradora" icon="pi pi-plus"
-                                                 action="#{seguroBean.newEntity}"
-                                                 update=":dialogoSeguro"
-                                                 oncomplete="PF('dlgSeguro').show()"
-                                                 styleClass="ui-button-success">
-                                    <p:resetInput target=":dialogoSeguro" />
-                                </p:commandButton>
-                            </p:toolbarGroup>
-                        </p:toolbar>
-
-                        <p:dataTable id="tblSeguros" value="#{seguroBean.list}" var="s"
-                                     paginator="true" rows="10" size="small" paginatorPosition="bottom"
-                                     rowKey="#{s.id}" selectionMode="single" selection="#{seguroBean.selected}"
-                                     striped="true" rowStyleClass="#{s.estado ? null : 'fila-desactivada'}">
-
-                            <p:column headerText="Código" width="100">
-                                <h:outputText value="#{s.codigoAseguradora}" />
-                            </p:column>
-
-                            <p:column headerText="Aseguradora" sortBy="#{s.nombreAseguradora}">
-                                <h:outputText value="#{s.nombreAseguradora}" />
-                            </p:column>
-
-                            <p:column headerText="Cobertura/Desc." width="110" style="text-align: center;">
-                                <h:outputText value="#{s.porcentajeDescuento}%" />
-                            </p:column>
-
-                            <p:column headerText="Deducible" width="100" style="text-align: right;">
-                                <h:outputText value="#{s.deducible}">
-                                    <f:convertNumber type="currency" currencySymbol="Q" />
-                                </h:outputText>
-                            </p:column>
-
-                            <p:column headerText="Vigencia" width="180" style="text-align: center;">
-                                <h:outputText value="#{s.fechaInicio}"><f:convertDateTime pattern="dd/MM/yy"/></h:outputText>
-                                <h:outputText value=" - " />
-                                <h:outputText value="#{s.fechaFinal}"><f:convertDateTime pattern="dd/MM/yy"/></h:outputText>
-                            </p:column>
-
-                            <p:column headerText="Estado" width="90" style="text-align: center;">
-                                <p:tag severity="#{s.estado ? 'success' : 'danger'}" value="#{s.estado ? 'Activo' : 'Inactivo'}"/>
-                            </p:column>
-
-                            <p:column headerText="Acciones" width="120" style="text-align: center;">
-                                <p:commandButton icon="pi pi-pencil"
-                                                 action="#{seguroBean.edit(s)}"
-                                                 update=":dialogoSeguro"
-                                                 oncomplete="PF('dlgSeguro').show()"
-                                                 styleClass="rounded-button ui-button-flat ui-button-warning"
-                                                 disabled="#{!s.estado}">
-                                    <p:resetInput target=":dialogoSeguro" />
-                                </p:commandButton>
-
-                                <p:commandButton icon="pi pi-ban" rendered="#{s.estado}"
-                                                 action="#{seguroBean.delete(s)}"
-                                                 update=":tabViewGeneral:frmSeguros:tblSeguros, :tabViewGeneral:frmSeguros:msgSeguros"
-                                                 styleClass="rounded-button ui-button-flat ui-button-danger">
-                                    <p:confirm header="Confirmar" message="¿Desactivar aseguradora?" icon="pi pi-exclamation-triangle" />
-                                </p:commandButton>
-
-                                <p:commandButton icon="pi pi-check-circle" rendered="#{!s.estado}"
-                                                 action="#{seguroBean.activar(s)}"
-                                                 update=":tabViewGeneral:frmSeguros:tblSeguros, :tabViewGeneral:frmSeguros:msgSeguros"
-                                                 styleClass="rounded-button ui-button-flat ui-button-success" />
-                            </p:column>
-                        </p:dataTable>
-                    </h:form>
-                </p:tab>
-            </p:tabView>
-        </div>
-
-        <h:form>
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
-                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" />
-            </p:confirmDialog>
+                    <p:commandButton value="Eliminar"
+                                     action="#{descuentoBean.delete(d)}"
+                                     update="tblDescuentos"
+                                     icon="pi pi-trash"
+                                     styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
         </h:form>
 
-        <p:dialog id="dialogoDescuento" header="Datos de Promoción" showEffect="fade" modal="true"
-                  widgetVar="dlgDescuento" responsive="true" width="500" closeOnEscape="true">
-            <h:form>
-                <div class="ui-fluid">
-                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+        <!-- ==================== BLOQUE DE SEGUROS ==================== -->
+        <h2 style="margin-top:40px;">Seguros</h2>
+        <h:form citaId="frmSeguros">
+            <p:growl citaId="msgSeguro" showDetail="true" life="4000" />
 
-                        <p:outputLabel value="Nombre Promoción:" for="nomD" styleClass="field-label"/>
-                        <p:inputText id="nomD" value="#{descuentoBean.selected.nombrePromocion}" required="true"/>
+            <!-- Formulario de seguros -->
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputLabel value="Código aseguradora:" for="codigoAseguradora"/>
+                <p:inputText citaId="codigoAseguradora" value="#{seguroBean.selected.codigoAseguradora}" required="true"/>
 
-                        <p:outputLabel value="Porcentaje (%):" for="porcD" styleClass="field-label"/>
-                        <p:inputNumber id="porcD" value="#{descuentoBean.selected.descuentoPromocion}"
-                                       symbol="%" symbolPosition="s" decimalPlaces="1" required="true"/>
+                <h:outputLabel value="Nombre aseguradora:" for="nombreAseguradora"/>
+                <p:inputText citaId="nombreAseguradora" value="#{seguroBean.selected.nombreAseguradora}" required="true"/>
 
-                        <p:outputLabel value="Descripción / Detalles:" for="descD" styleClass="field-label"/>
-                        <p:inputTextarea id="descD" value="#{descuentoBean.selected.descripcionPromocion}" rows="3"/>
-                    </p:panelGrid>
+                <h:outputLabel value="Porcentaje descuentoId:" for="porcentajeDescuento"/>
+                <p:inputText citaId="porcentajeDescuento" value="#{seguroBean.selected.porcentajeDescuento}" />
 
-                    <p:separator />
-                    <div style="text-align: right;">
-                        <p:commandButton value="Guardar" icon="pi pi-check"
-                                         action="#{descuentoBean.save}"
-                                         update=":tabViewGeneral:frmDescuentos:tblDescuentos, :tabViewGeneral:frmDescuentos:msgDescuentos"
-                                         oncomplete="if(!args.validationFailed){PF('dlgDescuento').hide()}"/>
-                    </div>
-                </div>
-            </h:form>
-        </p:dialog>
+                <h:outputLabel value="Fecha inicio:" for="fechaInicio"/>
+                <p:datePicker citaId="fechaInicio" value="#{seguroBean.selected.fechaInicio}" pattern="yyyy-MM-dd"/>
 
-        <p:dialog id="dialogoSeguro" header="Datos de Aseguradora" showEffect="fade" modal="true"
-                  widgetVar="dlgSeguro" responsive="true" width="600" closeOnEscape="true">
-            <h:form>
-                <div class="ui-fluid">
-                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4 field-label, ui-grid-col-8"
-                                 layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+                <h:outputLabel value="Deducible:" for="deducible"/>
+                <p:inputText citaId="deducible" value="#{seguroBean.selected.deducible}" />
 
-                        <p:outputLabel value="Código:" for="codS"/>
-                        <p:inputText id="codS" value="#{seguroBean.selected.codigoAseguradora}" required="true"/>
+                <h:outputLabel value="Fecha final:" for="fechaFinal"/>
+                <p:datePicker citaId="fechaFinal" value="#{seguroBean.selected.fechaFinal}" pattern="yyyy-MM-dd"/>
 
-                        <p:outputLabel value="Nombre Aseguradora:" for="nomS"/>
-                        <p:inputText id="nomS" value="#{seguroBean.selected.nombreAseguradora}" required="true"/>
+                <h:outputLabel value="Estado:" for="estadoSeguro"/>
+                <p:selectBooleanCheckbox citaId="estadoSeguro" value="#{seguroBean.selected.estado}" />
+            </h:panelGrid>
 
-                        <p:outputLabel value="Porcentaje Cobertura:" for="porcS"/>
-                        <p:inputNumber id="porcS" value="#{seguroBean.selected.porcentajeDescuento}"
-                                       symbol="%" symbolPosition="s" required="true"/>
+            <!-- Botones -->
+            <p:commandButton value="Guardar"
+                             action="#{seguroBean.save}"
+                             update="tblSeguros,frmSeguros,msgSeguro"
+                             icon="pi pi-check" />
 
-                        <p:outputLabel value="Deducible:" for="dedS"/>
-                        <p:inputNumber id="dedS" value="#{seguroBean.selected.deducible}"
-                                       symbol="Q " symbolPosition="p" decimalPlaces="2"/>
+            <p:commandButton value="Cancelar"
+                             action="#{seguroBean.newEntity}"
+                             update="frmSeguros"
+                             icon="pi pi-times"
+                             styleClass="p-button-secondary" />
 
-                        <p:outputLabel value="Fecha Inicio:" for="fecI"/>
-                        <p:datePicker id="fecI" value="#{seguroBean.selected.fechaInicio}" pattern="dd/MM/yyyy" showIcon="false"/>
+            <!-- Tabla de seguros -->
+            <p:dataTable citaId="tblSeguros"
+                         value="#{seguroBean.list}"
+                         var="s"
+                         paginator="true"
+                         rows="10"
+                         style="margin-top:20px;"
+                         rowKey="#{s.citaId}"
+                         selectionMode="single"
+                         selection="#{seguroBean.selected}">
 
-                        <p:outputLabel value="Fecha Final:" for="fecF"/>
-                        <p:datePicker id="fecF" value="#{seguroBean.selected.fechaFinal}" pattern="dd/MM/yyyy" showIcon="false"/>
-                    </p:panelGrid>
+                <p:column headerText="ID">
+                    <h:outputText value="#{s.citaId}" />
+                </p:column>
 
-                    <p:separator />
-                    <div style="text-align: right;">
-                        <p:commandButton value="Guardar" icon="pi pi-check"
-                                         action="#{seguroBean.save}"
-                                         update=":tabViewGeneral:frmSeguros:tblSeguros, :tabViewGeneral:frmSeguros:msgSeguros"
-                                         oncomplete="if(!args.validationFailed){PF('dlgSeguro').hide()}"/>
-                    </div>
-                </div>
-            </h:form>
-        </p:dialog>
+                <p:column headerText="Código">
+                    <h:outputText value="#{s.codigoAseguradora}" />
+                </p:column>
 
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{s.nombreAseguradora}" />
+                </p:column>
+
+                <p:column headerText="Porcentaje descuentoId">
+                    <h:outputText value="#{s.porcentajeDescuento}" />
+                </p:column>
+
+                <p:column headerText="Fecha inicio">
+                    <h:outputText value="#{s.fechaInicio}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Fecha final">
+                    <h:outputText value="#{s.fechaFinal}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Deducible">
+                    <h:outputText value="#{s.deducible}" />
+                </p:column>
+
+                <p:column headerText="Estado">
+                    <h:outputText value="#{s.estado ? 'Activo' : 'Inactivo'}" />
+                </p:column>
+
+                <p:column headerText="Acciones">
+                    <p:commandButton value="Editar"
+                                     action="#{seguroBean.edit(s)}"
+                                     update="frmSeguros"
+                                     icon="pi pi-pencil" />
+
+                    <p:commandButton value="Eliminar"
+                                     action="#{seguroBean.delete(s)}"
+                                     update="tblSeguros"
+                                     icon="pi pi-trash"
+                                     styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </ui:define>
 </ui:composition>
