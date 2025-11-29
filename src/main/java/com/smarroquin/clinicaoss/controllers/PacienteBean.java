@@ -30,11 +30,11 @@ public class PacienteBean extends Bean<Paciente> implements Serializable {
     protected List<Paciente> findAll() {return service.pacientes();}
 
     @Override
-    protected void persist(Paciente entity) {service.guardar(entity);}
+    protected void persist(Paciente entity) {service.guardarPaciente(entity);}
 
     @Override
     protected void remove(Paciente entity) {
-        service.eliminar(entity);
+        service.eliminarPaciente(entity);
     }
 
     public String formatFecha(LocalDate fecha) {

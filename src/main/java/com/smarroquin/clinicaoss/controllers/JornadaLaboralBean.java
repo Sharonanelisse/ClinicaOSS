@@ -37,12 +37,12 @@ public class JornadaLaboralBean extends Bean<JornadaLaboral> implements Serializ
 
     @Override
     protected void persist(JornadaLaboral entity) {
-        service.guardar(entity);
+        service.guardarJornada(entity);
     }
 
     @Override
     protected void remove(JornadaLaboral entity) {
-        service.eliminar(entity);
+        service.eliminarJornada(entity);
     }
 
     @Override

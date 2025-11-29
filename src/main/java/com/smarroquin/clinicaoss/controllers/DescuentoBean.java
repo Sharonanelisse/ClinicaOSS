@@ -31,12 +31,12 @@ public class DescuentoBean extends Bean<Descuento> implements Serializable {
 
     @Override
     protected void persist(Descuento entity) {
-        service.guardar(entity);
+        service.guardarDescuento(entity);
     }
 
     @Override
     protected void remove(Descuento entity) {
-        service.eliminar(entity);
+        service.eliminarDescuento(entity);
     }
 
     @Override
