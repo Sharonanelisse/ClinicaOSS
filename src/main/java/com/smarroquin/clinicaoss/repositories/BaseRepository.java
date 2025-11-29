@@ -8,8 +8,15 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class BaseRepository<T, ID> {
+
     @Inject
     private EntityManager em;
+
+    // === único cambio necesario ===
+    protected EntityManager getEm() {
+        return em;
+    }
+    // ==============================
 
     protected abstract Class<T> entity();
 
@@ -57,3 +64,4 @@ public abstract class BaseRepository<T, ID> {
     }
 
 }
+
