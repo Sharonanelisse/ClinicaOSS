@@ -22,7 +22,7 @@ public class LoginBean implements Serializable {
     private CatalogService service;
 
     public String login() {
-        System.out.println("LOGIN EJECUTADO");
+
         List<Usuario> usuarios = service.usuario();
 
         Usuario u = usuarios.stream()
@@ -53,6 +53,7 @@ public class LoginBean implements Serializable {
 
         return "/home.xhtml?faces-redirect=true";
     }
+
 
     private void addErrorMessage(String msg) {
         FacesContext.getCurrentInstance().addMessage(null,

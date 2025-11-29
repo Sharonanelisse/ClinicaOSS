@@ -19,7 +19,9 @@ public class AuthFilter implements Filter {
         String reqURI = req.getRequestURI();
         Object usuario = req.getSession().getAttribute("usuarioLogeado");
 
-        boolean esRecursoEstatico = reqURI.contains("javax.faces.resource");
+        boolean esRecursoEstatico =
+                reqURI.startsWith(req.getContextPath() + "/javax.faces.resource") ||
+                        reqURI.startsWith(req.getContextPath() + "/jakarta.faces.resource");
         boolean esLogin = reqURI.endsWith("login.xhtml");
 
         if (esLogin || esRecursoEstatico) {
