@@ -37,12 +37,12 @@ public class FacturacionBean extends Bean<Facturacion> implements Serializable {
 
     @Override
     protected void persist(Facturacion entity) {
-        service.guardar(entity);
+        service.guardarFacturacion(entity);
     }
 
     @Override
     protected void remove(Facturacion entity) {
-        service.eliminar(entity);
+        service.eliminarFacturacion(entity);
     }
 
     @Override

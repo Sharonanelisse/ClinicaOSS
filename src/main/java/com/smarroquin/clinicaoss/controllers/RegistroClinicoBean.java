@@ -35,12 +35,12 @@ public class RegistroClinicoBean extends Bean<RegistroClinico> implements Serial
 
     @Override
     protected void persist(RegistroClinico entity) {
-        service.guardar(entity);
+        service.guardarRegistro(entity);
     }
 
     @Override
     protected void remove(RegistroClinico entity) {
-        service.eliminar(entity);
+        service.eliminarRegistro(entity);
     }
 
     @Override

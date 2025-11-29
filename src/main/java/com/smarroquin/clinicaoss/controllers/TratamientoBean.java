@@ -32,12 +32,12 @@ public class TratamientoBean extends Bean<Tratamiento> implements Serializable {
 
     @Override
     protected void persist(Tratamiento entity) {
-        service.guardar(entity);
+        service.guardarTratamiento(entity);
     }
 
     @Override
     protected void remove(Tratamiento entity) {
-        service.eliminar(entity);
+        service.eliminarTratamiento(entity);
     }
 
     @Override
