@@ -185,7 +185,7 @@ public class CitaBean extends Bean<Cita> implements Serializable {
     }
 
     public List<Usuario> getUsuarios() {
-        return service.users();
+        return service.usuario();
     }
 
     public List<Tratamiento> getTratamientos() {

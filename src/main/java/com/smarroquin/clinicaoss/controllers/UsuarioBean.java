@@ -102,4 +102,10 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     protected String successDeleteMessage() {
         return "Usuario eliminado";
     }
+    public String logout() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.getExternalContext().invalidateSession(); // Cierra la sesión completa
+
+        return "/login.xhtml?faces-redirect=true"; // Redirige al login
+    }
 }

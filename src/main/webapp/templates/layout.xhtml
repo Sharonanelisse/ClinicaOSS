@@ -226,12 +226,13 @@
                 <a href="#"><h:graphicImage library="img" name="logo.png" style="width: 115px;filter: brightness(0) invert(1);" /></a>
             </div>
             <div class="top_menu">
-                <div>#{sessionScope.usuarioLogueado.nombreUsuario}</div>
+                <div>Hola, #{sessionScope.usuarioLogeado.nombreUsuario}</div>
                 <div class="right_info">
                     <div class="icon_wrap">
-                        <div class="icon">
-                            Cerrar sesión
-                        </div>
+                        <h:form>
+                            <h:commandLink value="Cerrar Sesión"
+                                           action="#{usuarioBean.logout}" />
+                        </h:form>
                     </div>
                 </div>
             </div>
