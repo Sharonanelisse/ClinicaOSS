@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 public class UsuarioConverter implements Converter<Usuario> {
 
     @Inject
-    private UsuarioRepostory repo;
+    private UsuarioRepository repo;
 
     @Override
     public Usuario getAsObject(FacesContext context, UIComponent component, String value) {

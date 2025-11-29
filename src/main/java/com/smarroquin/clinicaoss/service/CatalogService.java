@@ -19,7 +19,8 @@ public class CatalogService implements Serializable {
     public CatalogService() { }
 
     @Inject
-    private UsuarioRepostory userRepository;
+    private UsuarioRepository userRepository;
+
 
     @Inject
     private PacienteRepository pacienteRepository;
