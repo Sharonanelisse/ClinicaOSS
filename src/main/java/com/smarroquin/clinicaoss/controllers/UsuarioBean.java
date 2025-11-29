@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +21,17 @@ import java.util.Map;
 public class UsuarioBean extends Bean<Usuario> implements Serializable {
     private static final long serialVersionUID = 1L;
 
+
+
+
+
     @Inject
     private transient CatalogService service;
 
+
     @PostConstruct
     public void initBean() {
-        System.out.println("Usuarios encontrados en init: " + service.users().size());
+        System.out.println("Usuarios encontrados en init: " + service.usuario().size());
     }
 
 
@@ -36,7 +42,7 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
 
     @Override
     protected List<Usuario> findAll() {
-        List<Usuario> usuarios = service.users();
+        List<Usuario> usuarios = service.usuario();
         System.out.println("Usuarios encontrados: " + usuarios.size());
         return usuarios;
     }
@@ -95,5 +101,11 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     @Override
     protected String successDeleteMessage() {
         return "Usuario eliminado";
+    }
+    public String logout() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.getExternalContext().invalidateSession(); // Cierra la sesión completa
+
+        return "/login.xhtml?faces-redirect=true"; // Redirige al login
     }
 }

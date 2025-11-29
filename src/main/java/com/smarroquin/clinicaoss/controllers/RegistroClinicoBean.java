@@ -79,7 +79,7 @@ public class RegistroClinicoBean extends Bean<RegistroClinico> implements Serial
     }
 
     public List<Usuario> getUsuarios() {
-        return service.users();
+        return service.usuario();
     }
 
     public List<Cita> getCitas() {
