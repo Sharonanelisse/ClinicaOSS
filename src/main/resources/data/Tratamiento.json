@@ -1,0 +1,51 @@
+[
+  {
+    "nombreTratamiento": "Limpieza Dental",
+    "descripcion": "Eliminación de placa y sarro, incluye pulido dental.",
+    "duracionEstimado": 1.0,
+    "costo": 350.00,
+    "especialidadId": 1
+  },
+  {
+    "nombreTratamiento": "Colocación de Brackets",
+    "descripcion": "Instalación de brackets metálicos para corrección de maloclusiones.",
+    "duracionEstimado": 2.5,
+    "costo": 2500.00,
+    "especialidadId": 2
+  },
+  {
+    "nombreTratamiento": "Tratamiento de Conducto",
+    "descripcion": "Endodoncia para salvar piezas dentales con caries profundas.",
+    "duracionEstimado": 1.5,
+    "costo": 1800.00,
+    "especialidadId": 3
+  },
+  {
+    "nombreTratamiento": "Tratamiento de Encías",
+    "descripcion": "Raspado y alisado radicular para controlar periodontitis.",
+    "duracionEstimado": 1.0,
+    "costo": 1200.00,
+    "especialidadId": 4
+  },
+  {
+    "nombreTratamiento": "Consulta Odontopediátrica",
+    "descripcion": "Revisión y aplicación de flúor en pacientes pediátricos.",
+    "duracionEstimado": 0.75,
+    "costo": 500.00,
+    "especialidadId": 5
+  },
+  {
+    "nombreTratamiento": "Extracción de Molar",
+    "descripcion": "Cirugía oral para extracción de pieza dental complicada.",
+    "duracionEstimado": 1.5,
+    "costo": 1500.00,
+    "especialidadId": 6
+  },
+  {
+    "nombreTratamiento": "Blanqueamiento Dental",
+    "descripcion": "Procedimiento estético para aclarar el tono de los dientes.",
+    "duracionEstimado": 1.0,
+    "costo": 2000.00,
+    "especialidadId": 7
+  }
+]

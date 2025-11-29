@@ -6,7 +6,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h1>Gestión de Pacientes</h1>
+        <h5>Gestión de Pacientes</h5>
 
         <h:form id="frmPacientes">
             <p:growl id="msgPacientes" showDetail="true" life="4000" />
@@ -84,10 +84,9 @@
                 </p:column>
 
                 <p:column headerText="Fecha nacimiento">
-                    <h:outputText value="#{p.fechaNacimiento}">
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </h:outputText>
+                    <h:outputText value="#{pacienteBean.formatFecha(p.fechaNacimiento)}" />
                 </p:column>
+
 
                 <p:column headerText="Edad">
                     <h:outputText value="#{p.edad}" />

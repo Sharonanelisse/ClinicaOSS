@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-public class User {
+@Table(name = "usuario", schema = "public")
+
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,6 +117,9 @@ public class User {
         this.password = password;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
     public Boolean getStatus() {
         return status;
     }
@@ -125,7 +130,7 @@ public class User {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("User{");
+        final StringBuffer sb = new StringBuffer("Usuario{");
         sb.append("id=").append(id);
         sb.append(", nombreUsuario='").append(nombreUsuario).append('\'');
         sb.append(", apellidoUsuario='").append(apellidoUsuario).append('\'');

@@ -35,7 +35,7 @@
                     <f:selectItems value="#{registroClinicoBean.pacientes}" var="p" itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
                 </p:selectOneMenu>
 
-                <h:outputLabel value="Usuario (Odontólogo):" for="usuario"/>
+                <h:outputLabel value="Usuario" for="usuario"/>
                 <p:selectOneMenu id="usuario" value="#{registroClinicoBean.selected.user}">
                     <f:selectItems value="#{registroClinicoBean.usuarios}" var="u" itemLabel="#{u.nombreUsuario}" itemValue="#{u}"/>
                 </p:selectOneMenu>
@@ -65,13 +65,9 @@
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{r.id}"
+                         rowKey="#{r.numeroRegistro}"
                          selectionMode="single"
                          selection="#{registroClinicoBean.selected}">
-
-                <p:column headerText="ID">
-                    <h:outputText value="#{r.id}" />
-                </p:column>
 
                 <p:column headerText="Número registro">
                     <h:outputText value="#{r.numeroRegistro}" />
@@ -113,4 +109,3 @@
         </h:form>
     </ui:define>
 </ui:composition>
-

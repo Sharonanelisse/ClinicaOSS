@@ -1,0 +1,47 @@
+[
+  {
+    "codigo": "COSS-AAAA0001",
+    "fechaApertura": "2025-11-20T09:00:00",
+    "estado_cita": "PENDIENTE",
+    "observacionesCita": "Primera consulta de limpieza dental.",
+    "pacienteId": 1,
+    "userId": 2,
+    "tratamientoId": 1
+  },
+  {
+    "codigo": "COSS-BBBB0002",
+    "fechaApertura": "2025-11-21T10:30:00",
+    "estado_cita": "CONFIRMADA",
+    "observacionesCita": "Revisión de ortodoncia, ajuste de brackets.",
+    "pacienteId": 2,
+    "userId": 4,
+    "tratamientoId": 2
+  },
+  {
+    "codigo": "COSS-CCCC0003",
+    "fechaApertura": "2025-11-22T14:00:00",
+    "estado_cita": "PENDIENTE",
+    "observacionesCita": "Tratamiento de conducto en molar superior derecho.",
+    "pacienteId": 3,
+    "userId": 2,
+    "tratamientoId": 3
+  },
+  {
+    "codigo": "COSS-DDDD0004",
+    "fechaApertura": "2025-11-23T08:45:00",
+    "estado_cita": "CANCELADA",
+    "observacionesCita": "Paciente no asistió, reagendar.",
+    "pacienteId": 4,
+    "userId": 4,
+    "tratamientoId": 4
+  },
+  {
+    "codigo": "COSS-EEEE0005",
+    "fechaApertura": "2025-11-24T16:15:00",
+    "estado_cita": "PENDIENTE",
+    "observacionesCita": "Consulta de estética dental, blanqueamiento.",
+    "pacienteId": 5,
+    "userId": 2,
+    "tratamientoId": 7
+  }
+]

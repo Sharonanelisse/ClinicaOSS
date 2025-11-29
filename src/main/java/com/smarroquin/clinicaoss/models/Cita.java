@@ -4,6 +4,7 @@ import com.smarroquin.clinicaoss.enums.estado_cita;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class Cita {
     private String codigo;
 
     @Column
-    private Date fechaApertura;
+    private LocalDateTime fechaApertura;
 
     @Enumerated(EnumType.STRING)
     private estado_cita estado_cita;
@@ -32,7 +33,7 @@ public class Cita {
 
     @NotNull
     @ManyToOne(optional = false)
-    private User user;
+    private Usuario user;
 
     @NotNull
     @ManyToOne(optional = false)
@@ -41,12 +42,13 @@ public class Cita {
     @PrePersist
     protected void onCreate() {
         if (this.fechaApertura == null) {
-            this.fechaApertura = new Date();
+            this.fechaApertura = LocalDateTime.now();
         }
         if (this.codigo == null || this.codigo.isBlank()) {
             this.codigo = generarCodigo();
         }
     }
+
 
     private String generarCodigo() {
         return "COSS-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -70,11 +72,11 @@ public class Cita {
         this.codigo = codigo;
     }
 
-    public Date getFechaApertura() {
+    public LocalDateTime getFechaApertura() {
         return fechaApertura;
     }
 
-    public void setFechaApertura(Date fechaApertura) {
+    public void setFechaApertura(LocalDateTime fechaApertura) {
         this.fechaApertura = fechaApertura;
     }
 
@@ -102,11 +104,11 @@ public class Cita {
         this.paciente = paciente;
     }
 
-    public User getUser() {
+    public Usuario getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Usuario user) {
         this.user = user;
     }
 

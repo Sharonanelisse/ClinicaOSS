@@ -19,7 +19,6 @@ public class Especialidad {
 
     // Getters y setters
 
-
     public Long getId() {
         return id;
     }

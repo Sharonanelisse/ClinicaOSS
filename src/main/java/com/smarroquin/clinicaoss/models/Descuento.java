@@ -15,7 +15,7 @@ public class Descuento {
     @NotBlank(message = "Agregar nombre de la promocion")
     private String nombrePromocion;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 255)
     @NotBlank(message = "Agregar detalles de la promocion")
     private String descripcionPromocion;
 

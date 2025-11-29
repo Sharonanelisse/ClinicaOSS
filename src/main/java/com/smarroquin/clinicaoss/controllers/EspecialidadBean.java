@@ -31,12 +31,12 @@ public class EspecialidadBean extends Bean<Especialidad> implements Serializable
 
     @Override
     protected void persist(Especialidad entity) {
-        service.guardar(entity);
+        service.guardarEspecialidad(entity);
     }
 
     @Override
     protected void remove(Especialidad entity) {
-        service.eliminar(entity);
+        service.eliminarEspecialidad(entity);
     }
 
     @Override

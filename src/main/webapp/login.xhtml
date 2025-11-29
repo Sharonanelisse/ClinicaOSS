@@ -72,17 +72,44 @@
 
             <h3 class="mb-3">Iniciar sesión</h3>
 
-            <form method="post" action="${pageContext.request.contextPath}/login" class="row g-3">
-                <div class="inputStyle">
-                    <label class="form-label">Usuario</label>
-                    <p:inputText name="username" value="admin" required="true"/>
-                </div>
-                <div class="inputStyle">
-                    <label class="form-label">Contraseña</label>
-                    <p:inputText name="password" type="password"  value="admin123" required="true"/>
-                </div>
-                <button class="buttonLogin">Entrar</button>
-            </form>
+
+
+            <h:form id="frmLogin">
+                <p:growl id="msgLogin" showDetail="true" life="4000" />
+
+                <p:panel header="Login" style="width:350px; margin:auto; margin-top:100px;">
+                    <p:panelGrid columns="2" columnClasses="label,value" styleClass="p-fluid">
+
+                        <h:outputLabel value="Usuario o correo:" for="login" />
+                        <p:inputText id="login"
+                                     value="#{usuarioBean.selected.email}"
+                                     required="true" />
+
+                        <h:outputLabel value="Contraseña:" for="password" />
+                        <p:password id="password"
+                                    value="#{usuarioBean.selected.password}"
+                                    required="true" />
+
+                    </p:panelGrid>
+
+                    <p:commandButton value="Ingresar"
+                                     action="#{usuarioBean.login}"
+                                     update="frmLogin:msgLogin"
+                                     style="width:100%; margin-top:10px;" />
+                </p:panel>
+            </h:form>
+
+<!--            <form method="post" action="${pageContext.request.contextPath}/login" class="row g-3">-->
+<!--                <div class="inputStyle">-->
+<!--                    <label class="form-label">Usuario</label>-->
+<!--                    <p:inputText name="username" value="admin" required="true"/>-->
+<!--                </div>-->
+<!--                <div class="inputStyle">-->
+<!--                    <label class="form-label">Contraseña</label>-->
+<!--                    <p:inputText name="password" type="password"  value="admin123" required="true"/>-->
+<!--                </div>-->
+<!--                <button class="buttonLogin">Entrar</button>-->
+<!--            </form>-->
         </div>
 </div>
 </h:body>

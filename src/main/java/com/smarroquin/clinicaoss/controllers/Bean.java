@@ -137,4 +137,16 @@ public abstract class Bean<T> implements Serializable {
     public void setDialogVisible(boolean dialogVisible) {
         this.dialogVisible = dialogVisible;
     }
+
+    // Errores de login
+
+    protected void addErrorMessage(String msg) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null));
+    }
+
+    protected void addInfoMessage(String msg) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
+    }
 }

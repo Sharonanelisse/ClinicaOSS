@@ -1,20 +1,21 @@
 package com.smarroquin.clinicaoss.service;
 
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
+import com.smarroquin.clinicaoss.models.Usuario;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IUserService {
-    List<User> list(int page, int size);
+    List<Usuario> list(int page, int size);
 
     int totalPages(int size);
 
-    Optional<User> getById(int id);
+    Optional<Usuario> getById(int id);
 
-    Optional<User> getByUsername(String username);
+    Optional<Usuario> getByUsername(String username);
 
-    void save(User user);      // create or update
+    void save(Usuario user);      // create or update
 
     void delete(int id, int currentUserId); // valida no autoeliminarse
 

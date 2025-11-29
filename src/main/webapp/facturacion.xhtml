@@ -8,53 +8,53 @@
     <ui:define name="content">
         <h1>Gestión de Facturación</h1>
 
-        <h:form id="frmFacturacion">
-            <p:growl id="msgFacturacion" showDetail="true" life="4000" />
+        <h:form citaId="frmFacturacion">
+            <p:growl citaId="msgFacturacion" showDetail="true" life="4000" />
 
             <!-- Formulario de facturación -->
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Fecha de emisión:" for="fechaEmision"/>
-                <p:datePicker id="fechaEmision" value="#{facturacionBean.selected.fechaEmision}"
+                <p:datePicker citaId="fechaEmision" value="#{facturacionBean.selected.fechaEmision}"
                               showTime="true" pattern="yyyy-MM-dd HH:mm"/>
 
                 <h:outputLabel value="Subtotal:" for="subtotal"/>
-                <p:inputText id="subtotal" value="#{facturacionBean.selected.subtotal}" />
+                <p:inputText citaId="subtotal" value="#{facturacionBean.selected.subtotal}" />
 
                 <h:outputLabel value="Total:" for="total"/>
-                <p:inputText id="total" value="#{facturacionBean.selected.total}" />
+                <p:inputText citaId="total" value="#{facturacionBean.selected.total}" />
 
                 <h:outputLabel value="Estado de pago:" for="estadoPago"/>
-                <p:selectOneMenu id="estadoPago" value="#{facturacionBean.selected.estado_pago}">
+                <p:selectOneMenu citaId="estadoPago" value="#{facturacionBean.selected.estado_pago}">
                     <f:selectItems value="#{facturacionBean.estadosPago}" var="ep"
                                    itemLabel="#{ep}" itemValue="#{ep}"/>
                 </p:selectOneMenu>
 
                 <h:outputLabel value="Tratamiento:" for="tratamiento"/>
-                <p:selectOneMenu id="tratamiento" value="#{facturacionBean.selected.tratamiento}">
+                <p:selectOneMenu citaId="tratamiento" value="#{facturacionBean.selected.tratamiento}">
                     <f:selectItems value="#{facturacionBean.tratamientos}" var="t"
                                    itemLabel="#{t.nombreTratamiento}" itemValue="#{t}"/>
                 </p:selectOneMenu>
 
-                <h:outputLabel value="Paciente:" for="paciente"/>
-                <p:selectOneMenu id="paciente" value="#{facturacionBean.selected.paciente}">
+                <h:outputLabel value="Paciente:" for="pacienteId"/>
+                <p:selectOneMenu citaId="pacienteId" value="#{facturacionBean.selected.pacienteId}">
                     <f:selectItems value="#{facturacionBean.pacientes}" var="p"
                                    itemLabel="#{p.nombrePaciente}" itemValue="#{p}"/>
                 </p:selectOneMenu>
 
-                <h:outputLabel value="Cita:" for="cita"/>
-                <p:selectOneMenu id="cita" value="#{facturacionBean.selected.cita}">
+                <h:outputLabel value="Cita:" for="citaId"/>
+                <p:selectOneMenu citaId="citaId" value="#{facturacionBean.selected.citaId}">
                     <f:selectItems value="#{facturacionBean.citas}" var="c"
                                    itemLabel="#{c.codigo}" itemValue="#{c}"/>
                 </p:selectOneMenu>
 
-                <h:outputLabel value="Descuento:" for="descuento"/>
-                <p:selectOneMenu id="descuento" value="#{facturacionBean.selected.descuento}">
+                <h:outputLabel value="Descuento:" for="descuentoId"/>
+                <p:selectOneMenu citaId="descuentoId" value="#{facturacionBean.selected.descuentoId}">
                     <f:selectItems value="#{facturacionBean.descuentos}" var="d"
                                    itemLabel="#{d.nombre}" itemValue="#{d}"/>
                 </p:selectOneMenu>
 
                 <h:outputLabel value="Seguro:" for="seguro"/>
-                <p:selectOneMenu id="seguro" value="#{facturacionBean.selected.seguro}">
+                <p:selectOneMenu citaId="seguro" value="#{facturacionBean.selected.seguro}">
                     <f:selectItems value="#{facturacionBean.seguros}" var="s"
                                    itemLabel="#{s.nombre}" itemValue="#{s}"/>
                 </p:selectOneMenu>
@@ -73,18 +73,18 @@
                              styleClass="p-button-secondary" />
 
             <!-- Tabla de facturación -->
-            <p:dataTable id="tblFacturacion"
+            <p:dataTable citaId="tblFacturacion"
                          value="#{facturacionBean.list}"
                          var="f"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{f.id}"
+                         rowKey="#{f.citaId}"
                          selectionMode="single"
                          selection="#{facturacionBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{f.id}" />
+                    <h:outputText value="#{f.citaId}" />
                 </p:column>
 
                 <p:column headerText="Fecha emisión">
@@ -106,7 +106,7 @@
                 </p:column>
 
                 <p:column headerText="Paciente">
-                    <h:outputText value="#{f.paciente.nombrePaciente}" />
+                    <h:outputText value="#{f.pacienteId.nombrePaciente}" />
                 </p:column>
 
                 <p:column headerText="Tratamiento">
@@ -114,11 +114,11 @@
                 </p:column>
 
                 <p:column headerText="Cita">
-                    <h:outputText value="#{f.cita.codigo}" />
+                    <h:outputText value="#{f.citaId.codigo}" />
                 </p:column>
 
                 <p:column headerText="Descuento">
-                    <h:outputText value="#{f.descuento.nombre}" />
+                    <h:outputText value="#{f.descuentoId.nombre}" />
                 </p:column>
 
                 <p:column headerText="Seguro">
