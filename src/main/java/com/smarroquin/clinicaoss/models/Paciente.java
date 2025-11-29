@@ -55,21 +55,30 @@ public class Paciente {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;
 
+    @Column(length = 20, unique = true, nullable = false)
+    private String numeroExpediente;
+
+    @Column
+    private LocalDateTime fechaUltimaActualizacion;
+
     @Column(nullable = false)
     private Boolean activo = true;
 
     @PrePersist
     protected void prePersist() {
         this.fechaRegistro = LocalDateTime.now();
+        this.fechaUltimaActualizacion = LocalDateTime.now();
         actualizarEdad();
-        if (this.activo == null) {
-            this.activo = true;
+
+        if (this.numeroExpediente == null) {
+            this.numeroExpediente = "EXP-" + java.time.Year.now().getValue() + "-" + System.nanoTime() % 100000;
         }
     }
 
     @PreUpdate
     protected void preUpdate() {
         actualizarEdad();
+        this.fechaUltimaActualizacion = LocalDateTime.now();
     }
 
     private void actualizarEdad() {
@@ -186,6 +195,12 @@ public class Paciente {
         this.fechaRegistro = fechaRegistro;
     }
 
+    public String getNumeroExpediente() { return numeroExpediente; }
+    public void setNumeroExpediente(String numeroExpediente) { this.numeroExpediente = numeroExpediente; }
+
+    public LocalDateTime getFechaUltimaActualizacion() { return fechaUltimaActualizacion; }
+    public void setFechaUltimaActualizacion(LocalDateTime fechaUltimaActualizacion) { this.fechaUltimaActualizacion = fechaUltimaActualizacion; }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Paciente{");
@@ -201,6 +216,9 @@ public class Paciente {
         sb.append(", condicionesMedicas='").append(condicionesMedicas).append('\'');
         sb.append(", observaciones='").append(observaciones).append('\'');
         sb.append(", fechaRegistro='").append(fechaRegistro).append('\'');
+        sb.append(", numeroExpediente='").append(numeroExpediente).append(", observaciones='").append(observaciones).append('\'');
+        sb.append(", fechaUltimaActualizacion='").append(fechaUltimaActualizacion).append('\'');
+        sb.append(", activo='").append(activo);
         sb.append('}');
 
         return sb.toString();
