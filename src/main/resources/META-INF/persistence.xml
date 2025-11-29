@@ -6,6 +6,6 @@
     <persistence-unit name="clinicaossPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-            <properties> </properties>
+        <properties> </properties>
     </persistence-unit>
 </persistence>
