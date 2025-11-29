@@ -14,50 +14,49 @@
 
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Nombre:" for="nombreUsuario"/>
-                <p:inputText id="nombreUsuario" value="#{userBean.selected.nombreUsuario}" required="true"/>
+                <p:inputText id="nombreUsuario" value="#{UsuarioBean.selected.nombreUsuario}" required="true"/>
 
                 <h:outputLabel value="Apellido:" for="apellidoUsuario"/>
-                <p:inputText id="apellidoUsuario" value="#{userBean.selected.apellidoUsuario}" required="true"/>
+                <p:inputText id="apellidoUsuario" value="#{UsuarioBean.selected.apellidoUsuario}" required="true"/>
 
                 <h:outputLabel value="Email:" for="email"/>
-                <p:inputText id="email" value="#{userBean.selected.email}" required="true"/>
+                <p:inputText id="email" value="#{UsuarioBean.selected.email}" required="true"/>
 
                 <h:outputLabel value="Teléfono:" for="telefono"/>
-                <p:inputText id="telefono" value="#{userBean.selected.telefono}"/>
+                <p:inputText id="telefono" value="#{UsuarioBean.selected.telefono}"/>
 
                 <h:outputLabel value="Contraseña:" for="password"/>
-                <p:password id="password" value="#{userBean.selected.password}" feedback="true"/>
+                <p:password id="password" value="#{UsuarioBean.selected.password}" feedback="true"/>
 
                 <h:outputLabel value="Rol:" for="role"/>
-                <p:selectOneMenu id="role" value="#{userBean.selected.role_name}">
-                    <f:selectItems value="#{userBean.roles}" var="r" itemLabel="#{r}" itemValue="#{r}"/>
+                <p:selectOneMenu id="role" value="#{UsuarioBean.selected.role_name}">
+                    <f:selectItems value="#{UsuarioBean.roles}" var="r" itemLabel="#{r}" itemValue="#{r}"/>
                 </p:selectOneMenu>
 
-
                 <h:outputLabel value="Estado:" for="status"/>
-                <p:selectBooleanCheckbox id="status" value="#{userBean.selected.status}" />
+                <p:selectBooleanCheckbox id="status" value="#{UsuarioBean.selected.status}" />
             </h:panelGrid>
 
             <p:commandButton value="Guardar"
-                             action="#{userBean.save}"
+                             action="#{UsuarioBean.save}"
                              update="tblUsers,frmUsers,msgUser"
                              icon="pi pi-check" />
 
             <p:commandButton value="Cancelar"
-                             action="#{userBean.newEntity}"
+                             action="#{UsuarioBean.newEntity}"
                              update="frmUsers,frmJornadas"
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
             <p:dataTable id="tblUsers"
-                         value="#{userBean.list}"
+                         value="#{UsuarioBean.list}"
                          var="u"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
                          rowKey="#{u.id}"
                          selectionMode="single"
-                         selection="#{userBean.selected}">
+                         selection="#{UsuarioBean.selected}">
 
                 <p:column headerText="ID">
                     <h:outputText value="#{u.id}" />
@@ -80,7 +79,7 @@
                 </p:column>
 
                 <p:column headerText="Rol">
-                    <h:outputText value="#{u.role.name}" />
+                    <h:outputText value="#{u.role_name}" />
                 </p:column>
 
                 <p:column headerText="Estado">
@@ -89,13 +88,13 @@
 
                 <p:column headerText="Acciones">
                     <p:commandButton value="Editar"
-                                     action="#{userBean.edit(u)}"
-                                     actionListener="#{jornadaLaboralBean.setUserContext(userBean.selected)}"
+                                     action="#{UsuarioBean.edit(u)}"
+                                     actionListener="#{jornadaLaboralBean.setUserContext(UsuarioBean.selected)}"
                                      update="frmUsers,frmJornadas"
                                      icon="pi pi-pencil" />
 
                     <p:commandButton value="Eliminar"
-                                     action="#{userBean.delete(u)}"
+                                     action="#{UsuarioBean.delete(u)}"
                                      update="tblUsers,frmJornadas"
                                      icon="pi pi-trash"
                                      styleClass="ui-button-danger" />

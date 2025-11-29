@@ -7,6 +7,8 @@ import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,10 @@ public class PacienteBean extends Bean<Paciente> implements Serializable {
     @Override
     protected void remove(Paciente entity) {
         service.eliminar(entity);
+    }
+
+    public String formatFecha(LocalDate fecha) {
+        return fecha != null ? fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "";
     }
 
     @Override

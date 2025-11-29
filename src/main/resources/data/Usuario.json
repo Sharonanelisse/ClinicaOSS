@@ -1,0 +1,47 @@
+[
+  {
+    "nombreUsuario": "María Fernanda",
+    "apellidoUsuario": "García López",
+    "role_name": "ADMINISTRADOR",
+    "email": "mfernanda.garcia@sonrisasana.com",
+    "telefono": "55581234",
+    "password": "Admin@2025!",
+    "status": true
+  },
+  {
+    "nombreUsuario": "Carlos Eduardo",
+    "apellidoUsuario": "Ramírez Soto",
+    "role_name": "ODONTOLOGO",
+    "email": "carlos.ramirez@sonrisasana.com",
+    "telefono": "55582345",
+    "password": "Odonto@2025!",
+    "status": true
+  },
+  {
+    "nombreUsuario": "Ana Beatriz",
+    "apellidoUsuario": "Morales Díaz",
+    "role_name": "RECEPCIONISTA",
+    "email": "ana.morales@sonrisasana.com",
+    "telefono": "55583456",
+    "password": "Recep@2025!",
+    "status": true
+  },
+  {
+    "nombreUsuario": "Luis Alberto",
+    "apellidoUsuario": "Hernández Pérez",
+    "role_name": "ODONTOLOGO",
+    "email": "luis.hernandez@sonrisasana.com",
+    "telefono": "55584567",
+    "password": "Odonto@2025!",
+    "status": true
+  },
+  {
+    "nombreUsuario": "Sofía Isabel",
+    "apellidoUsuario": "Martínez Cruz",
+    "role_name": "RECEPCIONISTA",
+    "email": "sofia.martinez@sonrisasana.com",
+    "telefono": "55585678",
+    "password": "Recep@2025!",
+    "status": true
+  }
+]

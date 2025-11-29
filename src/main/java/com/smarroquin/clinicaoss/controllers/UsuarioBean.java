@@ -1,8 +1,11 @@
 package com.smarroquin.clinicaoss.controllers;
 
 import com.smarroquin.clinicaoss.enums.role_name;
-import com.smarroquin.clinicaoss.models.User;
+import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -12,35 +15,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.inject.Named;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Named
 @ViewScoped
-public class UserBean extends Bean<User> implements Serializable {
+public class UsuarioBean extends Bean<Usuario> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
     private transient CatalogService service;
 
+    @PostConstruct
+    public void initBean() {
+        System.out.println("Usuarios encontrados en init: " + service.users().size());
+    }
+
+
     @Override
-    protected User createNew() {
-        return new User();
+    protected Usuario createNew() {
+        return new Usuario();
     }
 
     @Override
-    protected List<User> findAll() {
-        return service.users();
+    protected List<Usuario> findAll() {
+        List<Usuario> usuarios = service.users();
+        System.out.println("Usuarios encontrados: " + usuarios.size());
+        return usuarios;
     }
+
 
     public role_name[] getRoles() {
         return role_name.values();
     }
 
+    public void toggleStatus(Usuario u) {
+        u.setStatus(!u.getStatus());
+        service.guardar(u);
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Estado actualizado",
+                        "El usuario ahora está " + (u.getStatus() ? "Activo" : "Inactivo"))
+        );
+    }
+
+
     @Override
-    protected void persist(User entity) {
+    protected void persist(Usuario entity) {
         service.guardar(entity);
     }
 
     @Override
-    protected void remove(User entity) {
+    protected void remove(Usuario entity) {
         service.eliminar(entity);
     }
 
@@ -71,5 +104,4 @@ public class UserBean extends Bean<User> implements Serializable {
     protected String successDeleteMessage() {
         return "Usuario eliminado";
     }
-
 }

@@ -26,7 +26,7 @@ public class JornadaLaboral {
 
     @NotNull
     @ManyToOne(optional = false)
-    private User user;
+    private Usuario user;
 
     // Getters y Setters
 
@@ -63,11 +63,11 @@ public class JornadaLaboral {
         this.horaFin = horaFin;
     }
 
-    public User getUser() {
+    public Usuario getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Usuario user) {
         this.user = user;
     }
 

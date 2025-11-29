@@ -2,7 +2,6 @@ package com.smarroquin.clinicaoss.models;
 
 import com.smarroquin.clinicaoss.enums.tipo_archivo;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -44,7 +43,7 @@ public class RegistroClinico {
 
     @NotNull(message = "Agregar usuario donde role_name = Odontologo")
     @ManyToOne(optional = false)
-    private User user;
+    private Usuario user;
 
     @NotNull(message = "Elegir fecha de cita")
     @ManyToOne(optional = false)
@@ -135,11 +134,11 @@ public class RegistroClinico {
         this.paciente = paciente;
     }
 
-    public User getUser() {
+    public Usuario getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Usuario user) {
         this.user = user;
     }
 
