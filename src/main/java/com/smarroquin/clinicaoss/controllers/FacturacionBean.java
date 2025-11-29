@@ -30,11 +30,16 @@ public class FacturacionBean extends Bean<Facturacion> implements Serializable {
     @Override
     protected Facturacion createNew() {
         Facturacion f = new Facturacion();
-        f.setFechaEmision(LocalDateTime.now()); // Fecha actual por defecto
+        f.setFechaEmision(LocalDateTime.now());
         f.setEstado_pago(estado_pago.PENDIENTE); // Pendiente por defecto
         f.setSubtotal(BigDecimal.ZERO);
         f.setTotal(BigDecimal.ZERO);
         return f;
+    }
+
+    public String formatFecha(LocalDateTime fecha) {
+        if (fecha == null) return "";
+        return fecha.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     @Override
