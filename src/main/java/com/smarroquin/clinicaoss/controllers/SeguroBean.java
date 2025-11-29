@@ -31,12 +31,12 @@ public class SeguroBean extends Bean<Seguro> implements Serializable {
 
     @Override
     protected void persist(Seguro entity) {
-        service.guardar(entity);
+        service.guardarSeguro(entity);
     }
 
     @Override
     protected void remove(Seguro entity) {
-        service.eliminar(entity);
+        service.eliminarSeguro(entity);
     }
 
     @Override

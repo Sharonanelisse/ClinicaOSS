@@ -15,14 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.inject.Named;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Named
 @ViewScoped
 public class UsuarioBean extends Bean<Usuario> implements Serializable {
@@ -56,7 +48,7 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
 
     public void toggleStatus(Usuario u) {
         u.setStatus(!u.getStatus());
-        service.guardar(u);
+        service.guardarUsuario(u);
 
         FacesContext.getCurrentInstance().addMessage(
                 null,
@@ -69,12 +61,12 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
 
     @Override
     protected void persist(Usuario entity) {
-        service.guardar(entity);
+        service.guardarUsuario(entity);
     }
 
     @Override
     protected void remove(Usuario entity) {
-        service.eliminar(entity);
+        service.eliminarUsuario(entity);
     }
 
     @Override

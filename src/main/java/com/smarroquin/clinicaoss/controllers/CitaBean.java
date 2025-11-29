@@ -57,12 +57,12 @@ public class CitaBean extends Bean<Cita> implements Serializable {
 
     @Override
     protected void persist(Cita entity) {
-        service.guardar(entity);
+        service.guardarCita(entity);
     }
 
     @Override
     protected void remove(Cita entity) {
-        service.eliminar(entity);
+        service.eliminarCita(entity);
     }
 
     @Override
@@ -127,14 +127,14 @@ public class CitaBean extends Bean<Cita> implements Serializable {
     }
 
     public void save() {
-        service.guardar(cita);
+        service.guardarCita(cita);
         loadEvents();
         dialogVisible = false;
         detailVisible = false;
     }
 
     public void delete() {
-        service.eliminar(cita);
+        service.eliminarCita(cita);
         loadEvents();
         detailVisible = false;
     }
