@@ -9,6 +9,7 @@ import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.primefaces.model.file.UploadedFile;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -23,9 +24,15 @@ public class RegistroClinicoBean extends Bean<RegistroClinico> implements Serial
     @Inject
     private transient CatalogService service;
 
+
     @Override
     protected RegistroClinico createNew() {
-        return new RegistroClinico();
+        RegistroClinico r = new RegistroClinico();
+        // Valores por defecto para evitar errores de validación si no se llenan
+        r.setTipo_contenido("application/pdf");
+        r.setBlobName("Registro Físico");
+        r.setBlob_url("#");
+        return r;
     }
 
     @Override
@@ -42,6 +49,7 @@ public class RegistroClinicoBean extends Bean<RegistroClinico> implements Serial
     protected void remove(RegistroClinico entity) {
         service.eliminarRegistro(entity);
     }
+
 
     @Override
     protected Map<String, String> fieldLabels() {

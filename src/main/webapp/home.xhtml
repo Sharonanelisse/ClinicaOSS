@@ -6,34 +6,124 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h:form>
-            <div class="p-d-flex p-jc-center p-ai-center p-mb-4">
-                <p:card styleClass="welcome-card">
-                    <f:facet name="title">
-                        <i class="pi pi-star-fill"></i> Odontológica Sonrisa Sana
-                    </f:facet>
-                </p:card>
-            </div>
-        </h:form>
 
-        <h:outputStylesheet>
-            .welcome-card {
-                text-align: center;
-                font-size: 1.5rem;
-                padding: 1.5rem;
-                background: linear-gradient(135deg, #e3f2fd, #fce4ec);
-                color: #3f51b5;
+        <style>
+            .dashboard-card {
                 border-radius: 12px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                border: none;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                margin-bottom: 20px;
+                transition: transform 0.2s;
             }
+            .dashboard-card:hover { transform: translateY(-5px); }
 
-            .welcome-card .pi {
-                font-size: 1.2rem;
-                margin-right: 0.5rem;
-                color: #ff4081;
+            .card-icon {
+                font-size: 2.5rem;
+                padding: 15px;
+                border-radius: 50%;
+                color: #fff;
+                float: right;
             }
-        </h:outputStylesheet>
+            .card-title { font-size: 1rem; color: #6c757d; font-weight: 600; text-transform: uppercase; }
+            .card-value { font-size: 1.8rem; font-weight: bold; color: #343a40; margin-top: 10px; display: block;}
+            .card-subtext { font-size: 0.85rem; color: #adb5bd; margin-top: 5px; }
+
+            /* Colores de fondo para iconos */
+            .bg-blue { background: linear-gradient(45deg, #4099ff, #73b4ff); }
+            .bg-green { background: linear-gradient(45deg, #2ed8b6, #59e0c5); }
+            .bg-orange { background: linear-gradient(45deg, #FFB64D, #ffcb80); }
+            .bg-red { background: linear-gradient(45deg, #FF5370, #ff869a); }
+            .bg-purple { background: linear-gradient(45deg, #a766ff, #c499ff); }
+            .bg-cyan { background: linear-gradient(45deg, #00BCD4, #4DD0E1); }
+        </style>
+
+        <div class="card" style="background-color: transparent; border:none; box-shadow: none;">
+            <h2 style="color:#495057; margin-bottom:20px;">Panel de Control <small style="font-size:0.6em; color:#888">Resumen Operativo</small></h2>
+
+            <div class="p-grid ui-fluid">
+
+                <div class="p-col-12 p-md-6 p-lg-4">
+                    <p:card styleClass="dashboard-card">
+                        <i class="pi pi-dollar card-icon bg-green"></i>
+                        <span class="card-title">Ingresos (Mes)</span>
+                        <span class="card-value">
+                            <h:outputText value="#{homeBean.ingresosMes}">
+                                <f:convertNumber type="currency" currencySymbol="Q"/>
+                            </h:outputText>
+                        </span>
+                        <div class="card-subtext">Facturación acumulada actual</div>
+                    </p:card>
+                </div>
+
+                <div class="p-col-12 p-md-6 p-lg-4">
+                    <p:card styleClass="dashboard-card">
+                        <i class="pi pi-calendar-plus card-icon bg-blue"></i>
+                        <span class="card-title">Citas Hoy</span>
+                        <span class="card-value">#{homeBean.citasHoy}</span>
+                        <div class="card-subtext">Agendadas para hoy</div>
+                    </p:card>
+                </div>
+
+                <div class="p-col-12 p-md-6 p-lg-4">
+                    <p:card styleClass="dashboard-card">
+                        <i class="pi pi-users card-icon bg-orange"></i>
+                        <span class="card-title">Pacientes Nuevos</span>
+                        <span class="card-value">#{homeBean.pacientesNuevos}</span>
+                        <div class="card-subtext">Registrados últimos 7 días</div>
+                    </p:card>
+                </div>
+
+                <div class="p-col-12 p-md-6 p-lg-4">
+                    <p:card styleClass="dashboard-card">
+                        <i class="pi pi-times-circle card-icon bg-red"></i>
+                        <span class="card-title">Cancelaciones</span>
+                        <span class="card-value">#{homeBean.canceladasHoy}</span>
+                        <div class="card-subtext">Citas canceladas hoy</div>
+                    </p:card>
+                </div>
+
+                <div class="p-col-12 p-md-6 p-lg-4">
+                    <p:card styleClass="dashboard-card">
+                        <i class="pi pi-briefcase card-icon bg-purple"></i>
+                        <span class="card-title">Tratamientos</span>
+                        <span class="card-value">#{homeBean.tratamientosSemana}</span>
+                        <div class="card-subtext">Realizados esta semana</div>
+                    </p:card>
+                </div>
+
+                <div class="p-col-12 p-md-6 p-lg-4">
+                    <p:card styleClass="dashboard-card">
+                        <i class="pi pi-id-card card-icon bg-cyan"></i>
+                        <span class="card-title">Staff Activo</span>
+                        <span class="card-value">#{homeBean.odontologosActivos}</span>
+                        <div class="card-subtext">Odontólogos con citas este mes</div>
+                    </p:card>
+                </div>
+            </div>
+
+            <div class="p-grid">
+
+                <div class="p-col-12 p-lg-8">
+                    <p:card styleClass="dashboard-card" style="height: 100%">
+                        <f:facet name="title">Evolución de Ingresos (Noviembre)</f:facet>
+                        <p:barChart model="#{homeBean.ingresosChart}" style="width: 100%; height: 400px;"/>
+                    </p:card>
+                </div>
+
+                <div class="p-col-12 p-lg-4">
+
+                    <p:card styleClass="dashboard-card" style="margin-bottom: 20px;">
+                        <f:facet name="title">Tratamientos Top</f:facet>
+                        <p:donutChart model="#{homeBean.tratamientosChart}" style="width: 100%; height: 250px;"/>
+                    </p:card>
+
+                    <p:card styleClass="dashboard-card">
+                        <f:facet name="title">Productividad x Doctor</f:facet>
+                        <p:barChart model="#{homeBean.doctoresChart}" style="width: 100%; height: 200px;"/>
+                    </p:card>
+                </div>
+            </div>
+        </div>
 
     </ui:define>
-
 </ui:composition>
