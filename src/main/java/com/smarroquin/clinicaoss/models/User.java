@@ -44,6 +44,7 @@ public class User {
     @Column(length = 60, nullable = false)
     private String password;
 
+
     @NotNull(message = "El estado es obligatorio.")
     @Column(nullable = false)
     private Boolean status = true;
