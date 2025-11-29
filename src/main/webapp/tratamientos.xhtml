@@ -8,37 +8,37 @@
     <ui:define name="content">
         <h1>Gestión de Tratamientos</h1>
 
-        <h:form citaId="frmTratamientos">
-            <p:growl citaId="msgTratamiento" showDetail="true" life="4000" />
+        <h:form id="frmTratamientos">
+            <p:growl id="msgTratamiento" showDetail="true" life="4000" />
 
-            <!-- Formulario de tratamiento -->
+
             <h:panelGrid columns="2" columnClasses="label,value">
 
                 <h:outputLabel value="Nombre:" for="nombreTratamiento"/>
-                <p:inputText citaId="nombreTratamiento"
+                <p:inputText id="nombreTratamiento"
                              value="#{tratamientoBean.selected.nombreTratamiento}"
                              required="true" />
 
                 <h:outputLabel value="Descripción:" for="descripcion"/>
-                <p:inputTextarea citaId="descripcion"
+                <p:inputTextarea id="descripcion"
                                  value="#{tratamientoBean.selected.descripcion}"
                                  rows="3"
                                  required="true" />
 
                 <h:outputLabel value="Duración estimada:" for="duracionEstimado"/>
-                <p:inputText citaId="duracionEstimado"
+                <p:inputText id="duracionEstimado"
                              value="#{tratamientoBean.selected.duracionEstimado}" />
 
                 <h:outputLabel value="Costo:" for="costo"/>
-                <p:inputText citaId="costo"
+                <p:inputText id="costo"
                              value="#{tratamientoBean.selected.costo}" />
 
-                <h:outputLabel value="Especialidad:" for="especialidadId"/>
-                <p:inputText citaId="especialidadId"
-                             value="#{tratamientoBean.selected.especialidadId}" />
+                <h:outputLabel value="Especialidad:" for="especialidad"/>
+                <p:inputText id="especialidad"
+                             value="#{tratamientoBean.selected.especialidad}" />
             </h:panelGrid>
 
-            <!-- Botones -->
+
             <p:commandButton value="Guardar"
                              action="#{tratamientoBean.save}"
                              update="tblTratamientos,frmTratamientos,msgTratamiento"
@@ -50,18 +50,18 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <!-- Tabla -->
-            <p:dataTable citaId="tblTratamientos"
+
+            <p:dataTable id="tblTratamientos"
                          value="#{tratamientoBean.list}"
                          var="t"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{t.citaId}"
+                         rowKey="#{t.id}"
                          selectionMode="single">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{t.citaId}" />
+                    <h:outputText value="#{t.id}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -81,18 +81,18 @@
                 </p:column>
 
                 <p:column headerText="Especialidad">
-                    <h:outputText value="#{t.especialidadId}" />
+                    <h:outputText value="#{t.especialidad.nombre}" />
                 </p:column>
 
                 <p:column headerText="Acciones">
 
-                    <!-- EDITAR -->
+
                     <p:commandButton value="Editar"
                                      action="#{tratamientoBean.edit(t)}"
                                      update="frmTratamientos"
                                      icon="pi pi-pencil" />
 
-                    <!-- ELIMINAR -->
+
                     <p:commandButton value="Eliminar"
                                      action="#{tratamientoBean.delete(t)}"
                                      update="tblTratamientos msgTratamiento"
@@ -104,4 +104,3 @@
         </h:form>
     </ui:define>
 </ui:composition>
-

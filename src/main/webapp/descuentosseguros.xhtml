@@ -10,28 +10,34 @@
 
         <!-- ==================== BLOQUE DE DESCUENTOS ==================== -->
         <h2>Descuentos</h2>
-        <h:form citaId="frmDescuentos">
-            <p:growl citaId="msgDescuento" showDetail="true" life="4000" />
+        <h:form id="frmDescuentos">
+            <p:growl id="msgDescuento" showDetail="true" life="4000" />
 
-            <!-- Formulario de descuentos -->
             <h:panelGrid columns="2" columnClasses="label,value">
+
                 <h:outputLabel value="Nombre promoción:" for="nombrePromocion"/>
-                <p:inputText citaId="nombrePromocion" value="#{descuentoBean.selected.nombrePromocion}" required="true"/>
+                <p:inputText id="nombrePromocion"
+                             value="#{descuentoBean.selected.nombrePromocion}"
+                             required="true"/>
 
                 <h:outputLabel value="Descripción promoción:" for="descripcionPromocion"/>
-                <p:inputTextarea citaId="descripcionPromocion" value="#{descuentoBean.selected.descripcionPromocion}" rows="3" required="true"/>
+                <p:inputTextarea id="descripcionPromocion"
+                                 value="#{descuentoBean.selected.descripcionPromocion}"
+                                 rows="3"
+                                 required="true"/>
 
-                <h:outputLabel value="Porcentaje descuentoId:" for="descuentoPromocion"/>
-                <p:inputText citaId="descuentoPromocion" value="#{descuentoBean.selected.descuentoPromocion}" />
+                <h:outputLabel value="Porcentaje descuento (%):" for="descuentoPromocion"/>
+                <p:inputText id="descuentoPromocion"
+                             value="#{descuentoBean.selected.descuentoPromocion}" />
 
-                <h:outputLabel value="Estado:" for="estado"/>
-                <p:selectBooleanCheckbox citaId="estado" value="#{descuentoBean.selected.estado}" />
+                <h:outputLabel value="Estado:" for="estadoDescuento"/>
+                <p:selectBooleanCheckbox id="estadoDescuento"
+                                         value="#{descuentoBean.selected.estado}" />
             </h:panelGrid>
 
-            <!-- Botones -->
             <p:commandButton value="Guardar"
                              action="#{descuentoBean.save}"
-                             update="tblDescuentos,frmDescuentos,msgDescuento"
+                             update=":frmDescuentos:tblDescuentos :frmDescuentos :frmDescuentos:msgDescuento"
                              icon="pi pi-check" />
 
             <p:commandButton value="Cancelar"
@@ -40,19 +46,19 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <!-- Tabla de descuentos -->
-            <p:dataTable citaId="tblDescuentos"
+            <!-- Tabla -->
+            <p:dataTable id="tblDescuentos"
                          value="#{descuentoBean.list}"
                          var="d"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{d.citaId}"
+                         rowKey="#{d.id}"
                          selectionMode="single"
                          selection="#{descuentoBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{d.citaId}" />
+                    <h:outputText value="#{d.id}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -79,46 +85,57 @@
 
                     <p:commandButton value="Eliminar"
                                      action="#{descuentoBean.delete(d)}"
-                                     update="tblDescuentos"
+                                     update=":frmDescuentos:tblDescuentos"
                                      icon="pi pi-trash"
                                      styleClass="ui-button-danger" />
                 </p:column>
+
             </p:dataTable>
         </h:form>
 
         <!-- ==================== BLOQUE DE SEGUROS ==================== -->
         <h2 style="margin-top:40px;">Seguros</h2>
-        <h:form citaId="frmSeguros">
-            <p:growl citaId="msgSeguro" showDetail="true" life="4000" />
+        <h:form id="frmSeguros">
+            <p:growl id="msgSeguro" showDetail="true" life="4000" />
 
-            <!-- Formulario de seguros -->
             <h:panelGrid columns="2" columnClasses="label,value">
+
                 <h:outputLabel value="Código aseguradora:" for="codigoAseguradora"/>
-                <p:inputText citaId="codigoAseguradora" value="#{seguroBean.selected.codigoAseguradora}" required="true"/>
+                <p:inputText id="codigoAseguradora"
+                             value="#{seguroBean.selected.codigoAseguradora}"
+                             required="true"/>
 
                 <h:outputLabel value="Nombre aseguradora:" for="nombreAseguradora"/>
-                <p:inputText citaId="nombreAseguradora" value="#{seguroBean.selected.nombreAseguradora}" required="true"/>
+                <p:inputText id="nombreAseguradora"
+                             value="#{seguroBean.selected.nombreAseguradora}"
+                             required="true"/>
 
-                <h:outputLabel value="Porcentaje descuentoId:" for="porcentajeDescuento"/>
-                <p:inputText citaId="porcentajeDescuento" value="#{seguroBean.selected.porcentajeDescuento}" />
+                <h:outputLabel value="Porcentaje descuento (%):" for="porcentajeDescuento"/>
+                <p:inputText id="porcentajeDescuento"
+                             value="#{seguroBean.selected.porcentajeDescuento}" />
 
                 <h:outputLabel value="Fecha inicio:" for="fechaInicio"/>
-                <p:datePicker citaId="fechaInicio" value="#{seguroBean.selected.fechaInicio}" pattern="yyyy-MM-dd"/>
+                <p:datePicker id="fechaInicio"
+                              value="#{seguroBean.selected.fechaInicio}"
+                              pattern="yyyy-MM-dd"/>
 
                 <h:outputLabel value="Deducible:" for="deducible"/>
-                <p:inputText citaId="deducible" value="#{seguroBean.selected.deducible}" />
+                <p:inputText id="deducible"
+                             value="#{seguroBean.selected.deducible}" />
 
                 <h:outputLabel value="Fecha final:" for="fechaFinal"/>
-                <p:datePicker citaId="fechaFinal" value="#{seguroBean.selected.fechaFinal}" pattern="yyyy-MM-dd"/>
+                <p:datePicker id="fechaFinal"
+                              value="#{seguroBean.selected.fechaFinal}"
+                              pattern="yyyy-MM-dd"/>
 
                 <h:outputLabel value="Estado:" for="estadoSeguro"/>
-                <p:selectBooleanCheckbox citaId="estadoSeguro" value="#{seguroBean.selected.estado}" />
+                <p:selectBooleanCheckbox id="estadoSeguro"
+                                         value="#{seguroBean.selected.estado}" />
             </h:panelGrid>
 
-            <!-- Botones -->
             <p:commandButton value="Guardar"
                              action="#{seguroBean.save}"
-                             update="tblSeguros,frmSeguros,msgSeguro"
+                             update=":frmSeguros:tblSeguros :frmSeguros :frmSeguros:msgSeguro"
                              icon="pi pi-check" />
 
             <p:commandButton value="Cancelar"
@@ -127,19 +144,18 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <!-- Tabla de seguros -->
-            <p:dataTable citaId="tblSeguros"
+            <p:dataTable id="tblSeguros"
                          value="#{seguroBean.list}"
                          var="s"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{s.citaId}"
+                         rowKey="#{s.id}"
                          selectionMode="single"
                          selection="#{seguroBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{s.citaId}" />
+                    <h:outputText value="#{s.id}" />
                 </p:column>
 
                 <p:column headerText="Código">
@@ -150,7 +166,7 @@
                     <h:outputText value="#{s.nombreAseguradora}" />
                 </p:column>
 
-                <p:column headerText="Porcentaje descuentoId">
+                <p:column headerText="Porcentaje descuento">
                     <h:outputText value="#{s.porcentajeDescuento}" />
                 </p:column>
 
@@ -182,10 +198,11 @@
 
                     <p:commandButton value="Eliminar"
                                      action="#{seguroBean.delete(s)}"
-                                     update="tblSeguros"
+                                     update=":frmSeguros:tblSeguros"
                                      icon="pi pi-trash"
                                      styleClass="ui-button-danger" />
                 </p:column>
+
             </p:dataTable>
         </h:form>
     </ui:define>
