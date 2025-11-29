@@ -107,6 +107,7 @@ public class CargarDesdeJson {
             p.setAlergias(json.getAlergias());
             p.setCondicionesMedicas(json.getCondicionesMedicas());
             p.setObservaciones(json.getObservaciones());
+            p.setActivo(json.getActivoPaciente());
             p.setFechaRegistro(json.getFechaRegistro() != null ? json.getFechaRegistro() : LocalDateTime.now());
             em.persist(p);
         }
@@ -352,8 +353,18 @@ public class CargarDesdeJson {
         private String condicionesMedicas;
         private String observaciones;
         private LocalDateTime fechaRegistro;
+        private Boolean activoPaciente;
+
         // getters y setters...
 
+
+        public Boolean getActivoPaciente() {
+            return activoPaciente;
+        }
+
+        public void setActivoPaciente(Boolean activoPaciente) {
+            this.activoPaciente = activoPaciente;
+        }
 
         public Long getPacienteId() {
             return pacienteId;

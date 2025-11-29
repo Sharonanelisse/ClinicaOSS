@@ -16,6 +16,15 @@ public class PacienteDTO {
     private String condicionesMedicas;
     private String observaciones;
     private LocalDateTime fechaRegistro;
+    private Boolean activoPaciente;
+
+    public Boolean getActivoPaciente() {
+        return activoPaciente;
+    }
+
+    public void setActivoPaciente(Boolean activoPaciente) {
+        this.activoPaciente = activoPaciente;
+    }
 
     public Long getPacienteId() {
         return pacienteId;
