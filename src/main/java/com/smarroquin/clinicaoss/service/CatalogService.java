@@ -9,6 +9,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Named
@@ -176,5 +179,50 @@ public class CatalogService implements Serializable {
 
     public List<Usuario> odontologos() {
         return userRepository.findByRolOdontologo();
+    }
+
+    // Métodos Dashboard Cards
+    public Long countPacientesSemana() {
+        return pacienteRepository.contarNuevos(LocalDateTime.now().minusDays(7), LocalDateTime.now());
+    }
+    public Long countCitasHoy() {
+        LocalDateTime inicio = LocalDateTime.now().with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return citaRepository.contarCitas(inicio, fin);
+    }
+    public BigDecimal sumIngresosMes() {
+        LocalDateTime inicio = LocalDateTime.now().withDayOfMonth(1).with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return facturacionRepository.sumarIngresos(inicio, fin);
+    }
+    public Long countTratamientosSemana() {
+        return facturacionRepository.contarTratamientos(LocalDateTime.now().minusDays(7), LocalDateTime.now());
+    }
+    public Long countCanceladasHoy() {
+        LocalDateTime inicio = LocalDateTime.now().with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return citaRepository.contarCanceladas(inicio, fin);
+    }
+    public Long countOdontologosMes() {
+        LocalDateTime inicio = LocalDateTime.now().withDayOfMonth(1).with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return citaRepository.contarOdontologosActivos(inicio, fin);
+    }
+
+    // Métodos Dashboard Gráficas
+    public List<Object[]> getCitasPorDoctorMes() {
+        LocalDateTime inicio = LocalDateTime.now().withDayOfMonth(1).with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return citaRepository.contarCitasPorDoctor(inicio, fin);
+    }
+    public List<Object[]> getTratamientosPopularesMes() {
+        LocalDateTime inicio = LocalDateTime.now().withDayOfMonth(1).with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return facturacionRepository.tratamientosPopulares(inicio, fin);
+    }
+    public List<Facturacion> getFacturasMesActual() {
+        LocalDateTime inicio = LocalDateTime.now().withDayOfMonth(1).with(LocalTime.MIN);
+        LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
+        return facturacionRepository.facturasDelMes(inicio, fin);
     }
 }
