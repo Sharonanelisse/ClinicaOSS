@@ -6,68 +6,137 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <ui:define name="content">
-        <h1>Gestión de Especialidades</h1>
 
-        <h:form citaId="frmEspecialidades">
-            <p:growl citaId="msgEspecialidad" showDetail="true" life="4000" />
+        <style>
+            body .ui-widget { font-size: 13px !important; }
+            body .ui-button { font-size: 13px !important; padding: 0.3rem 0.8rem; }
+            .fila-desactivada {
+                background-color: #f4f4f4 !important;
+                color: #9e9e9e !important;
+                font-style: italic;
+            }
+            .field-label { font-weight: bold; color: #495057; }
+        </style>
 
-            <!-- Formulario de especialidadId -->
-            <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputLabel value="Nombre:" for="nombreEspecialidad"/>
-                <p:inputText citaId="nombreEspecialidad" value="#{especialidadBean.selected.nombreEspecialidad}" required="true"/>
+        <h:form id="frmPrincipal">
+            <p:growl id="msgGlobal" showDetail="true" life="4000" />
 
-                <h:outputLabel value="Descripción:" for="descripcion"/>
-                <p:inputTextarea citaId="descripcion" value="#{especialidadBean.selected.descripcion}" rows="3"/>
-            </h:panelGrid>
+            <div class="card">
+                <h3 style="margin-top:0">Gestión de Especialidades</h3>
 
-            <!-- Botones -->
-            <p:commandButton value="Guardar"
-                             action="#{especialidadBean.save}"
-                             update="tblEspecialidades,frmEspecialidades,msgEspecialidad"
-                             icon="pi pi-check" />
+                <p:toolbar style="margin-bottom: 10px; padding: 5px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nueva Especialidad" icon="pi pi-plus"
+                                         action="#{especialidadBean.newEntity}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="ui-button-success">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
-            <p:commandButton value="Cancelar"
-                             action="#{especialidadBean.newEntity}"
-                             update="frmEspecialidades"
-                             icon="pi pi-times"
-                             styleClass="p-button-secondary" />
+                <p:dataTable id="tblEspecialidades"
+                             value="#{especialidadBean.list}"
+                             var="e"
+                             paginator="true"
+                             rows="10"
+                             size="small"
+                             paginatorPosition="bottom"
+                             rowKey="#{e.id}"
+                             selectionMode="single"
+                             selection="#{especialidadBean.selected}"
+                             striped="true"
+                             rowStyleClass="#{e.activoEspecialidad ? null : 'fila-desactivada'}">
 
-            <!-- Tabla de especialidades -->
-            <p:dataTable citaId="tblEspecialidades"
-                         value="#{especialidadBean.list}"
-                         var="e"
-                         paginator="true"
-                         rows="10"
-                         style="margin-top:20px;"
-                         rowKey="#{e.citaId}"
-                         selectionMode="single"
-                         selection="#{especialidadBean.selected}">
+                    <p:column headerText="ID" width="50" style="text-align: center;" sortBy="#{e.id}">
+                        <h:outputText value="#{e.id}" />
+                    </p:column>
 
-                <p:column headerText="ID">
-                    <h:outputText value="#{e.citaId}" />
-                </p:column>
+                    <p:column headerText="Nombre Especialidad" sortBy="#{e.nombreEspecialidad}">
+                        <h:outputText value="#{e.nombreEspecialidad}" />
+                    </p:column>
 
-                <p:column headerText="Nombre">
-                    <h:outputText value="#{e.nombreEspecialidad}" />
-                </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{e.descripcion}" />
+                    </p:column>
 
-                <p:column headerText="Descripción">
-                    <h:outputText value="#{e.descripcion}" />
-                </p:column>
+                    <p:column headerText="Estado" width="90" style="text-align: center;">
+                        <p:tag severity="#{e.activoEspecialidad ? 'success' : 'danger'}" value="#{e.activoEspecialidad ? 'Activa' : 'Inactiva'}"/>
+                    </p:column>
 
-                <p:column headerText="Acciones">
-                    <p:commandButton value="Editar"
-                                     action="#{especialidadBean.edit(e)}"
-                                     update="frmEspecialidades"
-                                     icon="pi pi-pencil" />
+                    <p:column headerText="Acciones" width="120" style="text-align: center;">
+                        <p:commandButton icon="pi pi-pencil"
+                                         action="#{especialidadBean.edit(e)}"
+                                         update=":dialogoGestion"
+                                         oncomplete="PF('wdialogo').show()"
+                                         styleClass="rounded-button ui-button-flat ui-button-warning"
+                                         disabled="#{!e.activoEspecialidad}"
+                                         title="Editar">
+                            <p:resetInput target=":dialogoGestion" />
+                        </p:commandButton>
 
-                    <p:commandButton value="Eliminar"
-                                     action="#{especialidadBean.delete(e)}"
-                                     update="tblEspecialidades"
-                                     icon="pi pi-trash"
-                                     styleClass="ui-button-danger" />
-                </p:column>
-            </p:dataTable>
+                        <p:commandButton icon="pi pi-ban"
+                                         rendered="#{e.activoEspecialidad}"
+                                         action="#{especialidadBean.delete(e)}"
+                                         update="tblEspecialidades, :frmPrincipal:msgGlobal"
+                                         styleClass="rounded-button ui-button-flat ui-button-danger"
+                                         title="Desactivar">
+                            <p:confirm header="Confirmar" message="¿Desactivar esta especialidad?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+
+                        <p:commandButton icon="pi pi-check-circle"
+                                         rendered="#{!e.activoEspecialidad}"
+                                         action="#{especialidadBean.activar(e)}"
+                                         update="tblEspecialidades, :frmPrincipal:msgGlobal"
+                                         styleClass="rounded-button ui-button-flat ui-button-success"
+                                         title="Reactivar">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="300">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
         </h:form>
+
+        <p:dialog id="dialogoGestion" header="Detalles de la Especialidad" showEffect="fade" modal="true"
+                  widgetVar="wdialogo" responsive="true" width="500" closeOnEscape="true">
+
+            <h:form id="frmDialogo">
+                <div class="ui-fluid">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+
+                        <div class="field">
+                            <p:outputLabel value="Nombre de la Especialidad:" for="nombre" styleClass="field-label"/>
+                            <p:inputText id="nombre" value="#{especialidadBean.selected.nombreEspecialidad}" required="true"/>
+                        </div>
+
+                        <div class="field" style="margin-top: 10px;">
+                            <p:outputLabel value="Descripción:" for="descripcion" styleClass="field-label"/>
+                            <p:inputTextarea id="descripcion" value="#{especialidadBean.selected.descripcion}" rows="4" autoResize="false"/>
+                        </div>
+                    </p:panelGrid>
+
+                    <p:separator style="margin: 15px 0" />
+
+                    <div style="text-align: right;">
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         onclick="PF('wdialogo').hide()"
+                                         styleClass="ui-button-secondary ui-button-outlined"
+                                         style="margin-right: 10px;"
+                                         type="button" />
+
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         action="#{especialidadBean.save}"
+                                         update=":frmPrincipal:tblEspecialidades, :frmPrincipal:msgGlobal"
+                                         oncomplete="if(!args.validationFailed){PF('wdialogo').hide()}" />
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
     </ui:define>
 </ui:composition>
