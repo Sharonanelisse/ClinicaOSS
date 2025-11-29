@@ -3,10 +3,19 @@ package com.smarroquin.clinicaoss.controllers;
 import com.smarroquin.clinicaoss.enums.role_name;
 import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.service.CatalogService;
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import jakarta.inject.Named;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +29,12 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     @Inject
     private transient CatalogService service;
 
+    @PostConstruct
+    public void initBean() {
+        System.out.println("Usuarios encontrados en init: " + service.users().size());
+    }
+
+
     @Override
     protected Usuario createNew() {
         return new Usuario();
@@ -27,8 +42,11 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
 
     @Override
     protected List<Usuario> findAll() {
-        return service.users();
+        List<Usuario> usuarios = service.users();
+        System.out.println("Usuarios encontrados: " + usuarios.size());
+        return usuarios;
     }
+
 
     public role_name[] getRoles() {
         return role_name.values();
@@ -71,5 +89,4 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     protected String successDeleteMessage() {
         return "Usuario eliminado";
     }
-
 }
