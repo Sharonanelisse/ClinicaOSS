@@ -51,7 +51,7 @@ public class CatalogService implements Serializable {
 
 
     //Users
-    public List<Usuario> users() { return userRepository.findAll(); }
+    public List<Usuario> usuario() { return userRepository.findAll(); }
     public Usuario guardarUsuario(Usuario user) { return userRepository.guardar(user); }
     public void eliminarUsuario(Usuario user) { userRepository.eliminar(user); }
     public Usuario findUserById(Long id) { return userRepository.find(id); }

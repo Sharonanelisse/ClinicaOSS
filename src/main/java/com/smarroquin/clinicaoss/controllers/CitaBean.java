@@ -171,7 +171,7 @@ public class CitaBean extends Bean<Cita> implements Serializable {
     }
 
     public List<Paciente> getPacientes() { return service.pacientes(); }
-    public List<Usuario> getUsuarios() { return service.users(); }
+    public List<Usuario> getUsuarios() { return service.usuario(); }
     public List<Tratamiento> getTratamientos() { return service.tratamientos(); }
     public estado_cita[] getEstadosCita() { return estado_cita.values(); }
 }

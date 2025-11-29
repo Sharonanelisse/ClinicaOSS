@@ -22,7 +22,8 @@ public class LoginBean implements Serializable {
     private CatalogService service;
 
     public String login() {
-        List<Usuario> usuarios = service.users();
+        System.out.println("LOGIN EJECUTADO");
+        List<Usuario> usuarios = service.usuario();
 
         Usuario u = usuarios.stream()
                 .filter(x -> (x.getEmail().equals(username) ||
@@ -50,7 +51,7 @@ public class LoginBean implements Serializable {
                 .getSessionMap()
                 .put("usuarioLogeado", u);
 
-        return "/dashboard.xhtml?faces-redirect=true";
+        return "/home.xhtml?faces-redirect=true";
     }
 
     private void addErrorMessage(String msg) {
