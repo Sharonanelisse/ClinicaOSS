@@ -4,6 +4,7 @@ import com.smarroquin.clinicaoss.enums.role_name;
 import com.smarroquin.clinicaoss.models.Usuario;
 import com.smarroquin.clinicaoss.service.CatalogService;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -14,6 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.inject.Named;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Named
 @ViewScoped
@@ -41,53 +49,23 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
         return usuarios;
     }
 
-    public String login() {
-        try {
-            List<Usuario> usuarios = service.users();
-            String loginInput = selected.getEmail(); // aquí reutilizamos el campo "email" como entrada genérica
-            String passwordInput = selected.getPassword();
-
-            Usuario encontrado = usuarios.stream()
-                    .filter(u ->
-                            (u.getEmail() != null && u.getEmail().equalsIgnoreCase(loginInput))
-                                    ||
-                                    (u.getNombreUsuario() != null && u.getNombreUsuario().equalsIgnoreCase(loginInput))
-                    )
-                    .findFirst()
-                    .orElse(null);
-
-            if (encontrado == null) {
-                addErrorMessage("Usuario o correo no encontrado");
-                return null;
-            }
-
-            if (!encontrado.getPassword().equals(passwordInput)) {
-                addErrorMessage("Contraseña incorrecta");
-                return null;
-            }
-
-            if (!encontrado.isStatus()) {
-                addErrorMessage("Usuario inactivo");
-                return null;
-            }
-
-            // Guardar usuario autenticado en sesión
-            FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .getSessionMap()
-                    .put("usuarioLogueado", encontrado);
-
-            return "/views/home.xhtml?faces-redirect=true";
-
-        } catch (Exception e) {
-            addErrorMessage("Error inesperado: " + e.getMessage());
-            return null;
-        }
-    }
 
     public role_name[] getRoles() {
         return role_name.values();
     }
+
+    public void toggleStatus(Usuario u) {
+        u.setStatus(!u.getStatus());
+        service.guardar(u);
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Estado actualizado",
+                        "El usuario ahora está " + (u.getStatus() ? "Activo" : "Inactivo"))
+        );
+    }
+
 
     @Override
     protected void persist(Usuario entity) {
@@ -126,8 +104,4 @@ public class UsuarioBean extends Bean<Usuario> implements Serializable {
     protected String successDeleteMessage() {
         return "Usuario eliminado";
     }
-
-
-
-
 }

@@ -8,42 +8,42 @@
     <ui:define name="content">
         <h5>Gestión de Pacientes</h5>
 
-        <h:form citaId="frmPacientes">
-            <p:growl citaId="msgPacientes" showDetail="true" life="4000" />
+        <h:form id="frmPacientes">
+            <p:growl id="msgPacientes" showDetail="true" life="4000" />
 
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputLabel value="Nombre:" for="nombrePaciente"/>
-                <p:inputText citaId="nombrePaciente" value="#{pacienteBean.selected.nombrePaciente}" required="true"/>
+                <p:inputText id="nombrePaciente" value="#{pacienteBean.selected.nombrePaciente}" required="true"/>
 
                 <h:outputLabel value="Apellido:" for="apellidoPaciente"/>
-                <p:inputText citaId="apellidoPaciente" value="#{pacienteBean.selected.apellidoPaciente}" required="true"/>
+                <p:inputText id="apellidoPaciente" value="#{pacienteBean.selected.apellidoPaciente}" required="true"/>
 
                 <h:outputLabel value="DPI:" for="dpi"/>
-                <p:inputText citaId="dpi" value="#{pacienteBean.selected.dpi}" required="true"/>
+                <p:inputText id="dpi" value="#{pacienteBean.selected.dpi}" required="true"/>
 
                 <h:outputLabel value="Fecha de nacimiento:" for="fechaNacimiento"/>
-                <p:datePicker citaId="fechaNacimiento" value="#{pacienteBean.selected.fechaNacimiento}" pattern="dd/MM/yyyy"/>
+                <p:datePicker id="fechaNacimiento" value="#{pacienteBean.selected.fechaNacimiento}" pattern="dd/MM/yyyy"/>
 
                 <h:outputLabel value="Edad:" for="edad"/>
-                <p:inputText citaId="edad" value="#{pacienteBean.selected.edad}" />
+                <p:inputText id="edad" value="#{pacienteBean.selected.edad}" />
 
                 <h:outputLabel value="Teléfono:" for="telefono"/>
-                <p:inputText citaId="telefono" value="#{pacienteBean.selected.telefono}" />
+                <p:inputText id="telefono" value="#{pacienteBean.selected.telefono}" />
 
                 <h:outputLabel value="Email:" for="email"/>
-                <p:inputText citaId="email" value="#{pacienteBean.selected.email}" />
+                <p:inputText id="email" value="#{pacienteBean.selected.email}" />
 
                 <h:outputLabel value="Alergias:" for="alergias"/>
-                <p:inputTextarea citaId="alergias" value="#{pacienteBean.selected.alergias}" rows="2"/>
+                <p:inputTextarea id="alergias" value="#{pacienteBean.selected.alergias}" rows="2"/>
 
                 <h:outputLabel value="Condiciones médicas:" for="condicionesMedicas"/>
-                <p:inputTextarea citaId="condicionesMedicas" value="#{pacienteBean.selected.condicionesMedicas}" rows="2"/>
+                <p:inputTextarea id="condicionesMedicas" value="#{pacienteBean.selected.condicionesMedicas}" rows="2"/>
 
                 <h:outputLabel value="Observaciones:" for="observaciones"/>
-                <p:inputTextarea citaId="observaciones" value="#{pacienteBean.selected.observaciones}" rows="2"/>
+                <p:inputTextarea id="observaciones" value="#{pacienteBean.selected.observaciones}" rows="2"/>
 
                 <h:outputLabel value="Fecha de registro:" for="fechaRegistro"/>
-                <p:datePicker citaId="fechaRegistro" value="#{pacienteBean.selected.fechaRegistro}" pattern="dd/MM/yyyy"/>
+                <p:datePicker id="fechaRegistro" value="#{pacienteBean.selected.fechaRegistro}" pattern="dd/MM/yyyy"/>
             </h:panelGrid>
 
             <p:commandButton value="Guardar"
@@ -57,18 +57,18 @@
                              icon="pi pi-times"
                              styleClass="p-button-secondary" />
 
-            <p:dataTable citaId="tblPacientes"
+            <p:dataTable id="tblPacientes"
                          value="#{pacienteBean.list}"
                          var="p"
                          paginator="true"
                          rows="10"
                          style="margin-top:20px;"
-                         rowKey="#{p.citaId}"
+                         rowKey="#{p.id}"
                          selectionMode="single"
                          selection="#{pacienteBean.selected}">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{p.citaId}" />
+                    <h:outputText value="#{p.id}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
@@ -84,10 +84,9 @@
                 </p:column>
 
                 <p:column headerText="Fecha nacimiento">
-                    <h:outputText value="#{p.fechaNacimiento}">
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </h:outputText>
+                    <h:outputText value="#{pacienteBean.formatFecha(p.fechaNacimiento)}" />
                 </p:column>
+
 
                 <p:column headerText="Edad">
                     <h:outputText value="#{p.edad}" />
