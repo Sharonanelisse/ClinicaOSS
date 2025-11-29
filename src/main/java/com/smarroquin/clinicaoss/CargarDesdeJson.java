@@ -109,6 +109,8 @@ public class CargarDesdeJson {
             p.setObservaciones(json.getObservaciones());
             p.setActivo(json.getActivoPaciente());
             p.setFechaRegistro(json.getFechaRegistro() != null ? json.getFechaRegistro() : LocalDateTime.now());
+            p.setNumeroExpediente(json.getNumeroExpediente());
+            p.setFechaUltimaActualizacion(json.getFechaUltimaActualizacion());
             em.persist(p);
         }
         System.out.println("Pacientes insertados: " + lista.size());
@@ -356,9 +358,17 @@ public class CargarDesdeJson {
         private String condicionesMedicas;
         private String observaciones;
         private LocalDateTime fechaRegistro;
+        private String numeroExpediente;
+        private LocalDateTime fechaUltimaActualizacion;
         private Boolean activoPaciente;
 
         // getters y setters...
+
+        public String getNumeroExpediente() { return numeroExpediente; }
+        public void setNumeroExpediente(String numeroExpediente) { this.numeroExpediente = numeroExpediente; }
+
+        public LocalDateTime getFechaUltimaActualizacion() { return fechaUltimaActualizacion; }
+        public void setFechaUltimaActualizacion(LocalDateTime fechaUltimaActualizacion) { this.fechaUltimaActualizacion = fechaUltimaActualizacion; }
 
 
         public Boolean getActivoPaciente() {

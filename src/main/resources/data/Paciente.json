@@ -10,7 +10,9 @@
     "alergias": "Penicilina",
     "condicionesMedicas": "Hipertensión",
     "observaciones": "Paciente con antecedentes familiares de hipertensión, requiere control de presión arterial.",
-    "fechaRegistro": "2025-11-27T22:54:00",
+    "fechaRegistro": "2025-11-20T14:54:00",
+    "numeroExpediente": "EXP-726354827",
+    "fechaUltimaActualizacion": "2025-11-27T16:54:00",
     "activoPaciente": true
   },
   {
@@ -24,7 +26,9 @@
     "alergias": "Polen",
     "condicionesMedicas": "Ninguna",
     "observaciones": "Consulta por limpieza dental, refiere sensibilidad en encías.",
-    "fechaRegistro": "2025-11-27T22:54:00",
+    "fechaRegistro": "2025-11-12T22:54:00",
+    "numeroExpediente": "EXP-6374982749",
+    "fechaUltimaActualizacion": "2025-11-21T16:54:00",
     "activoPaciente": true
   },
   {
@@ -38,7 +42,9 @@
     "alergias": "Ninguna",
     "condicionesMedicas": "Diabetes tipo II",
     "observaciones": "Paciente en tratamiento de periodontitis, requiere control glucémico.",
-    "fechaRegistro": "2025-11-27T22:54:00",
+    "fechaRegistro": "2025-11-10T22:54:00",
+    "numeroExpediente": "EXP-836747493",
+    "fechaUltimaActualizacion": "2025-11-21T16:54:00",
     "activoPaciente": true
   },
   {
@@ -52,7 +58,9 @@
     "alergias": "Ninguna",
     "condicionesMedicas": "Ninguna",
     "observaciones": "Paciente joven, primera visita odontológica, solicita revisión general.",
-    "fechaRegistro": "2025-11-27T22:54:00",
+    "fechaRegistro": "2025-11-17T22:54:00",
+    "numeroExpediente": "EXP-364723928",
+    "fechaUltimaActualizacion": "2025-11-22T16:54:00",
     "activoPaciente": true
   },
   {
@@ -66,7 +74,9 @@
     "alergias": "Aspirina",
     "condicionesMedicas": "Cardiopatía",
     "observaciones": "Paciente con prótesis dental parcial, requiere ajuste y revisión periódica.",
-    "fechaRegistro": "2025-11-27T22:54:00",
+    "fechaRegistro": "2025-11-17T22:54:00",
+    "numeroExpediente": "EXP-739294763",
+    "fechaUltimaActualizacion": "2025-11-20T16:54:00",
     "activoPaciente": true
   }
 ]
