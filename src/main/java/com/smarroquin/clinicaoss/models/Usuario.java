@@ -116,6 +116,9 @@ public class Usuario {
         this.password = password;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
     public Boolean getStatus() {
         return status;
     }
